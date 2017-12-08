@@ -21,25 +21,25 @@
                 @endcomponent
                 @component('layouts.menuentry')
                     @slot('uri')
-                        /plan/show
+                        duty/show
                     @endslot
                     <i class="fa fa-calendar fa-fw" aria-hidden="true"></i> Dienstplan</a>
                 @endcomponent
                 @component('layouts.menuentry')
                     @slot('uri')
-                        /user/phonelist
+                        user/phonelist
                     @endslot
                     <i class="fa fa-phone fa-fw" aria-hidden="true"></i> Telefonliste</a>
                 @endcomponent
                 @component('layouts.menuentry')
                     @slot('uri')
-                        /user/settings
+                        user/settings
                     @endslot
                     <i class="fa fa-user fa-fw" aria-hidden="true"></i> Mein Konto</a>
                 @endcomponent
                 @component('layouts.menuentry')
                     @slot('uri')
-                        /admin
+                        admin
                     @endslot
                     <i class="fa fa-users fa-fw" aria-hidden="true"></i> Verwaltung</a>
                 @endcomponent
@@ -50,5 +50,5 @@
 </div>
 
 @push('late')
-    <script src="js/menu.js"></script>
+    <script src="{{ asset('js/menu.js') }}"></script>
 @endpush
