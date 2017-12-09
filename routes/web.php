@@ -12,4 +12,4 @@
 */
 
 Route::get('/', 'PostController@index');
-Route::get('/duty/show/{year?}/{month?}', 'DutyController@index');
+Route::get('/plan/{year?}/{month?}', 'DutyController@index');

@@ -2,10 +2,6 @@
 
 @section('title', 'Dienstplan')
 
-@php
-    \Carbon\Carbon::setLocale(config('app.locale'));
-@endphp
-
 @section('content')
     <h1>
         {{ __('date.' . $month_start->format('F')) }}
@@ -21,12 +17,18 @@
     <table class="pure-table pure-table-bordered tight-table" id="plan">
         <thead><tr>
             <th>Tag</th>
-            <th>Schicht</th>
+            <th>Schichtbegin</th>
             <th>79/1</th>
             <th>10/1</th>
+            <th></th>
         </tr></thead>
 
         <tbody>
+            @include('duties.shifttable')
         </tbody>
     </table>
 @endsection
+
+@push('late')
+    <script src="{{ asset('js/ui.js') }}"></script>
+@endpush

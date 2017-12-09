@@ -2,17 +2,17 @@
     <thead>
         <tr>
             {{-- prev month --}}
-            <th><a href="{{ url('duty/show', $prev) }}">
+            <th><a href="{{ url('plan', $prev) }}">
                 &lt;&lt;
             </a></th>
 
             {{-- current month --}}
-            <th colspan="5"><a href="{{ url('duty/show') }}">
+            <th colspan="5"><a href="{{ url('plan') }}">
                 <i class="fa fa-home fa-lg linked-icon"></i>
             </a></th>
 
             {{-- next month --}}
-            <th><a href="{{ url('duty/show', $next) }}">
+            <th><a href="{{ url('plan', $next) }}">
                 &gt;&gt;
             </a></th>
         </tr>
@@ -28,7 +28,7 @@
             <tr>
                 @foreach ($week as $day)
                     <td class="{{ $day->isToday() ? 'today' : '' }}{{ $day->isSameMonth($month_start) ? '' : 'other' }}">
-                        <a href="day-{{ $day->format('j') }}">
+                        <a href="{{ $day->isSameMonth($month_start) ? '' : url('/plan') . $day->format('/Y/m') }}#day-{{ $day->format('j') }}">
                             {{ $day->format('j') }}
                         </a>
                     </td>

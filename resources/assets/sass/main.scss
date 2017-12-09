@@ -487,6 +487,16 @@ Hides the menu at `48em`, but modify this based on your app's needs.
 	vertical-align: middle;
 }
 
+  #nav .today a {
+    font-weight: bold;
+    color: #636b6f;
+  }
+
+  #nav .other a {
+    font-style: oblique;
+    color: #99ddff;
+  }
+
 #plan td {
 	border-left-width: 1px;
 }
@@ -568,7 +578,7 @@ td.dehover:hover {
 	min-width: 100%;
 }
 
-.hider > * {
+.hidden {
 	display: none;
 }
 

@@ -21,7 +21,7 @@
                 @endcomponent
                 @component('layouts.menuentry')
                     @slot('uri')
-                        duty/show
+                        plan
                     @endslot
                     <i class="fa fa-calendar fa-fw" aria-hidden="true"></i> Dienstplan</a>
                 @endcomponent

@@ -64,7 +64,7 @@ $(function () {
     });
 
     // Do not change selection when clicking links
-    $('td.shift-slot a').on('click', function(event) {
+    $('td.shift-slot a').on('click', function() {
         event.stopPropagation();
     }).on('mouseenter', function() {
         $(this).parentsUntil('tr').addClass('dehover');
@@ -80,17 +80,21 @@ $(function () {
  ****************************************************************/
 $(function () {
 
-    $('tr.hideable').hide();
-    $('#hider-show').show().on('click', function () {
-        $('tr.hideable').show();
-        $(this).hide();
-        $('#hider-hide').show();
-    });
-    $('#hider-hide').on('click', function () {
-        $('tr.hideable').hide();
-        $('tr.hideable td.selected').selectShift();
-        $(this).hide();
-        $('#hider-show').show();
-    });
+    if ($('#hider-show').hasClass('hidden')) {
+        $('tr.past').hide();
+        $('#hider-show').removeClass('hidden');
+
+        $('#hider-show').show().on('click', function () {
+            $('tr.past').show();
+            $(this).addClass('hidden');
+            $('#hider-hide').removeClass('hidden');
+        });
+        $('#hider-hide').on('click', function () {
+            $('tr.past').hide();
+            //$('tr.past td.selected').selectShift();
+            $(this).addClass('hidden');
+            $('#hider-show').removeClass('hidden');
+        });
+    }
 
 });
