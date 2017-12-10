@@ -1,5 +1,7 @@
 <?php
 
+use Carbon\Carbon;
+
 return [
 
     /*
@@ -25,14 +27,11 @@ return [
     | Shift Past Threshold
     |--------------------------------------------------------------------------
     |
-    | This threshold determines which shifts to consider as past. Any shift
-    | that starts before (and not at) this point in time is past.
-    | This can be any time string (relative to now), which is parseable by
-    | the Carbon library.
-    | Additionally, you should ensure that all shifts of one day are either
-    | past or not as by setting the time portion to 00:00:00.
+    | This threshold determines which shifts to consider as past. All shifts of
+    | a day are past if the last shift of that day ends before this threshold
+    | time.
     |
     */
-    'past_threshold' => 'yesterday'
+    'past_threshold' => Carbon::parse('10 hours ago'),
 
 ];

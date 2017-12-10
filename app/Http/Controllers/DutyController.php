@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Shift;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class DutyController extends Controller
 {
@@ -31,8 +32,7 @@ class DutyController extends Controller
         /*
          * -- Generate Shift Table
          */
-        $first_shift  = Shift::firstOfDay($cal_start);
-        $shiftsPerDay = Shift::shiftsPerDay();
+        $first_shift  = Shift::firstOfDay($month_start);
 
         $days = [];
         $shift = $first_shift->copy();
@@ -52,13 +52,35 @@ class DutyController extends Controller
         $prev = [ $prev_month->year, $prev_month->month ];
         $next = [ $next_month->year, $next_month->month ];
 
-        /*
-         * -- Misc --
-         */
-        $past_threshold = Carbon::parse(config('dienstplan.past_threshold'));
-
         return view('duties.index', compact(
-            'weeks', 'month_start', 'prev', 'next', 'days', 'shiftsPerDay', 'past_threshold'
+            'weeks', 'month_start', 'prev', 'next', 'days'
         ));
+    }
+
+    public function verify() {
+        $year = request('year');
+        $month = request('month');
+
+        $shifts = [];
+        foreach (request()->all() as $key => $val) {
+            $ids = explode('-', $key);
+            if ($ids[0] !== 'shift') continue;
+
+            $day   = (int) $ids[1];
+            $shift = (int) $ids[2];
+            $slot  = (int) $val;
+
+            $shifts[] = Shift::create($year, $month, $day, $shift)->setSlot($slot);
+        }
+
+        dd($shifts);
+    }
+
+    public function create() {
+
+    }
+
+    public function store(Request $request) {
+
     }
 }

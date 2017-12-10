@@ -39,6 +39,7 @@ class Shift {
     protected $shift;
     protected $start;
     protected $end;
+    public $slot;
 
     public function __construct($dt = null) {
         $dt = Carbon::instance($dt ?? now());
@@ -46,16 +47,16 @@ class Shift {
         // start time of the first shift on the day of $dt
         $first_start = $dt->copy()->setTimeFromTimeString(Shift::shifts()[0]);
 
-        // check if $dt is within a shift that started the previous day
+        // check if the shift start the day before $dt
         if ($dt->lt($first_start)) {
 
             $this->start = $dt->copy()
                 ->subDay()
                 ->setTimeFromTimeString(array_last(Shift::shifts()));
-            $this->end = $first_start;
+            $this->end   = $first_start;
             $this->shift = Shift::shiftsPerDay() - 1;
 
-        // otherwise the right shift is sometime today
+        // otherwise the shift starts the same day as $dt
         } else {
 
             // remember the previous shift as start time, so initially the first shift
@@ -68,14 +69,21 @@ class Shift {
 
                 if ($dt->lt($end)) {
                     $this->start = $start;
-                    $this->end = $end;
+                    $this->end   = $end;
                     $this->shift = $i - 1;
-                    break;
+                    return;
                 }
 
                 $start = $end;
 
             }
+
+            // if we reach here, the shift starts the day after $dt
+            $this->start = $start;
+            $this->end   = $dt->copy()
+                ->addDay()
+                ->setTimeFromTimeString(Shift::shifts()[0]);
+            $this->shift = Shift::shiftsPerDay() - 1;
         }
     }
 
@@ -85,8 +93,32 @@ class Shift {
 
     public static function firstOfDay($dt = null) {
         $dt = Carbon::instance($dt ?? now());
+        $firstStartTime = Shift::shifts()[0];
 
-        return new Shift($dt->copy()->setTimeFromTimeString(Shift::shifts()[0]));
+        return new Shift($dt->copy()->setTimeFromTimeString($firstStartTime));
+    }
+
+    public static function lastOfDay($dt = null) {
+        $dt = Carbon::instance($dt ?? now());
+        $lastStartTime = array_last(Shift::shifts());
+
+        return new Shift($dt->copy()->setTimeFromTimeString($lastStartTime));
+    }
+
+    public static function create($year = null, $month = null, $day = null, $shift = null) {
+        $dt = Carbon::createFromDate($year, $month, $day);
+
+        if (! isset($shift))
+            return new Shift($dt);
+
+        $shiftStartTime = Shift::shifts()[
+            min(
+                max(0,
+                    $shift),
+                Shift::shiftsPerDay() - 1)
+        ];
+
+        return new Shift($dt->setTimeFromTimeString($shiftStartTime));
     }
 
     public function copy() {
@@ -107,6 +139,31 @@ class Shift {
                 ->copy()
                 ->setTimeFromTimeString(Shift::shifts()[$this->shift + 1]);
         }
+
+        return $this;
+    }
+
+    public function prev() {
+        $this->shift = $this->shift - 1;
+        $this->end = $this->start;
+
+        if ($this->shift < 0) {
+            $this->shift = Shift::shiftsPerDay() - 1;
+            $this->start = $this->end
+                ->copy()
+                ->subDay()
+                ->setTimeFromTimeString(array_last(Shift::shifts()));
+        } else {
+            $this->start = $this->end
+                ->copy()
+                ->setTimeFromTimeString(Shift::shifts()[$this->shift]);
+        }
+
+        return $this;
+    }
+
+    public function setSlot($slot) {
+        $this->slot = $slot;
 
         return $this;
     }
@@ -146,11 +203,32 @@ class Shift {
         return $this->shift === Shift::shiftsPerDay() - 1;
     }
 
+    public function isPast() {
+        return Shift::lastOfDay($this->start)
+            ->end->lt(config('dienstplan.past_threshold'));
+    }
+
+    public function isFuture() {
+        return $this->start->gt(now());
+    }
+
+    public function isNow() {
+        return ! $this->isFuture() && $this->end->lt(now());
+    }
+
+    public function isNowish() {
+        return ! $this->isFuture() && ! $this->isPast();
+    }
+
+    public function isFirstNowish() {
+        return $this->isNowish() && $this->copy()->prev()->isPast();
+    }
+
     public function name() {
         return Shift::shifts()[$this->shift] . ' Uhr';
     }
 
-    public function classes($past_threshold = null) {
+    public function classes() {
         $classes = [];
         if ($this->start->isWeekday())
             $classes[] = 'weekday';
@@ -158,8 +236,7 @@ class Shift {
             $classes[] = 'weekend';
         if ($this->start->isToday())
             $classes[] = 'today';
-        if (isset($past_threshold) &&
-            $this->start->lt($past_threshold))
+        if ($this->isPast())
             $classes[] = 'past';
 
         return implode(" ", $classes);
