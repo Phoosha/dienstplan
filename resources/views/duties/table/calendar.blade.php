@@ -21,15 +21,18 @@
     <tbody>
         <tr>
             @foreach ($weeks[0] as $day)
-                <td>{{ __('date.' .$day->format('D')) }}</td>
+                <td>{{ dayname_short($day) }}</td>
             @endforeach
         </tr>
         @foreach ($weeks as $week)
             <tr>
                 @foreach ($week as $day)
                     <td class="{{ $day->isToday() ? 'today' : '' }}{{ $day->isSameMonth($month_start) ? '' : 'other' }}">
-                        <a href="{{ $day->isSameMonth($month_start) ? '' : url('/plan') . $day->format('/Y/m') }}#day-{{ $day->format('j') }}">
-                            {{ $day->format('j') }}
+                        <a href="{{ $day->isSameMonth($month_start)
+                                      ? ''
+                                      : url('/plan') . $day->format('/Y/m')
+                                 }}#day-{{ $day->format('j') }}">
+                            {{ $day->day }}
                         </a>
                     </td>
                 @endforeach

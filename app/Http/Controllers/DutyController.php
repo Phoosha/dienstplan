@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Duty;
 use App\Shift;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -73,7 +74,9 @@ class DutyController extends Controller
             $shifts[] = Shift::create($year, $month, $day, $shift)->setSlot($slot);
         }
 
-        dd($shifts);
+        $duties = Duty::createFromShifts($shifts);
+
+        return view('duties.create', compact('duties'));
     }
 
     public function create() {

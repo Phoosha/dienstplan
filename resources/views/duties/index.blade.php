@@ -4,8 +4,8 @@
 
 @section('content')
     <h1>
-        {{ __('date.' . $month_start->format('F')) }}
-        {{ $month_start->format('Y') }}
+        {{ monthname($month_start) }}
+        {{ $month_start->year }}
     </h1>
 
     {{-- NAVIGATION --}}
