@@ -37,5 +37,5 @@
 @endsection
 
 @push('late')
-    <script src="{{ asset('js/ui.js') }}"></script>
+    <script src="{{ mix('js/ui.js') }}"></script>
 @endpush
