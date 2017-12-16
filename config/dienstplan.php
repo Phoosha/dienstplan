@@ -36,6 +36,7 @@ return [
     'past_threshold' => Carbon::parse('10 hours ago'),
 
     'dropdown_time_steps' => CarbonInterval::minutes(30),
-    'dropdown_time_format' => 'H:i',
+    'time_format' => 'H:i',
+    'date_format' => 'd.m.Y',
 
 ];
