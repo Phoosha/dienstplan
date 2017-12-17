@@ -1,3 +1,4 @@
+window.$ = window.jQuery = require('jquery/dist/jquery.slim');
 
 /****************************************************************
  * Make shift slots selectable

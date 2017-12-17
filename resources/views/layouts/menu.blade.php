@@ -48,3 +48,7 @@
         <a href="/auth/logout" class="primary-button pure-button danger-button"><i class="fa fa-sign-out" aria-hidden="true"></i> Abmelden</a>
     @show
 </div>
+
+@push('late')
+    <script src="{{ mix('js/menu.js') }}"></script>
+@endpush
