@@ -1,44 +1,42 @@
+{{-- PARAMS: duties, from_scratch --}}
 @extends('layouts.master')
 
+
+@if (count($duties) == 1)
+    @section('title', 'Dienst anlegen')
+    @if ($from_scratch)
+        @section('duties.head', 'Neuen Dienst anlegen?')
+    @else
+        @section('duties.head', 'Dienst so übernehmen?')
+    @endif
+    @section('duties.save', 'Speichern')
+    @section('duties.reset', 'Zurücksetzen')
+@else
+    @section('title', 'Dienste anlegen')
+    @section('duties.head', 'Dienste so übernehmen?')
+    @section('duties.save', 'Alle speichern')
+    @section('duties.reset', 'Alle zurücksetzen')
+@endif
+
 @section('content')
-	<form method="POST" action="{{ url('duties') }}" class="pure-form">
-        <h2 class="content-subhead">Dienste so übernehmen?</h2>
+	<form method="post" action="{{ url('duties') }}" class="pure-form pure-form-stacked" id="duty-form">
+        {{csrf_field() }}
 
-        <div class="wrapper">
-            <fieldset><table class="pure-table">
-                <thead><tr>
-                    <th>Dienstanfang</th>
-                    <th>Dienstende</th>
-                    <th>Fahrzeug</th>
-                </tr></thead>
-                <tbody>
-                    @foreach($duties as $duty)
-                        <tr>
-                            @include('duties.create.datecell', [
-                                'dt' => $duty->start,
-                                'name' => "{$loop->index}-start" ])
-                            @include('duties.create.datecell', [
-                                'dt' => $duty->end,
-                                'name' => "{$loop->index}-end" ])
-                            <td>
-                                <select name="{{ $loop->index }}-vehicle"></select>
-                            </td>
-                        </tr>
-                        <tr><td colspan="3">
-                            <input type="text" name="{{ $loop->index }}->comment" value placeholder="Kommentar" class="duty-comment">
-                        </td></tr>
-                    @endforeach
-                </tbody>
-            </table></fieldset>
+        @include('duties.layouts.duties')
 
-            <fieldset class="bottom-wrapper">
-                blub
-            </fieldset>
+        @if (count ($duties) > 1)
+            <div class="sep"></div>
+        @endif
 
-            <fieldset class="bottom-wrapper">
-                <input type="submit" name="save" value="Alle speichern" class="pure-button primary-button">
-                <a href="{{ url()->previous() }}" class="pure-button secondary-button icon-button"><i class="fa fa-reply" aria-hidden="true"></i> Zurück</a
-            </fieldset>
-        </div>
+        <fieldset>
+            <div class="pure-button-group" role="group">
+                <button type="submit" class="pure-button primary-button">
+                    <i class="fa fa-save" aria-hidden="true"></i>&nbsp;@yield('duties.save')
+                </button>
+                <button type="reset" class="pure-button secondary-button">
+                    <i class="fa fa-undo" aria-hidden="true"></i>&nbsp;@yield('duties.reset')
+                </button>
+            </div>
+        </fieldset>
     </form>
 @endsection

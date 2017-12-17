@@ -14,10 +14,9 @@
     <br />
     <br />
 
-    <form method="POST" action="{{ url('duties/create') }}" class="pure-form">
-        {{ csrf_field() }}
-        <input type="hidden" name="year" value="{{ $month_start->year }}">
-        <input type="hidden" name="month" value="{{ $month_start->month }}">
+    <form method="get" action="{{ url('duties/create') }}" class="pure-form">
+        <input type="hidden" name="year" value="{{ $month_start->year }}" />
+        <input type="hidden" name="month" value="{{ $month_start->month }}" />
         <table class="pure-table pure-table-bordered tight-table" id="plan">
             <thead><tr>
                 <th>Tag</th>

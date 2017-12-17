@@ -10,6 +10,6 @@
         @include('duties.table.shiftslot', [ 'slot' => 0 ])
         @include('duties.table.shiftslot', [ 'slot' => 1 ])
     <td>
-        <button type="submit" name="verify" title="Eintragen" class="pure-button secondary-button icon-button fa fa-paper-plane-o"></button>
+        <button type="submit" title="Eintragen" class="pure-button secondary-button icon-button fa fa-paper-plane-o"></button>
     </td>
 </tr>

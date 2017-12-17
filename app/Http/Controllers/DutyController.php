@@ -58,7 +58,7 @@ class DutyController extends Controller
         ));
     }
 
-    public function verify() {
+    public function create() {
         $year = request('year');
         $month = request('month');
 
@@ -74,16 +74,37 @@ class DutyController extends Controller
             $shifts[] = Shift::create($year, $month, $day, $shift)->setSlot($slot);
         }
 
+        // If we have no shift, fallback to the current shift right now
+        $from_scratch = false;
+        if (empty($shifts)) {
+            $shifts = [Shift::create()->setSlot(0)];
+            $from_scratch = true;
+        }
+
         $duties = Duty::createFromShifts($shifts);
 
-        return view('duties.create', compact('duties'));
+        return view('duties.create', compact('duties', 'from_scratch'));
     }
 
-    public function create() {
-
+    public function edit($id) {
+        // FIXME
+        $duty = Duty::createFromShift(Shift::create());
+        $duty->id = 10;
+        return view('duties.edit', compact('duty'));
     }
 
     public function store(Request $request) {
-
+        dd(request()->all());
     }
+
+    public function update($id) {
+        // FIXME
+        dd('update');
+    }
+
+    public function destroy($id) {
+        // FIXME
+        dd('destroy');
+    }
+
 }

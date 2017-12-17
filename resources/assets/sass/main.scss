@@ -55,9 +55,13 @@ The content `<div>` is where all your content goes.
 .content {
     padding: 2em 0.5em 7em 0.5em;
     line-height: 1.6em;
-    max-width: 800px;
+    max-width: 1000px;
     margin: 0 auto;
     text-align: center;
+}
+
+.content div {
+  margin: 0 auto;
 }
 
 /*
@@ -158,6 +162,12 @@ a:hover {
 	display: inline;
 }
 
+div.sep {
+  border-bottom: 1px solid #ddd;
+  padding: 0;
+  margin: 0 0 1.5em;
+}
+
 
 /* -- Message styles ------------------------------------------------------*/
 
@@ -190,22 +200,20 @@ a:hover {
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
     box-shadow: none;
-    border-radius: 11px;
-    border: 1px solid #aaa;
+    border-radius: 8px;
+    //border: 1px solid #aaa;
 }
 .primary-button {
     color: #fff;
     background: #19f;
-    border-color: #17b
+    //border-color: #17b
 }
 .secondary-button {
-    background: #fff;
     color: #666;
-    font-size: 95%
 }
 
 .danger-button {
-	border-color: #a44;
+	//border-color: #a44;
 	background-color: #d55;
 	color: #fff;
 }
@@ -588,24 +596,4 @@ td.dehover:hover {
 .phonelist td,
 .phonelist th {
 	text-align: left;
-}
-
-
-/* -- Confirm duty page-specific formatting -----------------------------------*/
-
-#confirm-duty input {
-	margin-left: 0.5em;
-}
-
-.center {
-	text-align: center;
-}
-
-.wrapper {
-	display: inline-block;
-}
-
-.bottom-wrapper {
-	display: inline-block;
-	vertical-align: bottom;
 }
