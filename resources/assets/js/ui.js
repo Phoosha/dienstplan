@@ -2,7 +2,6 @@
 /****************************************************************
  * Make shift slots selectable
  ****************************************************************/
-
 $.fn.selectShift = function() {
 	return this.each(function() {
 		var shiftSlot = $(this);
@@ -17,7 +16,7 @@ $.fn.selectShift = function() {
 			.not(shiftSlot)
 			.toggleClass('selected', false);
 	});
-}
+};
 
 $(function () {
 
@@ -57,20 +56,26 @@ $(function () {
  ****************************************************************/
 $(function () {
 
-    if ($('#hider-show').hasClass('hidden')) {
-        $('tr.past').hide();
-        $('#hider-show').removeClass('hidden');
+    var show = $('#hider-show');
+    var hide = $('#hider-hide');
+    var past = $('tr.past');
 
-        $('#hider-show').show().on('click', function () {
-            $('tr.past').show();
+    if (show.hasClass('hidden')) {
+        // Hide the past and show the element to redisplay it
+        past.hide();
+        show.removeClass('hidden');
+
+        // Show / hide on click
+        show.show().on('click', function () {
+            past.show();
             $(this).addClass('hidden');
-            $('#hider-hide').removeClass('hidden');
+            hide.removeClass('hidden');
         });
-        $('#hider-hide').on('click', function () {
-            $('tr.past').hide();
+        hide.on('click', function () {
+            past.hide();
             //$('tr.past td.selected').selectShift();
             $(this).addClass('hidden');
-            $('#hider-show').removeClass('hidden');
+            show.removeClass('hidden');
         });
     }
 
