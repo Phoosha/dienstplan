@@ -17,4 +17,6 @@ mix.js('resources/assets/js/main.js', 'public/js')
 
 if (mix.inProduction()) {
     mix.version();
+} else {
+    mix.browserSync('localhost')
 }
