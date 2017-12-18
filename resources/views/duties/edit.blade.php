@@ -25,3 +25,9 @@
         </fieldset>
     </form>
 @endsection
+
+@push('late')
+    <script src="{{ mix('js/manifest.js') }}"></script>
+    <script src="{{ mix('js/vendor.js') }}"></script>
+    <script src="{{ mix('js/datepicker.js') }}"></script>
+@endpush

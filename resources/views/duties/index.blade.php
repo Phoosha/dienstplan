@@ -36,5 +36,7 @@
 @endsection
 
 @push('late')
+    <script src="{{ mix('js/manifest.js') }}"></script>
+    <script src="{{ mix('js/vendor.js') }}"></script>
     <script src="{{ mix('js/ui.js') }}"></script>
 @endpush

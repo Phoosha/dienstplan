@@ -13,7 +13,11 @@ let mix = require('laravel-mix');
 
 mix.scripts('resources/assets/js/menu.js', 'public/js/menu.js')
     .js('resources/assets/js/ui.js', 'public/js')
-    .sass('resources/assets/sass/main.scss', 'public/css');
+    .js('resources/assets/js/datepicker.js', 'public/js')
+
+mix.sass('resources/assets/sass/main.scss', 'public/css');
+
+mix.extract([ 'jquery' ])
 
 if (mix.inProduction()) {
     mix.version();
