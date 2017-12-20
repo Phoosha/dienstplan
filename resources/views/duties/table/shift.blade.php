@@ -1,8 +1,9 @@
+{{-- PARAMS: shift, month_start --}}
 <tr class="{{ $shift->classes() }}">
     @if ($loop->first)
         <td rowspan="{{ $shift->shiftsPerDay() }}" class="day-name" id="day-{{ $shift->day }}">
-            {{ dayname($day[0]->start) }},<br/>
-            {{ $day[0]->start->format('j.n.Y') }}
+            {{ dayname($shift->start) }},<br/>
+            {{ $shift->start->format('j.n.Y') }}
         </td>
     @endif
 

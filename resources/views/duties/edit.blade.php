@@ -1,3 +1,4 @@
+{{-- PARAMS: duty --}}
 @extends('layouts.master')
 
 @section('title', 'Dienst ändern')

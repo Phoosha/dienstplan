@@ -1,3 +1,4 @@
+{{-- PARAMS: weeks, month_start, prev, next --}}
 <table class="pure-table" id="nav">
     <thead>
         <tr>
