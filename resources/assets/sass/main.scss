@@ -227,6 +227,12 @@ div.sep {
 	text-decoration: none;
 }
 
+@media only screen and (max-width: 480px) {
+  .pure-form button {
+    margin: .7em 0 0;
+  }
+}
+
 
 /* -- Menu -----------------------------------------------------------------*/
 
@@ -255,7 +261,7 @@ div.sep {
 	#menu .primary-button {
 		margin: 1em 0.6em;
 	}
-	
+
     /*
     All anchors inside the menu should be styled like this.
     */
@@ -387,7 +393,7 @@ Hides the menu at `48em`, but modify this based on your app's needs.
         padding-left: 150px; /* left col width "#menu" */
         left: 0;
     }
-    
+
     #menu {
         left: 150px;
     }
@@ -467,14 +473,14 @@ Hides the menu at `48em`, but modify this based on your app's needs.
 		margin-left: auto;
 		margin-right: auto;
 	}
-	
+
 	#login input {
 		display: inline;
 	}
 
 
 /* -- Duty page-specific formatting -------------------------------------*/
-	
+
 #duty-form fieldset {
 	max-width: 30em;
 	margin: 0 auto;

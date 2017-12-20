@@ -24,19 +24,17 @@
 
         @include('duties.layouts.duties')
 
-        @if (count ($duties) > 1)
+        @if (count($duties) > 1)
             <div class="sep"></div>
         @endif
 
         <fieldset>
-            <div class="pure-button-group" role="group">
-                <button type="submit" class="pure-button primary-button">
-                    <i class="fa fa-save" aria-hidden="true"></i>&nbsp;@yield('duties.save')
-                </button>
-                <button type="reset" class="pure-button secondary-button">
-                    <i class="fa fa-undo" aria-hidden="true"></i>&nbsp;@yield('duties.reset')
-                </button>
-            </div>
+            <button type="submit" class="pure-button primary-button">
+                <i class="fa fa-save" aria-hidden="true"></i>&nbsp;@yield('duties.save')
+            </button>
+            <button type="reset" class="pure-button secondary-button">
+                <i class="fa fa-undo" aria-hidden="true"></i>&nbsp;@yield('duties.reset')
+            </button>
         </fieldset>
     </form>
 @endsection
