@@ -11,42 +11,111 @@ require('jquery-ui/ui/widgets/datepicker');
 
 var de = require('jquery-ui/ui/i18n/datepicker-de.js');
 
+$.datepicker.setDefaults(de);
+
+$.fn.filterSameFieldsetAs = function (element) {
+	var commonAncestor = $(element).closest('fieldset').get(0);
+	return this.filter(function () {
+		return $(this).closest('fieldset').get(0) === commonAncestor;
+    });
+};
+
 $(function() {
 
-	$.datepicker.setDefaults(de);
+    var startDates = $('input.start-date');
+    var endDates = $('input.end-date');
+    var startTimes = $('select.start-time');
+    var endTimes   = $('select.end-time');
 
-	var startInputs = $('input.start-date');
-    var endInputs   = $('input.end-date');
+    startDates.datepicker({
+        onClose: function () {
+            var myEndDate = endDates.filterSameFieldsetAs(this)
+            var newDate = $(this).datepicker("getDate");
 
-	startInputs.datepicker({
-		onClose: function() {
-			$(this).attr("disabled", false);
+            if (newDate > myEndDate.datepicker("getDate")) {
+                myEndDate.datepicker("setDate", newDate);
+            }
 
-            var group  		 = $(this).attr('data-group');
-            var myEndInput   = endInputs.filter('[data-group="' + group + '"]');
-			var newStartDate = $(this).datepicker("getDate");
+            updateEndTime(this);
+            $(this).attr("disabled", false);
+        },
+        beforeShow: function () {
+            $(this).attr("disabled", true);
+        }
+    });
+    endDates.datepicker({
+        onClose: function () {
+            updateEndTime(this);
+            $(this).attr("disabled", false);
+        },
+        beforeShow: function () {
+            $(this).attr("disabled", true);
 
-            if (newStartDate > myEndInput.datepicker("getDate")) {
-				myEndInput.datepicker("setDate", newStartDate);
-			}
-		},
-		beforeShow: function() {
-			$(this).attr("disabled", true);
-		}
-	});
-	endInputs.datepicker({
-		onClose: function() {
-			$(this).attr("disabled", false);
-		},
-		beforeShow: function() {
-			$(this).attr("disabled", true);
+            var myStartInput = startDates.filterSameFieldsetAs(this);
 
-            var group  		 = $(this).attr('data-group');
-            var myStartInput = startInputs.filter('[data-group="' + group + '"]');
+            $(this).datepicker("option", "minDate", myStartInput.datepicker("getDate"));
+        }
+    });
 
-			$(this).datepicker("option", "minDate", myStartInput.datepicker("getDate"));
-		}
-	});
+
+/****************************************************************
+ * Pimp the time dropdowns
+ ****************************************************************/
+
+    // only start/end time on the same day is of interest
+    function sameDay(element) {
+        var myStartDate = startDates.filterSameFieldsetAs(element);
+        var myEndDate   = endDates.filterSameFieldsetAs(element);
+
+        return myStartDate.datepicker("getDate").getTime() === myEndDate.datepicker("getDate").getTime();
+    }
+
+    // update the end time such that it is always before the start time
+    function updateEndTime(element) {
+        if (! sameDay(element))
+            return;
+
+        var myEndDate    = endDates.filterSameFieldsetAs(element);
+        var myStartTime  = startTimes.filterSameFieldsetAs(element);
+        var myEndTime    = endTimes.filterSameFieldsetAs(element);
+        var startTimeVal = myStartTime.val();
+
+        // ensure the end time is always before the start time
+        if (startTimeVal >= myEndTime.val()) {
+            var nextOption = myStartTime.children('option:selected').first().next();
+
+            if (nextOption.length > 0) {
+                // select the next option
+                myEndTime.val(nextOption.val());
+            } else {
+                // or the next day if the selected option was the last
+                var date = myEndDate.datepicker("getDate");
+                date.setDate(date.getDate() + 1);
+                myEndDate.datepicker('setDate', date);
+                myEndTime.val(myStartTime.children('option:first-child').val());
+            }
+        }
+    }
+
+    startTimes.on('input', function () {
+        updateEndTime(this);
+    });
+
+    // hide all end times before the start time
+    endTimes.on('focusin', function () {
+        // ensure we show all options since we might not hide any later
+        var allOptions = $(this).children('option').show();
+
+        if (!sameDay(this))
+            return;
+
+        var myStartTime = startTimes.filterSameFieldsetAs(this);
+        var startTimeVal = myStartTime.val();
+
+        allOptions.filter(function () {
+            return startTimeVal >= $(this).val();
+        }).hide();
+    });
 
 });
 
