@@ -10,6 +10,10 @@ use InvalidArgumentException;
 
 class DutyController extends Controller {
 
+    public function __construct() {
+        $this->middleware('auth');
+    }
+
     private static function firstOfMonth($year, $month) {
         $year  = isset($year)  ? (int) $year  : $year;
         $month = isset($month) ? (int) $month : $month;
