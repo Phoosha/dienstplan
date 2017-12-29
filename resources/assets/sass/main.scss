@@ -2,12 +2,12 @@
  * Set height to viewport to allow for footer positioning at the bottom
  */
 html {
-	height: 100%;
+  height: 100%;
 }
 
 body {
-	height: 100%;
-    color: #777;
+  height: 100%;
+  color: #777;
 }
 
 /*
@@ -16,48 +16,49 @@ Add transition to containers so they can push in and out.
 #layout,
 #menu,
 .menu-link {
-    -webkit-transition: all 0.2s ease-out;
-    -moz-transition: all 0.2s ease-out;
-    -ms-transition: all 0.2s ease-out;
-    -o-transition: all 0.2s ease-out;
-    transition: all 0.2s ease-out;
+  -webkit-transition: all 0.2s ease-out;
+  -moz-transition: all 0.2s ease-out;
+  -ms-transition: all 0.2s ease-out;
+  -o-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
 }
 
 /*
  * This is the parent `<div>` that contains the menu and the content area.
 */
 #layout {
-	height: 100%;
-    padding-left: 0;
+  height: 100%;
+  padding-left: 0;
 }
-    #layout.active #menu {
-        left: 150px;
-        width: 150px;
-    }
 
-    #layout.active .menu-link {
-        left: 150px;
-    }
+#layout.active #menu {
+  left: 150px;
+  width: 150px;
+}
+
+#layout.active .menu-link {
+  left: 150px;
+}
 
 /*
  * Wrapper for content and footer
 */
 #main {
-    position: relative;
-	float: left;  /* scale to content size */
-	min-height: 100%;  /* prevent floating left */
-	min-width: 100%;
+  position: relative;
+  float: left; /* scale to content size */
+  min-height: 100%; /* prevent floating left */
+  min-width: 100%;
 }
 
 /*
 The content `<div>` is where all your content goes.
 */
 .content {
-    padding: 2em 0.5em 7em 0.5em;
-    line-height: 1.6em;
-    max-width: 1000px;
-    margin: 0 auto;
-    text-align: center;
+  padding: 2em 0.5em 7em 0.5em;
+  line-height: 1.6em;
+  max-width: 1000px;
+  margin: 0 auto;
+  text-align: center;
 }
 
 .content div {
@@ -68,20 +69,20 @@ The content `<div>` is where all your content goes.
  * Footer which always stays at the bottom of the page and below all content
  */
 .footer {
-    font-size: 85%;
-    border-top: 1px solid #ddd;
-    background: #eee;
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 4em;
-    text-align: center;
+  font-size: 85%;
+  border-top: 1px solid #ddd;
+  background: #eee;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 4em;
+  text-align: center;
 }
 
-	.footer p {
-		padding: 0 2em;
-		margin: 0.7em 0;
-	}
+.footer p {
+  padding: 0 2em;
+  margin: 0.7em 0;
+}
 
 /*
 .header {
@@ -108,58 +109,58 @@ The content `<div>` is where all your content goes.
  * Ensure centering of tables like other inline content
  */
 table {
-	display: inline-table;
+  display: inline-table;
 }
 
 th {
-	text-align: center;
+  text-align: center;
 }
 
 label {
-	text-align: left;
+  text-align: left;
 }
 
 .tight-table td,
 .tight-table th {
-	padding: 0.4em;
+  padding: 0.4em;
 }
 
 .nowrap {
-	white-space: nowrap;
+  white-space: nowrap;
 }
 
 .pure-img-responsive {
-    max-width: 100%;
-    height: auto;
+  max-width: 100%;
+  height: auto;
 }
 
 .content-subhead {
-    text-transform: uppercase;
-    color: #555;
-    border-bottom: 1px solid #ddd;
-    padding: 0.4em 0;
-    font-size: 90%;
-    font-weight: 500;
-    letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #555;
+  border-bottom: 1px solid #ddd;
+  padding: 0.4em 0;
+  font-size: 90%;
+  font-weight: 500;
+  letter-spacing: 0.1em;
 }
 
 .pure-form legend {
-	color: #555;
+  color: #555;
 }
 
 a {
-    text-decoration: none;
-    color: #1f8dd6;
+  text-decoration: none;
+  color: #1f8dd6;
 }
 
 a:hover {
-	text-decoration: underline;
-	/*color: #116298;*/
+  text-decoration: underline;
+  /*color: #116298;*/
 }
 
 .inline-icon {
-	padding: 0 0.5em;
-	display: inline;
+  padding: 0 0.5em;
+  display: inline;
 }
 
 div.sep {
@@ -168,63 +169,63 @@ div.sep {
   margin: 0 0 1.5em;
 }
 
-
 /* -- Message styles ------------------------------------------------------*/
 
 #infoMessage {
-	margin-bottom: 0.5em;
+  margin-bottom: 0.5em;
 }
 
-	#infoMessage p {
-		margin: 0;
-		font-weight: bold;
-	}
-	
-	.error, .warning {
-		color: #d11;
-	}
-	
-	.info {
-		color: #17c;
-	}
-	
-	.success {
-		color: #5b5;
-	}
+#infoMessage p {
+  margin: 0;
+  font-weight: bold;
+}
 
+.error, .warning {
+  color: #d11;
+}
+
+.info {
+  color: #17c;
+}
+
+.success {
+  color: #5b5;
+}
 
 /* -- Button styles -----------------------------------------------------*/
 
 .primary-button,
 .secondary-button {
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-    box-shadow: none;
-    border-radius: 8px;
-    //border: 1px solid #aaa;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  border-radius: 8px;
+  //border: 1px solid #aaa;
 }
+
 .primary-button {
-    color: #fff;
-    background: #19f;
-    //border-color: #17b
+  color: #fff;
+  background: #19f;
+  //border-color: #17b
 }
+
 .secondary-button {
-    color: #666;
+  color: #666;
 }
 
 .danger-button {
-	//border-color: #a44;
-	background-color: #d55;
-	color: #fff;
+  //border-color: #a44;
+  background-color: #d55;
+  color: #fff;
 }
 
 .icon-button {
-	padding: 0.5em;
-	margin: 0 0.2em;
+  padding: 0.5em;
+  margin: 0 0.2em;
 }
 
 .pure-button:hover {
-	text-decoration: none;
+  text-decoration: none;
 }
 
 @media only screen and (max-width: 480px) {
@@ -233,93 +234,93 @@ div.sep {
   }
 }
 
-
 /* -- Menu -----------------------------------------------------------------*/
 
 #logo {
-	width: 128px;
-	height: 160px;
-	background-image: url(../images/Wappen-transparent.png);
-	background-size: contain;
-	background-repeat: no-repeat;
-	background-position: center;
-	margin: auto;
+  height: 160px;
+  background-image: url(../images/Wappen-transparent.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  margin: auto;
 }
 
 #menu {
-    margin-left: -150px; /* "#menu" width */
-    width: 150px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    z-index: 1000; /* so the menu or its navicon stays above all content */
-    background: #191818;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
+  margin-left: -150px; /* "#menu" width */
+  width: 150px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 1000; /* so the menu or its navicon stays above all content */
+  background: #191818;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
-	#menu .primary-button {
-		margin: 1em 0.6em;
-	}
 
-    /*
-    All anchors inside the menu should be styled like this.
-    */
-    #menu .pure-menu-list a {
-        color: #999;
-        border: none;
-        padding: 0.6em 0 0.6em 0.6em;
-    }
+#menu .primary-button {
+  margin: 1em 0.6em;
+}
 
-    /*
-    Remove all background/borders, since we are applying them to #menu.
-    */
-     #menu .pure-menu,
-     #menu .pure-menu ul {
-        border: none;
-        background: transparent;
-        text-align: left;
-    }
+/*
+All anchors inside the menu should be styled like this.
+*/
+#menu .pure-menu-list a {
+  color: #999;
+  border: none;
+  padding: 0.6em 0 0.6em 0.6em;
+}
 
-    /*
-    Add that light border to separate items into groups.
-    */
-    #menu .pure-menu ul,
-    #menu .pure-menu .menu-item-divided {
-        border-top: 1px solid #333;
-    }
-        /*
-        Change color of the anchor links on hover/focus.
-        */
-        #menu .pure-menu li a:hover,
-        #menu .pure-menu li a:focus {
-			text-decoration: none;
-            background: #333;
-        }
+/*
+Remove all background/borders, since we are applying them to #menu.
+*/
+#menu .pure-menu,
+#menu .pure-menu ul {
+  border: none;
+  background: transparent;
+  text-align: left;
+}
 
-    /*
-    This styles the selected menu item `<li>`.
-    */
-    #menu .pure-menu-selected{
-        background: #1f8dd6;
-    }
-        /*
-        This styles a link within a selected menu item `<li>`.
-        */
-        #menu .pure-menu-selected a {
-            color: #fff;
-        }
+/*
+Add that light border to separate items into groups.
+*/
+#menu .pure-menu ul,
+#menu .pure-menu .menu-item-divided {
+  border-top: 1px solid #333;
+}
 
-    /*
-    This styles the menu heading.
-    */
-    #menu .pure-menu-heading {
-        font-size: 110%;
-        color: #fff;
-        margin: 0;
-        padding: 0.6em;
-    }
+/*
+Change color of the anchor links on hover/focus.
+*/
+#menu .pure-menu li a:hover,
+#menu .pure-menu li a:focus {
+  text-decoration: none;
+  background: #333;
+}
 
+/*
+This styles the selected menu item `<li>`.
+*/
+#menu .pure-menu-selected {
+  background: #1f8dd6;
+}
+
+/*
+This styles a link within a selected menu item `<li>`.
+*/
+#menu .pure-menu-selected a {
+  color: #fff;
+}
+
+/*
+This styles the menu heading.
+*/
+#menu .pure-menu-heading {
+  font-size: 110%;
+  color: #fff;
+  margin: 0;
+  padding: 0.6em;
+}
 
 /* -- Dynamic Button For Responsive Menu -------------------------------------*/
 
@@ -333,48 +334,47 @@ how it works:
 small screens.
 */
 .menu-link {
-    position: fixed;
-    display: block; /* show this only on small screens */
-    top: 0;
-    left: 0; /* "#menu width" */
-    background: #000;
-    background: rgba(0,0,0,0.7);
-    font-size: 10px; /* change this value to increase/decrease button size */
-    z-index: 10;
-    width: 2em;
-    height: auto;
-    padding: 2.1em 1.6em;
+  position: fixed;
+  display: block; /* show this only on small screens */
+  top: 0;
+  left: 0; /* "#menu width" */
+  background: #000;
+  background: rgba(0, 0, 0, 0.7);
+  font-size: 10px; /* change this value to increase/decrease button size */
+  z-index: 10;
+  width: 2em;
+  height: auto;
+  padding: 2.1em 1.6em;
 }
 
-    .menu-link:hover,
-    .menu-link:focus {
-        background: #000;
-    }
+.menu-link:hover,
+.menu-link:focus {
+  background: #000;
+}
 
-    .menu-link span {
-        position: relative;
-        display: block;
-    }
+.menu-link span {
+  position: relative;
+  display: block;
+}
 
-    .menu-link span,
-    .menu-link span:before,
-    .menu-link span:after {
-        background-color: #fff;
-        width: 100%;
-        height: 0.2em;
-    }
+.menu-link span,
+.menu-link span:before,
+.menu-link span:after {
+  background-color: #fff;
+  width: 100%;
+  height: 0.2em;
+}
 
-        .menu-link span:before,
-        .menu-link span:after {
-            position: absolute;
-            margin-top: -0.6em;
-            content: " ";
-        }
+.menu-link span:before,
+.menu-link span:after {
+  position: absolute;
+  margin-top: -0.6em;
+  content: " ";
+}
 
-        .menu-link span:after {
-            margin-top: 0.6em;
-        }
-
+.menu-link span:after {
+  margin-top: 0.6em;
+}
 
 /* -- Responsive Styles (Media Queries) ------------------------------------- */
 
@@ -383,102 +383,99 @@ Hides the menu at `48em`, but modify this based on your app's needs.
 */
 @media (min-width: 48em) {
 
-    .header,
-    .content {
-        padding-left: 2em;
-        padding-right: 2em;
-    }
+  .header,
+  .content {
+    padding-left: 2em;
+    padding-right: 2em;
+  }
 
-    #layout {
-        padding-left: 150px; /* left col width "#menu" */
-        left: 0;
-    }
+  #layout {
+    padding-left: 150px; /* left col width "#menu" */
+    left: 0;
+  }
 
-    #menu {
-        left: 150px;
-    }
+  #menu {
+    left: 150px;
+  }
 
-    .menu-link {
-        position: fixed;
-        left: 150px;
-        display: none;
-    }
+  .menu-link {
+    position: fixed;
+    left: 150px;
+    display: none;
+  }
 
-    #layout.active .menu-link {
-        left: 150px;
-    }
+  #layout.active .menu-link {
+    left: 150px;
+  }
 }
 
 @media (max-width: 48em) {
-    /* Only apply this when the window is small. Otherwise, the following
-    case results in extra padding on the left:
-        * Make the window small.
-        * Tap the menu to trigger the active state.
-        * Make the window large again.
-    */
-    #layout.active {
-        position: relative;
-		padding-left: 0;
-        /*left: 150px;*/
-    }
+  /* Only apply this when the window is small. Otherwise, the following
+  case results in extra padding on the left:
+      * Make the window small.
+      * Tap the menu to trigger the active state.
+      * Make the window large again.
+  */
+  #layout.active {
+    position: relative;
+    padding-left: 0;
+    /*left: 150px;*/
+  }
 }
-
 
 /* -- Welcome page-specific formatting -------------------------------------*/
 
 .news-item {
-	padding-bottom: 1em;
+  padding-bottom: 1em;
 }
 
 .news-title {
-	font-size: 2em;
-	color: #c55;
-	margin-top: 0.5em;
-	margin-bottom: 0.2em;
+  font-size: 2em;
+  color: #c55;
+  margin-top: 0.5em;
+  margin-bottom: 0.2em;
 }
 
-	.news-title a {
-		color: #c55;
-		text-decoration: none;
-	}
+.news-title a {
+  color: #c55;
+  text-decoration: none;
+}
 
 .news-meta {
-    color: #999;
-    font-size: 90%;
-    margin: 0;
+  color: #999;
+  font-size: 90%;
+  margin: 0;
 }
 
 .news-description {
-    color: #555;
-    line-height: 1.8em;
+  color: #555;
+  line-height: 1.8em;
 }
 
-	.news-description p {
-		margin: 0.2em;
-	}
-
+.news-description p {
+  margin: 0.2em;
+}
 
 /* -- Login page-specific formatting -------------------------------------*/
 
 #login-form {
-	text-align: center;
-	margin: 10% auto;
-    max-width: 800px;
+  text-align: center;
+  margin: 10% auto;
+  max-width: 800px;
 }
 
-	#login-form label {
-		text-align: center;
-	}
+#login-form label {
+  text-align: center;
+}
 
-	#login-form * {
-		margin-left: auto;
-		margin-right: auto;
-	}
+#login-form * {
+  margin-left: auto;
+  margin-right: auto;
+}
 
-    #login-form #forgot {
-        font-size: 70%;
-    }
-
+#login-form #forgot {
+  font-size: 70%;
+}
 
 /* -- Password reset page-specific formatting ---------------------------*/
 
@@ -486,142 +483,140 @@ Hides the menu at `48em`, but modify this based on your app's needs.
   margin: 10% auto;
 }
 
-  #reset-form label {
-    text-align: center;
-  }
+#reset-form label {
+  text-align: center;
+}
 
-  #reset-form * {
-    margin-left: auto;
-    margin-right: auto;
-  }
+#reset-form * {
+  margin-left: auto;
+  margin-right: auto;
+}
 
-  #reset-form > p {
-    font-size: 85%;
-    max-width: 30em;
-    text-align: justify;
-  }
+#reset-form > p {
+  font-size: 85%;
+  max-width: 30em;
+  text-align: justify;
+}
 
 /* -- Duty page-specific formatting -------------------------------------*/
 
 #duty-form fieldset {
-	max-width: 30em;
-	margin: 0 auto;
+  max-width: 30em;
+  margin: 0 auto;
 }
 
 .input-box {
-	padding-right: 0.5em;
+  padding-right: 0.5em;
 }
 
-	.input-box * {
-		width: 100%;
-	}
-
+.input-box * {
+  width: 100%;
+}
 
 /* -- Plan page-specific formatting -------------------------------------*/
 
 #nav {
-	vertical-align: middle;
+  vertical-align: middle;
 }
 
-  #nav .today a {
-    font-weight: bold;
-    color: #636b6f;
-  }
+#nav .today a {
+  font-weight: bold;
+  color: #636b6f;
+}
 
-  #nav .other a {
-    font-style: oblique;
-    color: #99ddff;
-  }
+#nav .other a {
+  font-style: oblique;
+  color: #99ddff;
+}
 
 #plan td {
-	border-left-width: 1px;
+  border-left-width: 1px;
 }
 
 .weekend {
-	background: #eee;
+  background: #eee;
 }
 
 .today {
-	background: #bee;
+  background: #bee;
 }
 
 td.shift-slot {
-	background-color: #cfc;
-	width: 30%;
-	min-width: 8em;
-	height: 7em;
+  background-color: #cfc;
+  width: 30%;
+  min-width: 8em;
+  height: 7em;
 }
 
-	.shift-slot p {
-		line-height: 1.2;
-		margin: 0;
-		padding: 0.4em 0;
-	}
+.shift-slot p {
+  line-height: 1.2;
+  margin: 0;
+  padding: 0.4em 0;
+}
 
 td.empty-slot {
-	background-color: #fcb;
+  background-color: #fcb;
 }
 
 td.alone-slot {
-	background-color: #ffb;
+  background-color: #ffb;
 }
 
 td.out-of-service {
-	background-color: #ccc;
+  background-color: #ccc;
 }
 
 span.out-of-service {
-	font-weight: bold;
-	color: #000;
+  font-weight: bold;
+  color: #000;
 }
 
 td.selected {
-	background-color: #9df;
+  background-color: #9df;
 }
 
 td.hovered-slot {
-	-moz-box-shadow: inset 0 0 7px 3px #6ac;
-	-webkit-box-shadow: inset 0 0 7px 3px #6ac;
-	box-shadow: inset 0 0 7px 3px #6ac;
-/*
-	outline: 2px solid #7bd;
-*/
+  -moz-box-shadow: inset 0 0 7px 3px #6ac;
+  -webkit-box-shadow: inset 0 0 7px 3px #6ac;
+  box-shadow: inset 0 0 7px 3px #6ac;
+  /*
+      outline: 2px solid #7bd;
+  */
 }
 
 td.dehover:hover {
-	-moz-box-shadow: none;
-	-webkit-box-shadow: none;
-	box-shadow: none;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
 }
 
 .duty-time {
-	font-size: 105%;
+  font-size: 105%;
 }
 
 .duty-user {
-	font-weight: bold;
+  font-weight: bold;
 }
 
 .duty-comment {
-	font-size: 80%;
-	color: #999;
-	min-width: 100%;
+  font-size: 80%;
+  color: #999;
+  min-width: 100%;
 }
 
 .duty-need-driver {
-	font-weight: bold;
-	color: red;
-	min-width: 100%;
+  font-weight: bold;
+  color: red;
+  min-width: 100%;
 }
 
 .hidden {
-	display: none;
+  display: none;
 }
-
 
 /* -- Phonelist page-specific formatting -------------------------------------*/
 
 .phonelist td,
 .phonelist th {
-	text-align: left;
+  text-align: left;
 }
