@@ -5,9 +5,15 @@
 @section('content')
     <form method="post" url="{{ url('login') }}" class="pure-form pure-form-stacked" id="login-form">
         {{ csrf_field() }}
-        <fieldset>
-            <h2 class="content-subhead">Anmeldung</h2>
+        <h2 class="content-subhead">Anmeldung</h2>
 
+        <div id="infoMessage">
+            @foreach ($errors->all() as $message)
+                <p class="error">{{ $message }}</p>
+            @endforeach
+        </div>
+
+        <fieldset>
             <label for="user">Nutzername</label>
             <input type="text" id="user" name="login" tabindex="1" autofocus required />
 
