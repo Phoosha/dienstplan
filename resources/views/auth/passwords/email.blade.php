@@ -5,13 +5,20 @@
 @section('content')
     <form method="post" action="{{ url('password/email') }}" class="pure-form" id="reset-form">
         {{ csrf_field() }}
-        <fieldset>
-            <h2 class="content-subhead">Passwort zurücksetzen</h2>
-            <p>Gib hier bitte die E-Mail, mit der du registriert bist, an.
-                Dann schicken wir dir eine Nachricht mit einem Link,
-                um deine Identität zu bestätigen und ein neues Passwort
-                festzulegen.</p>
+        <h2 class="content-subhead">Passwort zurücksetzen</h2>
 
+        <div id="infoMessage">
+            @foreach ($errors->all() as $message)
+                <p class="error">{{ $message }}</p>
+            @endforeach
+        </div>
+
+        <p>Gib hier bitte die E-Mail, mit der du registriert bist, an.
+            Dann schicken wir dir eine Nachricht mit einem Link,
+            um deine Identität zu bestätigen und ein neues Passwort
+            festzulegen.</p>
+
+        <fieldset>
             <input type="text" id="email" name="email" placeholder="E-Mail" size="25" tabindex="1" autofocus required />
 
             <button type="submit" class="pure-button primary-button" tabindex="2">
