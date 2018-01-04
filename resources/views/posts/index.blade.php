@@ -4,7 +4,7 @@
         <section class="news-item">
             <header class="news-header">
                 <h3 class="news-title">{{ $post->title }}</h3>
-                <p class="news-meta">von Blub</p>
+                <p class="news-meta">von {{ $post->user->getFullName() }}</p>
             </header>
             <div class="news-description">
                 <p>{!! $post->body !!}</p>

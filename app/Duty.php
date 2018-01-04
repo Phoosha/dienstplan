@@ -60,4 +60,13 @@ class Duty extends Model {
         return false;
     }
 
+    /**
+     * Returns the list of <code>User</code>s, which are able to take that <code>Duty</code>.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
+    public function possibleTakers() {
+       return User::all();
+    }
+
 }

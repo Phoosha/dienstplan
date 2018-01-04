@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Notifications\ResetPassword;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -30,6 +31,15 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    /**
+     * Returns the full (first + last) name of the <code>User</code>.
+     *
+     * @return string
+     */
+    public function getFullName() {
+        return "{$this->first_name} {$this->last_name}";
+    }
 
     /**
      * Send the password reset notification.
