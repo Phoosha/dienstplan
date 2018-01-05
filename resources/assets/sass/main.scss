@@ -169,6 +169,27 @@ div.sep {
   margin: 0 0 1.5em;
 }
 
+::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+    color:    #AAA;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+   color:    #AAA;
+   opacity:  1;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+   color:    #AAA;
+   opacity:  1;
+}
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+   color:    #AAA;
+}
+::-ms-input-placeholder { /* Microsoft Edge */
+   color:    #AAA;
+}
+::placeholder { /* Most modern browsers support this now. */
+   color:    #AAA;
+}
+
 /* -- Message styles ------------------------------------------------------*/
 
 #infoMessage {
