@@ -2,9 +2,22 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
+ * A <code>Post</code> to a bulletin board done by a <code>User</code>.
+ *
+ * @package App
+ *
+ * @property int $id
+ * @property int user_id
+ * @property string $title
+ * @property string $body
+ * @property \Carbon\Carbon $release_on
+ * @property \Carbon\Carbon $expire_on
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
  * @property User $user
  */
 class Post extends Model {

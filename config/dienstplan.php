@@ -35,8 +35,31 @@ return [
     */
     'past_threshold' => Carbon::parse('10 hours ago'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Time Steps for Dropdown Selection
+    |--------------------------------------------------------------------------
+    |
+    | In dropdown menus choices for the selection of the time of day are spaced
+    | by this interval.
+    |
+    */
     'dropdown_time_steps' => CarbonInterval::minutes(30),
-    'time_format' => 'H:i',
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Date and Time Format
+    |--------------------------------------------------------------------------
+    |
+    | This date and time format is used to display dates and times througout
+    | the application. Be aware that changing this, does not modify existing
+    | records, but may change the precision, with which existing records are
+    | displayed. It also does not limit the precision with which future records
+    | are stored.
+    |
+    */
     'date_format' => 'd.m.Y',
+    'time_format' => 'H:i',
 
 ];

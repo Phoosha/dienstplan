@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Duty;
 use App\Shift;
 use Carbon\Carbon;
+use Illuminate\Foundation\Testing\HttpException;
 use Illuminate\Http\Request;
 use InvalidArgumentException;
 
@@ -14,6 +15,18 @@ class DutyController extends Controller {
         $this->middleware('auth');
     }
 
+    /**
+     * Safely get a <code>Carbon</code> instance for the first day of the
+     * month from <code>$year</code> and <code>$month</code> as integers.
+     *
+     * Throws a <code>HttpException</code> if <code>$year</code> or
+     * <code>$month</code> are invalid.
+     *
+     * @param $year
+     * @param $month
+     * @return \Carbon\Carbon
+     * @throws HttpException
+     */
     private static function firstOfMonth($year, $month) {
         $year  = isset($year)  ? (int) $year  : $year;
         $month = isset($month) ? (int) $month : $month;
@@ -74,8 +87,20 @@ class DutyController extends Controller {
         ));
     }
 
-    public function create() {
-        $request = $this->validate(request(), [
+    public function create(Request $request) {
+        // Check if we want to create duties from a selection of shifts
+        if (isset($request['year'])) {
+            return $this->createFromShifts($request);
+        }
+
+        $duties       = [Shift::create()->setSlot(0)];
+        $from_scratch = true;
+
+        return view('duties.create', compact('duties', 'from_scratch'));
+    }
+
+    public function createFromShifts(Request $request) {
+        $request = $this->validate($request, [
             'year' => 'integer|min:0|max:9999',
             'month' => 'required_with:year|integer|min:1|max:12',
             'shifts' => 'required_with:year|array|max:7|integer_keys',
@@ -83,35 +108,27 @@ class DutyController extends Controller {
             'shifts.*.*' => "required_with:year|integer|min:0|max:1"
         ]);
 
-        if (isset($request['year'])) {
-            $month_start = self::firstOfMonth($request['year'], $request['month']);
+        $month_start = self::firstOfMonth($request['year'], $request['month']);
 
-            $shifts = [];
-            foreach ($request['shifts'] as $day => $dayOfShifts) {
-                if ($day < 1 || $day >= $month_start->daysInMonth)
+        $duties = [];
+        foreach ($request['shifts'] as $day => $dayOfShifts) {
+            if ($day < 1 || $day >= $month_start->daysInMonth)
+                return back();
+            foreach ($dayOfShifts as $shift => $slot) {
+                if ($shift < 0 || $shift >= Shift::shiftsPerDay())
                     return back();
-                foreach ($dayOfShifts as $shift => $slot) {
-                    if ($shift < 0 || $shift >= Shift::shiftsPerDay())
-                        return back();
-                    $shifts[] = Shift::create(
-                        $month_start->year,
-                        $month_start->month,
-                        $day,
-                        $shift
-                    )->setSlot($slot);
-                }
+
+                $shifts[] = Shift::create(
+                    $month_start->year,
+                    $month_start->month,
+                    $day,
+                    $shift
+                )->setSlot($slot)->toDuty();
             }
         }
 
-        // If we have no shift, fallback to the current shift right now
+        $duties       = Duty::mergeAll($duties);
         $from_scratch = false;
-        if (empty($shifts)) {
-            $shifts = [Shift::create()->setSlot(0)];
-            $from_scratch = true;
-        }
-
-        // Convert shifts into duties, i.e. merge adjacent ones
-        $duties = Duty::createFromShifts($shifts);
 
         return view('duties.create', compact('duties', 'from_scratch'));
     }

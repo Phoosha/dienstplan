@@ -8,6 +8,20 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 /**
+ * A <code>User</code> of the application.
+ *
+ * @package App
+ *
+ * @property int $id
+ * @property string $first_name
+ * @property string $last_name
+ * @property string $login
+ * @property string $email
+ * @property string $phone
+ * @property string $password
+ * @property string remember_token
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
  * @property mixed $posts
  */
 class User extends Authenticatable
@@ -44,7 +58,7 @@ class User extends Authenticatable
     /**
      * Send the password reset notification.
      *
-     * @param  string  $token
+     * @param  string $token
      * @return void
      */
     public function sendPasswordResetNotification($token) {

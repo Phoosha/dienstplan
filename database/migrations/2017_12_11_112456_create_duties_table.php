@@ -19,10 +19,8 @@ class CreateDutiesTable extends Migration
             $table->timestamp('start')->nullable();
             $table->timestamp('end')->nullable();
             $table->tinyInteger('slot');
-            $table->enum('type', ['normal', 'outOfService', 'withInternee'])
-                ->default('normal');
-            $table->string('comment')
-                ->default('');
+            $table->enum('type', ['outOfService', 'withInternee'])->nullable();
+            $table->string('comment')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')
