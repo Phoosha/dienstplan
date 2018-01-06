@@ -3,9 +3,13 @@
     <thead>
         <tr>
             {{-- prev month --}}
-            <th><a href="{{ url('plan', $prev) }}">
-                &lt;&lt;
-            </a></th>
+            <th>
+                @if (isset($prev))
+                    <a href="{{ url('plan', $prev) }}">
+                        &lt;&lt;
+                    </a>
+                @endif
+            </th>
 
             {{-- current month --}}
             <th colspan="5"><a href="{{ url('plan') }}">
@@ -13,9 +17,13 @@
             </a></th>
 
             {{-- next month --}}
-            <th><a href="{{ url('plan', $next) }}">
-                &gt;&gt;
-            </a></th>
+            <th>
+                @if (isset($next))
+                    <a href="{{ url('plan', $next) }}">
+                        &gt;&gt;
+                    </a>
+                @endif
+            </th>
         </tr>
     </thead>
 
@@ -29,12 +37,15 @@
             <tr>
                 @foreach ($week as $day)
                     <td class="{{ $day->isToday() ? 'today' : '' }}{{ $day->isSameMonth($month_start) ? '' : 'other' }}">
-                        <a href="{{ $day->isSameMonth($month_start)
-                                      ? ''
-                                      : url('/plan') . $day->format('/Y/m')
-                                 }}#day-{{ $day->format('j') }}">
-                            {{ $day->day }}
-                        </a>
+                        @if (( isset($prev) || ! $day->isSameMonth($prev_month) )
+                            && ( isset($next) || ! $day->isSameMonth($next_month) ) )
+                            <a href="{{ $day->isSameMonth($month_start)
+                                          ? ''
+                                          : url('/plan') . $day->format('/Y/m')
+                                     }}#day-{{ $day->format('j') }}">
+                                {{ $day->day }}
+                            </a>
+                        @endif
                     </td>
                 @endforeach
             </tr>

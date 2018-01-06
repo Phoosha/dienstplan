@@ -1,4 +1,4 @@
-{{-- PARAMS: index, duties --}}
+{{-- PARAMS: index, duty, duties --}}
 <div class="pure-u-1 pure-u-xl-11-24"><fieldset><div class="pure-g">
     @if (count($duties) > 1)
         <div class="pure-u-1">
@@ -10,9 +10,9 @@
     <div class="pure-u-5-8">
         <div class="input-box">
             <label for="{{ $index }}-user">Fahrer: </label>
-            <select id="{{ $index }}-user" name="duties[{{ $index }}][user]">
+            <select id="{{ $index }}-user" name="duties[{{ $index }}][user_id]">
                 @foreach ($duty->possibleTakers() as $user)
-                    <option value="{{ $user->id }}">{{ $user->getFullName() }}</option>
+                    <option {!! option(Auth::user()->id, $user->id) !!}>{{ $user->getFullName() }}</option>
                 @endforeach
             </select>
         </div>
@@ -24,15 +24,17 @@
     {{-- FAHRZEUG --}}
     <div class="pure-u-3-8"><div class="input-box">
         <label for="{{ $index }}-slot">Fahrzeug: </label>
-        <select id="{{ $index }}-slot" name="duties[{{ $index }}][slot]">
-            {{-- TODO --}}
+        <select id="{{ $index }}-slot" name="duties[{{ $index }}][slot_id]">
+            @foreach ($duty->availableSlots() as $slot)
+                <option {!! option($duty->slot_id, $slot->id) !!}>{{ $slot->name }}</option>
+            @endforeach
         </select>
     </div></div>
 
     {{-- KOMMENTAR --}}
     <div class="pure-u-1"><div class="input-box">
         <label for="{{ $index }}-comment">Kommentar: </label>
-        <input id="{{ $index }}-comment" name="duties[{{ $index }}][comment]" placeholder="Kommentar" value="{{-- TODO --}}" />
+        <input type="text" id="{{ $index }}-comment" name="duties[{{ $index }}][comment]" placeholder="Kommentar" value="{{-- TODO --}}" />
     </div></div>
 
     {{-- ANFANG --}}

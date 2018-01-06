@@ -59,7 +59,6 @@ class Shift {
     protected $shift;
     protected $start;
     protected $end;
-    public $slot;
 
     /**
      * Configures available shifts.
@@ -243,18 +242,6 @@ class Shift {
         return $this;
     }
 
-    /**
-     * Convenience method setting <code>$slot</code> and returning <code>$this</code>.
-     *
-     * @param int $slot
-     * @return $this
-     */
-    public function setSlot(int $slot) {
-        $this->slot = $slot;
-
-        return $this;
-    }
-
     public function __get($name) {
         switch ($name) {
             case 'start':
@@ -383,7 +370,6 @@ class Shift {
         return (new Duty())->fill([
             'start' => $this->start,
             'end'   => $this->end,
-            'slot'  => $this->slot
         ]);
     }
 

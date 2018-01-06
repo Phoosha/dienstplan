@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Duty;
+use App\Http\Requests\CreateDutyFromShifts;
 use App\Shift;
+use App\SlotConfig;
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\HttpException;
 use Illuminate\Http\Request;
 use InvalidArgumentException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class DutyController extends Controller {
 
@@ -25,14 +28,17 @@ class DutyController extends Controller {
      * @param $year
      * @param $month
      * @return \Carbon\Carbon
-     * @throws HttpException
+     * @throws HttpException,NotFoundHttpException
      */
     private static function firstOfMonth($year, $month) {
         $year  = isset($year)  ? (int) $year  : $year;
         $month = isset($month) ? (int) $month : $month;
 
         try {
-            return Carbon::createSafe($year, $month, 1, 0)->firstOfMonth();
+            $month_start = Carbon::createSafe($year, $month, 1, 0)->firstOfMonth();
+            if (! hasValidYear($month_start))
+                abort(404);
+            return $month_start;
         } catch (InvalidArgumentException $e) {
             abort(400, $e->getMessage());
         }
@@ -79,51 +85,53 @@ class DutyController extends Controller {
          */
         $prev_month = $month_start->copy()->subMonth();
         $next_month = $month_start->copy()->addMonth();
-        $prev = [ $prev_month->year, $prev_month->month ];
-        $next = [ $next_month->year, $next_month->month ];
+        $prev = $next = null;
+        if (SlotConfig::active($prev_month) !== null && hasValidYear($prev_month))
+            $prev = [ $prev_month->year, $prev_month->month ];
+        if (SlotConfig::active($next_month) !== null && hasValidYear($next_month))
+            $next = [ $next_month->year, $next_month->month ];
+
+        /*
+         * -- Slot Config --
+         */
+        $slots = SlotConfig::activeOrFail($month_start)->slots;
+        if (empty($slots))
+            return abort(404);
 
         return view('duties.index', compact(
-            'weeks', 'month_start', 'prev', 'next', 'days'
+            'weeks', 'month_start', 'prev_month', 'prev', 'next_month', 'next', 'days', 'slots'
         ));
     }
 
-    public function create(Request $request) {
+    public function create(CreateDutyFromShifts $request) {
         // Check if we want to create duties from a selection of shifts
         if (isset($request['year'])) {
             return $this->createFromShifts($request);
         }
 
-        $duties       = [Shift::create()->setSlot(0)];
+        // Otherwise present the current shift
+        $duty  = Shift::create()->toDuty();
+        $duty->slot()->associate($duty->availableSlots()->first());
+        $duties = [ $duty ];
         $from_scratch = true;
 
         return view('duties.create', compact('duties', 'from_scratch'));
     }
 
-    public function createFromShifts(Request $request) {
-        $request = $this->validate($request, [
-            'year' => 'integer|min:0|max:9999',
-            'month' => 'required_with:year|integer|min:1|max:12',
-            'shifts' => 'required_with:year|array|max:7|integer_keys',
-            'shifts.*' => 'required_with:year|array|max:9|integer_keys',
-            'shifts.*.*' => "required_with:year|integer|min:0|max:1"
-        ]);
-
+    public function createFromShifts(CreateDutyFromShifts $request) {
         $month_start = self::firstOfMonth($request['year'], $request['month']);
 
         $duties = [];
         foreach ($request['shifts'] as $day => $dayOfShifts) {
             if ($day < 1 || $day >= $month_start->daysInMonth)
                 return back();
-            foreach ($dayOfShifts as $shift => $slot) {
+            foreach ($dayOfShifts as $shift => $slot_id) {
                 if ($shift < 0 || $shift >= Shift::shiftsPerDay())
                     return back();
 
-                $shifts[] = Shift::create(
-                    $month_start->year,
-                    $month_start->month,
-                    $day,
-                    $shift
-                )->setSlot($slot)->toDuty();
+                $duty = Shift::create($month_start->year, $month_start->month, $day, $shift)->toDuty();
+                $duty->slot_id = (int) $slot_id;
+                $duties[] = $duty;
             }
         }
 

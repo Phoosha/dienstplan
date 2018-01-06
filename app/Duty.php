@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 /**
  * A <code>Duty</code> taken by a <code>User</code> for a specific <code>$slot</code>.
@@ -16,6 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $user_id
  * @property \Carbon\Carbon $start
  * @property \Carbon\Carbon $end
+ * @property int $slot_id
  * @property int $slot
  * @property string $type <code>null</code> unless, the instance is of a special type
  * @property string $comment
@@ -49,7 +51,7 @@ class Duty extends Model {
      * @return bool <code>true</code> if merging was possible
      */
     public function merge(Duty $duty) {
-        if ($this->slot !== $duty->slot)
+        if ($this->slot_id !== $duty->slot_id)
             return false;
 
         if ($this->start->eq($duty->end)) {
@@ -95,6 +97,35 @@ class Duty extends Model {
      */
     public function possibleTakers() {
        return User::all();
+    }
+
+    /**
+     * Returns the <code>SlotConfig</code> applicable to this <code>Duty</code> based on its <code>start</code> field.
+     *
+     * @return SlotConfig
+     * @throws ModelNotFoundException
+     */
+    public function applicableSlotConfig() {
+        return SlotConfig::activeOrFail($this->start);
+    }
+
+    /**
+     * Returns the <code>Slot</code>s available to this <code>Duty</code> based on its <code>start</code> field.
+     *
+     * @return SlotConfig
+     * @throws ModelNotFoundException
+     */
+    public function availableSlots() {
+        return $this->applicableSlotConfig()->slots;
+    }
+
+    /**
+     * Get the <code>Slot</code> this <code>Duty</code> belongs to.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function slot() {
+        return $this->belongsTo(Slot::class);
     }
 
 }

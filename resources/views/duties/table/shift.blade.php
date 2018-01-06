@@ -8,8 +8,9 @@
     @endif
 
     <td class="shift-name">{{ $shift->name() }}</td>
-        @include('duties.table.shiftslot', [ 'slot' => 0 ])
-        @include('duties.table.shiftslot', [ 'slot' => 1 ])
+        @foreach ($slots as $slot)
+            @include('duties.table.shiftslot', [ 'slot' => $slot ])
+        @endforeach
     <td>
         <button type="submit" title="Eintragen" class="pure-button secondary-button icon-button fa fa-paper-plane-o"></button>
     </td>

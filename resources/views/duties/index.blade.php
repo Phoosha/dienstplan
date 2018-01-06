@@ -22,8 +22,9 @@
             <thead><tr>
                 <th>Tag</th>
                 <th>Schichtbegin</th>
-                <th>79/1</th>
-                <th>10/1</th>
+                @foreach ($slots as $slot)
+                    <th>{{ $slot->name }}</th>
+                @endforeach
                 <th></th>
             </tr></thead>
 
