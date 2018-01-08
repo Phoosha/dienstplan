@@ -1,4 +1,4 @@
-{{-- PARAMS: weeks, days, month_start, prev, next --}}
+{{-- PARAMS: weeks, days, slots, month_start, prev_month, prev, next_month, next --}}
 @extends('layouts.master')
 
 @section('title', 'Dienstplan')

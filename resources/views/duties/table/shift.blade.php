@@ -1,4 +1,4 @@
-{{-- PARAMS: shift, month_start --}}
+{{-- PARAMS: shift, slots, month_start --}}
 <tr class="{{ $shift->classes() }}">
     @if ($loop->first)
         <td rowspan="{{ $shift->shiftsPerDay() }}" class="day-name" id="day-{{ $shift->day }}">

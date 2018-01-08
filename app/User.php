@@ -22,7 +22,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property string remember_token
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property mixed $posts
+ * @property Collection $posts
+ * @property Collection $duties
  */
 class User extends Authenticatable
 {
@@ -66,12 +67,20 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the posts made by that <code>User</code>
+     * Get the <code>Post</code>s made by that <code>User</code>
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function posts() {
         return $this->hasMany(Post::class);
+    }
+
+    /**
+     * Get the <code>Duty</code>s taken by that <code>User</code>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function duties() {
+        return $this->hasMany(Duty::class);
     }
 
 }

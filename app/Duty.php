@@ -2,8 +2,10 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Collection;
 
 /**
  * A <code>Duty</code> taken by a <code>User</code> for a specific <code>$slot</code>.
@@ -15,6 +17,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
  *
  * @property int $id
  * @property int $user_id
+ * @property User $user
  * @property \Carbon\Carbon $start
  * @property \Carbon\Carbon $end
  * @property int $slot_id
@@ -32,7 +35,7 @@ class Duty extends Model {
      * @var array
      */
     protected $fillable = [
-        'start', 'end', 'slot', 'type', 'comment'
+        'start', 'end', 'slot_id', 'comment'
     ];
 
     /**
@@ -112,11 +115,19 @@ class Duty extends Model {
     /**
      * Returns the <code>Slot</code>s available to this <code>Duty</code> based on its <code>start</code> field.
      *
-     * @return SlotConfig
+     * @return Collection
      * @throws ModelNotFoundException
      */
     public function availableSlots() {
         return $this->applicableSlotConfig()->slots;
+    }
+
+    /**
+     * Get the <code>User</code> that has taken this <code>Duty</code>.
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user() {
+        return $this->belongsTo(User::class);
     }
 
     /**

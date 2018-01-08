@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Faker\Provider\DateTime;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Collection;
 
 /**
  *
@@ -14,7 +15,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
  * @property \Carbon\Carbon $available_on
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property Slot[] $slots
+ * @property Collection $slots
  */
 class SlotConfig extends Model {
 
@@ -71,8 +72,12 @@ class SlotConfig extends Model {
     }
 
     /**
+     * Returns the <code>SlotConfig</code> that is active at <code>$month_start</code>.
+     *
      * @param \Carbon\Carbon|DateTime $month_start
      * @return SlotConfig
+     * @see SlotConfig::activeOrFail()
+     * @see Slot::active()
      */
     public static function active($month_start = null) {
         $month_start = Carbon::instance($month_start ?? now())->firstOfMonth();
@@ -83,6 +88,9 @@ class SlotConfig extends Model {
     }
 
     /**
+     * Returns the <code>SlotConfig</code> that is active at <code>$month_start</code>
+     * or, if none is found, fails throwing a <code>ModelNotFoundException</code>.
+     *
      * @param \Carbon\Carbon|DateTime $month_start
      * @return SlotConfig
      * @throws ModelNotFoundException

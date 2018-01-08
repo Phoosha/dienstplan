@@ -2,14 +2,16 @@
 
 namespace App;
 
+use DateTime;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 /**
  *
  *
  * @property int $id
  * @property string $name
- * @property mixed $slot_config
+ * @property SlotConfig $slot_config
  */
 class Slot extends Model {
 
@@ -34,6 +36,18 @@ class Slot extends Model {
      */
     public function slot_config() {
         return $this->belongsTo(SlotConfig::class);
+    }
+
+    /**
+     * Returns the <code>Slot</code>s that are active at <code>$month_start</code>
+     *
+     * @param \Carbon\Carbon|DateTime $month_start
+     * @return Collection
+     * @see SlotConfig::active()
+     */
+    public static function active($month_start = null) {
+        $config = SlotConfig::active($month_start);
+        return isset($config) ? $config->slots : new Collection();
     }
 
 }

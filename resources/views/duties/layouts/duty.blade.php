@@ -1,10 +1,10 @@
 {{-- PARAMS: index, duty, duties --}}
 <div class="pure-u-1 pure-u-xl-11-24"><fieldset><div class="pure-g">
-    @if (count($duties) > 1)
-        <div class="pure-u-1">
-            <h2 class="content-subhead">Dienst {{ $index + 1 }}</h2>
-        </div>
-    @endif
+    <div class="pure-u-1">
+        @if (count($duties) > 1)
+                <h2 class="content-subhead">Dienst {{ $index + 1 }}</h2>
+        @endif
+    </div>
 
     {{-- FAHRER --}}
     <div class="pure-u-5-8">
@@ -48,4 +48,12 @@
         'type' => 'end',
         'label' => 'Dienstende',
         'dt' => $duty->end ])
+
+    <div class="pure-u-1">
+        <div id="infoMessage">
+            @foreach (array_flatten($errors->get("duties.{$index}.*")) as $message)
+                <p class="error">{{ $message }}</p>
+            @endforeach
+        </div>
+    </div>
 </div></fieldset></div>
