@@ -25,7 +25,7 @@ $(function () {
     $('input.shift-slot-select').hide();
 
     // Update the state in case user did selections without js loaded
-    $('td.selectable').has('input[type="radio"]:checked').selectShift();
+    $('td.selectable').has('input.shift-slot-select:checked').selectShift();
 
     // Update radio and cell on click and hover
     $('td.shift-slot').on('click', function () {
@@ -55,6 +55,13 @@ $(function () {
 /****************************************************************
  * Allow hiding of past days
  ****************************************************************/
+$.fn.hideShiftSlots = function() {
+    this.hide()
+        .find('td.shift-slot') // additionally: unselect hidden shifts
+        .has('input.shift-slot-select:checked')
+        .selectShift();
+};
+
 $(function () {
 
     var show = $('#hider-show');
@@ -63,7 +70,7 @@ $(function () {
 
     if (show.hasClass('hidden')) {
         // Hide the past and show the element to redisplay it
-        past.hide();
+        past.hideShiftSlots();
         show.removeClass('hidden');
 
         // Show / hide on click
@@ -73,7 +80,7 @@ $(function () {
             hide.removeClass('hidden');
         });
         hide.on('click', function () {
-            past.hide();
+            past.hideShiftSlots();
             //$('tr.past td.selected').selectShift();
             $(this).addClass('hidden');
             show.removeClass('hidden');
