@@ -71,7 +71,7 @@ class CreateDuty extends FormRequest {
 
         $duties = new Collection();
         foreach ($this->shifts as $day => $dayOfShifts) {
-            if ($day < 1 || $day >= $month_start->daysInMonth)
+            if ($day < 1 || $day > $month_start->daysInMonth)
                 abort(400);
             foreach ($dayOfShifts as $shift => $slot_id) {
                 if ($shift < 0 || $shift >= Shift::shiftsPerDay())
