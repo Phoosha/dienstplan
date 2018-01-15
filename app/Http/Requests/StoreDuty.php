@@ -40,6 +40,7 @@ class StoreDuty extends FormRequest {
             'duties.*.end-date'   => "required|date_format:{$date_format}|after_or_equal:duties.*.start-date",
             'duties.*.start-time' => "required|date_format:{$time_format}",
             'duties.*.end-time'   => "required|date_format:{$time_format}",
+            'duties.*.type'       => 'sometimes|integer|' . Rule::in(Duty::TYPES),
         ];
     }
 

@@ -19,22 +19,31 @@ class DutyController extends Controller {
         // first: determine the month to render
         $month_start = firstOfMonth($year, $month);
 
-        /*
-         * -- Generate Calendar --
-         */
+        // fetch month's active slots
+        $slots = Slot::active($month_start);
+        if ($slots->isEmpty())
+            abort(404);
+
+        // fetch duties
+        $duties = Duty::allBetweenByDay(
+            $month_start,
+            $month_start->copy()->lastOfMonth()
+        )->orderByRaw('start, end DESC, created_at')->get();
+
+        // generate calendar
         $weeks = calendar($month_start);
 
         /*
-         * -- Generate Shift Table
+         * -- Generate Shift Table --
          */
         $first_shift = Shift::firstOfDay($month_start);
 
         $days = [];
         $shift = $first_shift->copy();
-        for ($day = 0; $day < $month_start->daysInMonth; $day++) {
+        for ($day = 1; $day <= $month_start->daysInMonth; $day++) {
             $days[$day] = [];
             do {
-                $days[$day][] = $shift;
+                $days[$day][] = $shift->setShiftSlots($slots, $duties);
                 $shift = $shift->copy()->next();
             } while (! $shift->isFirstShift());
         }
@@ -50,13 +59,6 @@ class DutyController extends Controller {
             $prev = [ $prev_month->year, $prev_month->month ];
         if (Slot::active($next_month)->isNotEmpty() && hasValidYear($next_month))
             $next = [ $next_month->year, $next_month->month ];
-
-        /*
-         * -- Slot Config --
-         */
-        $slots = Slot::active($month_start);
-        if ($slots->isEmpty())
-            abort(404);
 
         return view('duties.index', compact(
             'weeks', 'month_start', 'prev_month', 'prev', 'next_month', 'next', 'days', 'slots'

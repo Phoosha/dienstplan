@@ -8,7 +8,7 @@
         <div class="pure-u-11-24"><div class="input-box">
             <select id="{{ $index }}-{{ $type }}-time" name="duties[{{ $index }}][{{ $type }}-time]" class="time {{ $type }}-time">
                 @foreach (time_dropdown($dt) as $time)
-                    <option {!! option($dt->format(config('dienstplan.time_format')), $time->format(config('dienstplan.time_format'))) !!}>
+                    <option {!! selected($dt->format(config('dienstplan.time_format')), $time->format(config('dienstplan.time_format'))) !!}>
                         {{ $time->format(config('dienstplan.time_format')) }}
                     </option>
                 @endforeach

@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Duty;
 use App\Shift;
 use App\Slot;
+use Auth;
 use Carbon\Carbon;
 use HttpException;
 use Illuminate\Foundation\Http\FormRequest;
@@ -33,8 +34,8 @@ class CreateDuty extends FormRequest {
         return [
             'year' => 'sometimes|integer|min:1970|max:2037',
             'month' => 'required_with:year|integer|min:1|max:12',
-            'shifts' => 'required_with:year|array|max:7|integer_keys',
-            'shifts.*' => 'required_with:year|array|max:9|integer_keys',
+            'shifts' => 'required_with:year|array|max:31|integer_keys',
+            'shifts.*' => 'required_with:year|array|max:14|integer_keys',
             'shifts.*.*' => 'required_with:year|integer|exists:slots,id',
         ];
     }
@@ -79,6 +80,7 @@ class CreateDuty extends FormRequest {
 
                 $duty = Shift::create($month_start->year, $month_start->month, $day, $shift)->toDuty();
                 $duty->slot_id = (int) $slot_id;
+                $duty->user_id = Auth::user()->id;
                 $duties->push($duty);
             }
         }

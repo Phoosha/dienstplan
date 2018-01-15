@@ -566,6 +566,7 @@ td.shift-slot {
   background-color: #cfc;
   width: 30%;
   min-width: 8em;
+  max-width: 13em;
   height: 7em;
 }
 
@@ -583,11 +584,11 @@ td.alone-slot {
   background-color: #ffb;
 }
 
-td.out-of-service {
+td.duty-service {
   background-color: #ccc;
 }
 
-span.out-of-service {
+span.duty-service {
   font-weight: bold;
   color: #000;
 }

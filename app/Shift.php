@@ -3,6 +3,7 @@
 namespace App;
 
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use InvalidArgumentException;
 
 /**
@@ -18,15 +19,16 @@ use InvalidArgumentException;
  * object describing the start datetime are directly available as properties
  * of a <code>Shift</code>.
  *
- * Furthermore <code>Shift</code>s may be bound to a <code>$slot</code>
- * such as a vehicle or a station.
+ * Furthermore <code>Duty</code>s and <code>Slot</code>s may be bound to an
+ * instance and are stored by a <code>ShiftSlot</code> for every
+ * <code>Slot</code>.
  *
  * @package App
  *
  * @property-read int $shift recurring identifier of the shift
  * @property-read \Carbon\Carbon $start
  * @property-read \Carbon\Carbon $end
- * @property int $slot
+ * @property-read Collection $shiftslots
  *
  * @property-read int $year
  * @property-read int $yearIso
@@ -59,6 +61,7 @@ class Shift {
     protected $shift;
     protected $start;
     protected $end;
+    protected $shiftslots;
 
     /**
      * Configures available shifts.
@@ -75,6 +78,8 @@ class Shift {
      * @param \Carbon\Carbon|\DateTime $dt if <code>null</code>, the current time is used
      */
     public function __construct($dt = null) {
+        $this->shiftslots = new Collection();
+
         $dt = Carbon::instance($dt ?? now());
 
         // start time of the first shift on the day of $dt
@@ -201,6 +206,7 @@ class Shift {
      * @return $this
      */
     public function next() {
+        $this->shiftslots = new Collection();
         $this->shift = ($this->shift + 1) % Shift::shiftsPerDay();
         $this->start = $this->end;
 
@@ -224,6 +230,7 @@ class Shift {
      * @return $this
      */
     public function prev() {
+        $this->shiftslots = new Collection();
         $this->shift = $this->shift - 1;
         $this->end = $this->start;
 
@@ -250,6 +257,8 @@ class Shift {
                 return $this->end;
             case 'shift':
                 return $this->shift;
+            case 'shiftslots':
+                return $this->shiftslots;
             default:
                 return $this->start->__get($name);
         }
@@ -371,6 +380,27 @@ class Shift {
             'start' => $this->start,
             'end'   => $this->end,
         ]);
+    }
+
+    /**
+     * Binds a <code>Collection</code> of <code>ShiftSlot</code>s to this
+     * instance.
+     *
+     * Every <code>ShiftSlot</code> is built from one entry of
+     * <code>$slots</code> and <code>$duties</code>-
+     *
+     * @param Collection $slots
+     * @param Collection|null $duties
+     * @return $this
+     * @see ShiftSlot::setDuties()
+     */
+    public function setShiftSlots(Collection $slots, Collection $duties = null) {
+        $duties = $duties ?? new Collection();
+        $this->shiftslots = $slots->map(function ($slot) use ($duties) {
+            return ShiftSlot::create($this, $slot)->setDuties($duties);
+        });
+
+        return $this;
     }
 
 }

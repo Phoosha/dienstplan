@@ -12,12 +12,12 @@
             <label for="{{ $index }}-user">Fahrer: </label>
             <select id="{{ $index }}-user" name="duties[{{ $index }}][user_id]">
                 @foreach ($duty->possibleTakers() as $user)
-                    <option {!! option(Auth::user()->id, $user->id) !!}>{{ $user->getFullName() }}</option>
+                    <option {!! selected($duty->user_id, $user->id) !!}>{{ $user->getFullName() }}</option>
                 @endforeach
             </select>
         </div>
         <label for="{{ $index }}-internee" class="pure-checkbox">
-            <input type="checkbox" id="{{ $index }}-internee" name="duties[{{ $index }}][internee]" value="1{{-- TODO --}}" /> mit Praktikant
+            <input type="checkbox" id="{{ $index }}-internee" name="duties[{{ $index }}][type]" {!! checked($duty->type, Duty::WITH_INTERNEE) !!}/> mit Praktikant
         </label>
     </div>
 
@@ -26,7 +26,7 @@
         <label for="{{ $index }}-slot">Fahrzeug: </label>
         <select id="{{ $index }}-slot" name="duties[{{ $index }}][slot_id]">
             @foreach ($duty->availableSlots() as $slot)
-                <option {!! option($duty->slot_id, $slot->id) !!}>{{ $slot->name }}</option>
+                <option {!! selected($duty->slot_id, $slot->id) !!}>{{ $slot->name }}</option>
             @endforeach
         </select>
     </div></div>
@@ -34,7 +34,7 @@
     {{-- KOMMENTAR --}}
     <div class="pure-u-1"><div class="input-box">
         <label for="{{ $index }}-comment">Kommentar: </label>
-        <input type="text" id="{{ $index }}-comment" name="duties[{{ $index }}][comment]" placeholder="Kommentar" value="{{-- TODO --}}" />
+        <input type="text" id="{{ $index }}-comment" name="duties[{{ $index }}][comment]" placeholder="Kommentar" value="{{ $duty->comment }}" />
     </div></div>
 
     {{-- ANFANG --}}

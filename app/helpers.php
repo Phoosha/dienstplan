@@ -27,14 +27,43 @@ function time_dropdown($dt) {
 }
 
 /**
+ * Returns a time string that uses minutes and seconds only if necessary.
+ *
+ * @param Carbon $dt
+ * @return string
+ */
+function minTime(Carbon $dt) {
+    $format = 'G:i:s';
+    if ($dt->second === 0) {
+        if ($dt->minute === 0)
+            $format = 'G';
+        else
+            $format = 'G:i';
+    }
+    return $dt->format($format);
+}
+
+/**
  * Outputs value and selection state for an HTML option tag.
  *
  * @param mixed $sel value of the selected option
  * @param mixed $cur value name of the current option
  * @return string
  */
-function option($sel, $cur) {
+function selected($sel, $cur) {
     $selected = $cur === $sel ? ' selected' : '';
+    return "value=\"{$cur}\"{$selected}";
+}
+
+/**
+ * Outputs value and selection state for an HTML checkbox.
+ *
+ * @param mixed $sel value of the checked option
+ * @param mixed $cur value name of the current option
+ * @return string
+ */
+function checked($sel, $cur) {
+    $selected = $cur === $sel ? ' checked' : '';
     return "value=\"{$cur}\"{$selected}";
 }
 
@@ -96,7 +125,7 @@ function firstOfMonth($year, $month) {
     $month = isset($month) ? (int) $month : $month;
 
     try {
-        $month_start = Carbon::createSafe($year, $month, 1, 0)->firstOfMonth();
+        $month_start = Carbon::createSafe($year, $month, 1, 0);
         if (! hasValidYear($month_start))
             abort(404);
         return $month_start;

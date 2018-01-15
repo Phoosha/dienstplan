@@ -21,7 +21,7 @@
         <table class="pure-table pure-table-bordered tight-table" id="plan">
             <thead><tr>
                 <th>Tag</th>
-                <th>Schichtbegin</th>
+                <th>Beginn</th>
                 @foreach ($slots as $slot)
                     <th>{{ $slot->name }}</th>
                 @endforeach
@@ -30,7 +30,11 @@
 
             <tbody>
                 @foreach ($days as $day)
-                    @include('duties.table.day')
+                    @includeWhen($month_start->isSameMonth() && $day[0]->isFirstNowish(), 'duties.table.hider')
+
+                    @foreach ($day as $shift)
+                        @include('duties.table.shift')
+                    @endforeach
                 @endforeach
             </tbody>
         </table>

@@ -1,4 +1,4 @@
-{{-- PARAMS: shift, slots, month_start --}}
+{{-- PARAMS: shift, loop --}}
 <tr class="{{ $shift->classes() }}">
     @if ($loop->first)
         <td rowspan="{{ $shift->shiftsPerDay() }}" class="day-name" id="day-{{ $shift->day }}">
@@ -8,8 +8,8 @@
     @endif
 
     <td class="shift-name">{{ $shift->name() }}</td>
-        @foreach ($slots as $slot)
-            @include('duties.table.shiftslot', [ 'slot' => $slot ])
+        @foreach ($shift->shiftslots as $shiftslot)
+            @include('duties.table.shiftslot', [ 'slot' => $shiftslot->slot, 'duties' => $shiftslot->duties ])
         @endforeach
     <td>
         <button type="submit" title="Eintragen" class="pure-button secondary-button icon-button fa fa-paper-plane-o"></button>

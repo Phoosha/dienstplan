@@ -19,7 +19,7 @@ class CreateDutiesTable extends Migration
             $table->integer('slot_id')->unsigned();
             $table->timestamp('start')->nullable();
             $table->timestamp('end')->nullable();
-            $table->enum('type', ['outOfService', 'withInternee'])->nullable();
+            $table->tinyInteger('type')->unsigned()->default(Duty::NORMAL);
             $table->string('comment')->nullable();
             $table->timestamps();
 
