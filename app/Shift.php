@@ -252,9 +252,9 @@ class Shift {
     public function __get($name) {
         switch ($name) {
             case 'start':
-                return $this->start;
+                return $this->start->copy();
             case 'end':
-                return $this->end;
+                return $this->end->copy();
             case 'shift':
                 return $this->shift;
             case 'shiftslots':
