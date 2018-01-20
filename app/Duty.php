@@ -3,6 +3,7 @@
 namespace App;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection;
@@ -104,46 +105,69 @@ class Duty extends Model {
     }
 
     /**
-     * Returns all duties "between" <code>$start</code> and <code>$end</code>.
+     * Selects all duties "between" <code>$start</code> and <code>$end</code>.
      *
      * A <code>Duty</code> is said to be between two points in time
      * if it starts or ends inside that time period or encompasses
      * it altogether.
      *
+     * If <code>$strict = true</code>, then only duties completely encompassing
+     * the interval are selected.
+     *
+     * @param Builder $query
      * @param Carbon $start
      * @param Carbon $end
-     * @return \Illuminate\Database\Query\Builder
+     * @param bool $strict
+     * @return Builder
      */
-    public static function allBetween(Carbon $start, Carbon $end) {
-        return Duty::where(
-            function ($query) use ($start, $end) { // 1. starts within time period
-                $query->where('start', '>=', $start)->where('start', '<', $end);
+    public function scopeBetween(Builder $query, Carbon $start, Carbon $end, bool $strict = false) {
+        return $query->where(
+            function ($query) use ($start, $end, $strict) { // 1. starts within time period
+                if (! $strict)
+                    $query->where('start', '>=', $start)->where('start', '<', $end);
             }
         )->orWhere(
-            function ($query) use ($start, $end) { // 2. ends within time period
-                $query->where('end', '>', $start)->where('end', '<=', $end);
+            function ($query) use ($start, $end, $strict) { // 2. ends within time period
+                if (! $strict)
+                    $query->where('end', '>', $start)->where('end', '<=', $end);
             }
         )->orWhere(
             function ($query) use ($start, $end) { // 3. encompasses the time period
                 $query->where('start', '<=', $start)->where('end', '>=', $end);
             }
-        );
+        )->orderByRaw('start, end DESC, created_at');
     }
 
     /**
-     * Returns all duties "between" the first shift of the day given by
+     * Selects all duties "between" the first shift of the day given by
      * <code>$start</code> and the last shift of <code>$end</code>.
      *
+     * @param Builder $query
      * @param Carbon $start
      * @param Carbon $end
-     * @return \Illuminate\Database\Query\Builder
-     * @see Duty::allBetween()
+     * @param bool $strict
+     * @return Builder
+     * @see Duty::scopeBetween()
      */
-    public static function allBetweenByDay(Carbon $start, Carbon $end) {
+    public function scopeBetweenByDay(Builder $query, Carbon $start, Carbon $end, bool $strict = false) {
         $start = Shift::firstOfDay($start)->start;
         $end   = Shift::lastOfDay($end)->end;
 
-        return self::allBetween($start, $end);
+        return self::scopeBetween($query, $start, $end, $strict);
+    }
+
+    /**
+     * Selected duties taken by <code>$user</code>
+     *
+     * @param Builder $query
+     * @param User|int $user
+     * @return Builder
+     */
+    public function scopeTakenBy(Builder $query, $user) {
+        if ($user instanceof User)
+            $user = $user->id;
+
+        return $query->where('user_id', $user);
     }
 
     /**

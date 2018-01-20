@@ -12,13 +12,17 @@
                 @endif
             </span>
             <span class="{{ $duty->type === Duty::SERVICE ? 'duty-service' : 'duty-user' }}">
+                @can('edit', $duty)
                 <a href="{{ url('duties', [ $duty->id ]) }}">
+                @endcan
                     @if ($duty->type === Duty::SERVICE)
                         <i class="fa fa-wrench inline-icon" aria-hidden="true"></i>Außer Dienst<i class="fa fa-wrench inline-icon" aria-hidden="true"></i>
                     @else
                         {{ $duty->user->getFullName() }}
                     @endif
+                @can('edit', $duty)
                 </a>
+                @endcan
             </span>
             <br/>
             <span class="duty-comment">

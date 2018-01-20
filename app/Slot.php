@@ -45,7 +45,7 @@ class Slot extends Model {
      * @return Collection
      * @see SlotConfig::active()
      */
-    public static function active($month_start = null) {
+    public static function allActive($month_start = null) {
         $config = SlotConfig::active($month_start);
         return isset($config) ? $config->slots : new Collection();
     }

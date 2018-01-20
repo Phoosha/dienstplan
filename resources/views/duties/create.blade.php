@@ -1,10 +1,10 @@
-{{-- PARAMS: duties, from_scratch --}}
+{{-- PARAMS: duties|duty --}}
 @extends('layouts.master')
 
 
-@if (count($duties) == 1)
+@if (isset($duty) || count($duties) === 1)
     @section('title', 'Dienst anlegen')
-    @if ($from_scratch)
+    @if (isset($duty))
         @section('duties.head', 'Neuen Dienst anlegen?')
     @else
         @section('duties.head', 'Dienst so übernehmen?')
@@ -24,7 +24,7 @@
 
         @include('duties.layouts.duties')
 
-        @if (count($duties) > 1)
+        @if (isset($duty) || count($duties) > 1)
             <div class="sep"></div>
         @endif
 

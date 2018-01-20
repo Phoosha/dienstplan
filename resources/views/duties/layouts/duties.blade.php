@@ -7,6 +7,11 @@
 
 <div class="pure-g">
     @foreach ($duties as $duty)
+        @can('impersonate', App\Duty::class)
+            @section('duties.driver.disabled', '')
+        @else
+            @section('duties.driver.disabled', 'disabled')
+        @endcan
         @include('duties.layouts.duty', [ 'index' => $loop->index ])
     @endforeach
 </div>

@@ -1,6 +1,8 @@
 <?php
 
 
+use App\CalendarMonth;
+use App\Duty;
 use Carbon\Carbon;
 
 function dayname_short($dt) {
@@ -73,64 +75,51 @@ function checked($sel, $cur) {
  * @param Carbon $dt
  * @return bool
  */
-function hasValidYear(Carbon $dt) {
+function isValidDate(Carbon $dt) {
     return $dt->year >= 1970 && $dt->year < 2038;
 }
 
 /**
- * Returns two-dimensional calendar-like array for the month
- * given by <code>$month_start</code>.
+ * Checks for a range supported by MySQL TIMESTAMP type and throws
+ * an <code>OutOfBoundsException</code> otherwise.
  *
- * Every entry of the returned array represents a week and
- * contains <code>Carbon</code> instances for each day of
- * the week.
- *
- * @param Carbon $month_start
- * @return Carbon[][]
+ * @param Carbon $dt
+ * @return bool
  */
-function calendar(Carbon $month_start) {
-    $month_start = $month_start->firstOfMonth();
+function isValidDateOrFail(Carbon $dt) {
+    if (! isValidDate($dt))
+        throw new OutOfBoundsException("Date was not between 1970 and 2038");
+    else
+        return true;
+}
 
-    // the calendars displays whole weeks only
-    $cal_start   = $month_start->copy()->startOfWeek();
-    $numWeeks    = $month_start->copy()->lastOfMonth()->weekOfMonth;
 
-    $weeks = [];
-    $day = $cal_start->copy();
-    for ($week = 0; $week < $numWeeks; $week++) {
-        $weeks[$week] = [];
-        for ($dayOfWeek = 0; $dayOfWeek < 7; $dayOfWeek++) {
-            $weeks[$week][] = $day;
-            $day = $day->copy()->addDay();
-        }
-    }
+/**
+ * Returns a URI that shows the plan with <code>$duty</code>.
+ *
+ * @param Duty $duty
+ * @return string
+ */
+function planWithDuty(Duty $duty) {
+    $start  = $duty->start;
 
-    return $weeks;
+    return "plan/{$start->year}/{$start->month}#day-{$start->day}";
 }
 
 /**
- * Safely get a <code>Carbon</code> instance for the first day of the
- * month from <code>$year</code> and <code>$month</code> as integers.
+ * Returns a URI that shows the plan with <code>$day</code>
+ * and is relative to <code>$cur_month</code>
  *
- * Throws a <code>HttpException</code> if <code>$year</code> or
- * <code>$month</code> are invalid.
- *
- * @param $year
- * @param $month
- * @return Carbon
- * @throws HttpException
+ * @param Carbon $day
+ * @param CalendarMonth $cur_month
+ * @return string
  */
-function firstOfMonth($year, $month) {
-    $year  = isset($year)  ? (int) $year  : $year;
-    $month = isset($month) ? (int) $month : $month;
+function planWithDay(Carbon $day, CalendarMonth $cur_month) {
+   if ($day->isSameMonth($cur_month->start))
+       $prefix = '';
+   else
+       $prefix = url('/plan', [ $day->year, $day->month ]);
 
-    try {
-        $month_start = Carbon::createSafe($year, $month, 1, 0);
-        if (! hasValidYear($month_start))
-            abort(404);
-        return $month_start;
-    } catch (InvalidArgumentException $e) {
-        abort(400, $e->getMessage());
-    }
+   return "{$prefix}#day-{$day->day}";
 }
 

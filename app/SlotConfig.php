@@ -72,19 +72,26 @@ class SlotConfig extends Model {
     }
 
     /**
+     * Returns whether this instance is the active <code>SlotConfig</code>
+     * at <code>$month_start</code>
+     *
+     * @param Carbon|null $month_start
+     * @return bool
+     */
+    public function isActive(Carbon $month_start = null) {
+        return $this->is(SlotConfig::active($month_start));
+    }
+
+    /**
      * Returns the <code>SlotConfig</code> that is active at <code>$month_start</code>.
      *
      * @param \Carbon\Carbon|DateTime $month_start
      * @return SlotConfig
      * @see SlotConfig::activeOrFail()
-     * @see Slot::active()
+     * @see Slot::allActive()
      */
-    public static function active($month_start = null) {
-        $month_start = Carbon::instance($month_start ?? now())->firstOfMonth();
-
-        return static::where('available_on', '<=', $month_start)
-            ->orderBy('available_on', 'desc')
-            ->first();
+    public static function active(Carbon $month_start = null) {
+        return self::activeQuery($month_start)->first();
     }
 
     /**
@@ -96,7 +103,13 @@ class SlotConfig extends Model {
      * @throws ModelNotFoundException
      */
     public static function activeOrFail($month_start = null) {
-        return self::active($month_start)->firstOrFail();
+        return self::activeQuery($month_start)->firstOrFail();
+    }
+
+    private static function activeQuery(Carbon $month_start) {
+        $month_start = Carbon::instance($month_start ?? now())->firstOfMonth();
+
+        return self::where('available_on', '<=', $month_start)->orderBy('available_on', 'desc');
     }
 
 }

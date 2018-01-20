@@ -1,12 +1,12 @@
-{{-- PARAMS: weeks, days, slots, month_start, prev_month, prev, next_month, next --}}
+{{-- PARAMS: cur_month, next_month, prev_month --}}
 @extends('layouts.master')
 
 @section('title', 'Dienstplan')
 
 @section('content')
     <h1>
-        {{ monthname($month_start) }}
-        {{ $month_start->year }}
+        {{ monthname($cur_month->start) }}
+        {{ $cur_month->year }}
     </h1>
 
     {{-- NAVIGATION --}}
@@ -16,21 +16,21 @@
     <br />
 
     <form method="get" action="{{ url('duties/create') }}" class="pure-form">
-        <input type="hidden" name="year" value="{{ $month_start->year }}" />
-        <input type="hidden" name="month" value="{{ $month_start->month }}" />
+        <input type="hidden" name="year" value="{{ $cur_month->year }}" />
+        <input type="hidden" name="month" value="{{ $cur_month->month }}" />
         <table class="pure-table pure-table-bordered tight-table" id="plan">
             <thead><tr>
                 <th>Tag</th>
                 <th>Beginn</th>
-                @foreach ($slots as $slot)
+                @foreach ($cur_month->slots as $slot)
                     <th>{{ $slot->name }}</th>
                 @endforeach
                 <th></th>
             </tr></thead>
 
             <tbody>
-                @foreach ($days as $day)
-                    @includeWhen($month_start->isSameMonth() && $day[0]->isFirstNowish(), 'duties.table.hider')
+                @foreach ($cur_month->getDaysAndShifts() as $day)
+                    @includeWhen($cur_month->start->isSameMonth() && $day[0]->isFirstNowish(), 'duties.table.hider')
 
                     @foreach ($day as $shift)
                         @include('duties.table.shift')

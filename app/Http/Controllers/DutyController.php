@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Duty;
+use App\CalendarMonth;
 use App\Http\Requests\CreateDuty;
 use App\Http\Requests\StoreDuty;
 use App\Shift;
-use App\Slot;
+use Carbon\Exceptions\InvalidDateException;
+use DB;
+use Gate;
 use Throwable;
 
 class DutyController extends Controller {
@@ -16,53 +19,20 @@ class DutyController extends Controller {
     }
 
     public function index($year = null, $month = null) {
-        // first: determine the month to render
-        $month_start = firstOfMonth($year, $month);
-
-        // fetch month's active slots
-        $slots = Slot::active($month_start);
-        if ($slots->isEmpty())
-            abort(404);
-
-        // fetch duties
-        $duties = Duty::allBetweenByDay(
-            $month_start,
-            $month_start->copy()->lastOfMonth()
-        )->orderByRaw('start, end DESC, created_at')->get();
-
-        // generate calendar
-        $weeks = calendar($month_start);
-
-        /*
-         * -- Generate Shift Table --
-         */
-        $first_shift = Shift::firstOfDay($month_start);
-
-        $days = [];
-        $shift = $first_shift->copy();
-        for ($day = 1; $day <= $month_start->daysInMonth; $day++) {
-            $days[$day] = [];
-            do {
-                $days[$day][] = $shift->setShiftSlots($slots, $duties);
-                $shift = $shift->copy()->next();
-            } while (! $shift->isFirstShift());
+        try {
+            $cur_month  = new CalendarMonth($year, $month);
+            $next_month = $cur_month->next();
+            $prev_month = $cur_month->prev();
+        } catch (InvalidDateException $e) {
+            abort(400);
         }
 
-        /*
-         * -- Navigation --
-         */
-        $prev_month = $month_start->copy()->subMonth();
-        $next_month = $month_start->copy()->addMonth();
+        if (! $cur_month->isUsable())
+            abort(404);
 
-        $prev = $next = null;
-        if (Slot::active($prev_month)->isNotEmpty() && hasValidYear($prev_month))
-            $prev = [ $prev_month->year, $prev_month->month ];
-        if (Slot::active($next_month)->isNotEmpty() && hasValidYear($next_month))
-            $next = [ $next_month->year, $next_month->month ];
+        Gate::authorize('month.view', $cur_month);
 
-        return view('duties.index', compact(
-            'weeks', 'month_start', 'prev_month', 'prev', 'next_month', 'next', 'days', 'slots'
-        ));
+        return view('duties.index', compact('cur_month', 'next_month', 'prev_month'));
     }
 
     public function create(CreateDuty $request) {
@@ -76,56 +46,57 @@ class DutyController extends Controller {
         $duty->slot()->associate(
             $duty->availableSlots()->first()
         );
-        $from_scratch = true;
+
+        $this->authorize('create', $duty);
 
         return view('duties.create', compact('duty', 'from_scratch'));
     }
 
     public function createFromShifts(CreateDuty $request) {
-        $duties       = $request->getDuties();
-        $from_scratch = false;
+        $duties = $request->getDuties();
+
+        foreach ($duties as $duty)
+            $this->authorize('create', $duty);
 
         return view('duties.create', compact('duties', 'from_scratch'));
     }
 
-    public function edit($id) {
-        $duty = Duty::find($id);
+    public function edit(Duty $duty) {
+        $this->authorize('edit', $duty);
 
         return view('duties.edit', compact('duty'));
     }
 
     public function store(StoreDuty $request) {
-        try {
-            $duties = $request->persist();
+        $duties = $request->getDuties();
 
-            return redirect(self::planWithDuty($duties->first()));
+        try {
+            DB::transaction(function () use ($duties) {
+                foreach ($duties as $duty) {
+                    $this->authorize('store', $duty);
+                    $duty->saveOrFail();
+                }
+            });
         } catch (Throwable $e) {
             return back()->withInput($request->all())->withErrors('Dienst konnte nicht gespeichert werden.');
         }
+
+        return redirect(planWithDuty($duties->first()));
     }
 
     public function update() {
         // FIXME
         dd('update');
+        // $this->authorize('update', $duty);
     }
 
     public function destroy($id) {
         $duty = Duty::find($id);
+
+        $this->authorize('delete', $duty);
         $duty->delete();
 
-        return redirect(self::planWithDuty($duty));
-    }
-
-    /**
-     * Return a URI that show the plan with <code>$duty</code>.
-     *
-     * @param Duty $duty
-     * @return string
-     */
-    private static function planWithDuty(Duty $duty) {
-        $start  = $duty->start;
-
-        return "plan/{$start->year}/{$start->month}#day-{$start->day}";
+        return redirect(planWithDuty($duty));
     }
 
 }

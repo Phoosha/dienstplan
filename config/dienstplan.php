@@ -62,4 +62,10 @@ return [
     'date_format' => 'd.m.Y',
     'time_format' => 'H:i',
 
+    'view_past_months' => 2,
+
+    'store_threshold' => CarbonInterval::month(),
+
+    'modify_threshold' => CarbonInterval::week(),
+
 ];

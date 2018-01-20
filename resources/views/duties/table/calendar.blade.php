@@ -4,8 +4,8 @@
         <tr>
             {{-- prev month --}}
             <th>
-                @if (isset($prev))
-                    <a href="{{ url('plan', $prev) }}">
+                @if ($prev_month->isUsable() && Gate::allows('month.view', $prev_month))
+                    <a href="{{ url('plan', [ $prev_month->year, $prev_month->month ]) }}">
                         &lt;&lt;
                     </a>
                 @endif
@@ -18,8 +18,8 @@
 
             {{-- next month --}}
             <th>
-                @if (isset($next))
-                    <a href="{{ url('plan', $next) }}">
+                @if ($next_month->isUsable() && Gate::allows('month.view', $next_month))
+                    <a href="{{ url('plan', [ $next_month->year, $next_month->month ]) }}">
                         &gt;&gt;
                     </a>
                 @endif
@@ -29,22 +29,20 @@
 
     <tbody>
         <tr>
-            @foreach ($weeks[0] as $day)
+            @foreach (($cur_month->getWeeksAndDays())[0] as $day)
                 <td>{{ dayname_short($day) }}</td>
             @endforeach
         </tr>
-        @foreach ($weeks as $week)
+        @foreach ($cur_month->getWeeksAndDays() as $week)
             <tr>
                 @foreach ($week as $day)
-                    <td class="{{ $day->isToday() ? 'today' : '' }}{{ $day->isSameMonth($month_start) ? '' : 'other' }}">
-                        @if (( isset($prev) || ! $day->isSameMonth($prev_month) )
-                            && ( isset($next) || ! $day->isSameMonth($next_month) ) )
-                            <a href="{{ $day->isSameMonth($month_start)
-                                          ? ''
-                                          : url('/plan') . $day->format('/Y/m')
-                                     }}#day-{{ $day->format('j') }}">
-                                {{ $day->day }}
-                            </a>
+                    <td class="{{ $day->isToday() ? 'today' : '' }}{{ $day->isSameMonth($cur_month->start) ? '' : 'other' }}">
+                        @if (( $day->gte($cur_month->start) ||
+                                ( $prev_month->isUsable() && Gate::allows('month.view', $prev_month) )
+                            ) && ( $day->lte($cur_month->end) ||
+                                ( $next_month->isUsable() && Gate::allows('month.view', $next_month) )
+                            ))
+                            <a href="{{ planWithDay($day, $cur_month) }}">{{ $day->day }}</a>
                         @endif
                     </td>
                 @endforeach

@@ -25,6 +25,6 @@ Route::post('password/reset', 'Auth\ResetPasswordController@reset');
 Route::get('plan/{year?}/{month?}', 'DutyController@index');
 Route::get('duties/create', 'DutyController@create');
 Route::post('duties', 'DutyController@store');
-Route::get('duties/{id}', 'DutyController@edit');
+Route::get('duties/{duty}', 'DutyController@edit');
 Route::put('duties/{id}', 'DutyController@update');
 Route::delete('duties/{id}', 'DutyController@destroy');

@@ -20,7 +20,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property string $email
  * @property string $phone
  * @property string $password
- * @property string remember_token
+ * @property string $remember_token
+ * @property boolean $is_admin
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property \Carbon\Carbon $deleted_at
@@ -28,8 +29,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property Collection $posts
  * @property Collection $duties
  */
-class User extends Authenticatable
-{
+class User extends Authenticatable {
+
     use Notifiable, SoftDeletes;
 
     /**

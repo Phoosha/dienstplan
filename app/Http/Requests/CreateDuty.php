@@ -2,17 +2,14 @@
 
 namespace App\Http\Requests;
 
+use App\CalendarMonth;
 use App\Duty;
 use App\Shift;
 use App\Slot;
 use Auth;
-use Carbon\Carbon;
-use HttpException;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Foundation\Testing\HttpException;
 use Illuminate\Support\Collection;
-use Illuminate\Validation\Rule;
-use Psr\Log\InvalidArgumentException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class CreateDuty extends FormRequest {
 
@@ -47,16 +44,28 @@ class CreateDuty extends FormRequest {
      * @return void
      */
     public function withValidator($validator) {
-        // Try to add a rule that validates slot ids
-        try {
-            $year  = isset($this->year)  ? (int) $this->year  : null;
-            $month = isset($this->month) ? (int) $this->month : null;
-            $slots = Slot::active(Carbon::createSafe($year, $month, 0, 1));
-            $validator->addRules([
-                'shifts.*.*' => Rule::in($slots->pluck('id')->all())
-            ]);
-        } catch (InvalidArgumentException $e) {
-        }
+        $validator->after(function ($validator) {
+            // bail if there have been errors so far
+            if ($validator->messages()->isNotEmpty())
+                return;
+
+            $month = new CalendarMonth($this->year, $this->month);
+
+            foreach ($this->shifts as $day => $dayOfShifts) {
+                if ($day < 1 || $day > $month->daysInMonth)
+                    $validator->errors()->add("shifts.{$day}",
+                        'Gewählter Tag existiert nicht');
+
+                foreach ($dayOfShifts as $shift => $slot_id) {
+                    if ($shift < 0 || $shift >= Shift::shiftsPerDay())
+                        $validator->errors()->add("shifts.{$day}.{$shift}",
+                            'Gewählte Schicht existiert nicht');
+                    if (! Slot::find($slot_id)->slot_config->isActive($month->start))
+                        $validator->errors()->add("shifts.{$day}.{$shift}",
+                            'Gewähltes Fahrzeug ist zu dieser Zeit nicht aktiv');
+                }
+            }
+        });
     }
 
     /**
@@ -65,20 +74,14 @@ class CreateDuty extends FormRequest {
      *
      * @return Duty[]
      * @throws HttpException
-     * @throws NotFoundHttpException
      */
     public function getDuties() {
-        $month_start = firstOfMonth($this->year, $this->month);
+        $month = new CalendarMonth($this->year, $this->month);
 
         $duties = new Collection();
         foreach ($this->shifts as $day => $dayOfShifts) {
-            if ($day < 1 || $day > $month_start->daysInMonth)
-                abort(400);
             foreach ($dayOfShifts as $shift => $slot_id) {
-                if ($shift < 0 || $shift >= Shift::shiftsPerDay())
-                    abort(400);
-
-                $duty = Shift::create($month_start->year, $month_start->month, $day, $shift)->toDuty();
+                $duty = Shift::create($month->year, $month->month, $day, $shift)->toDuty();
                 $duty->slot_id = (int) $slot_id;
                 $duty->user_id = Auth::user()->id;
                 $duties->push($duty);

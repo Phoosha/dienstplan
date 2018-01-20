@@ -10,7 +10,7 @@
     <div class="pure-u-5-8">
         <div class="input-box">
             <label for="{{ $index }}-user">Fahrer: </label>
-            <select id="{{ $index }}-user" name="duties[{{ $index }}][user_id]">
+            <select id="{{ $index }}-user" name="duties[{{ $index }}][user_id]" @yield('duties.disabled') @yield('duties.driver.disabled')>
                 @foreach ($duty->possibleTakers() as $user)
                     <option {!! selected($duty->user_id, $user->id) !!}>{{ $user->getFullName() }}</option>
                 @endforeach
@@ -24,7 +24,7 @@
     {{-- FAHRZEUG --}}
     <div class="pure-u-3-8"><div class="input-box">
         <label for="{{ $index }}-slot">Fahrzeug: </label>
-        <select id="{{ $index }}-slot" name="duties[{{ $index }}][slot_id]">
+        <select id="{{ $index }}-slot" name="duties[{{ $index }}][slot_id]" @yield('duties.disabled')>
             @foreach ($duty->availableSlots() as $slot)
                 <option {!! selected($duty->slot_id, $slot->id) !!}>{{ $slot->name }}</option>
             @endforeach
@@ -34,7 +34,7 @@
     {{-- KOMMENTAR --}}
     <div class="pure-u-1"><div class="input-box">
         <label for="{{ $index }}-comment">Kommentar: </label>
-        <input type="text" id="{{ $index }}-comment" name="duties[{{ $index }}][comment]" placeholder="Kommentar" value="{{ $duty->comment }}" />
+        <input type="text" id="{{ $index }}-comment" name="duties[{{ $index }}][comment]" placeholder="Kommentar" value="{{ $duty->comment }}" @yield('duties.disabled')/>
     </div></div>
 
     {{-- ANFANG --}}
