@@ -321,7 +321,7 @@ class Shift {
      * @return bool
      */
     public function isNow() {
-        return ! $this->isFuture() && $this->end->lt(now());
+        return ! $this->isFuture() && $this->end->gt(now());
     }
 
     /**
@@ -362,7 +362,7 @@ class Shift {
             $classes[] = 'weekday';
         if ($this->start->isWeekend())
             $classes[] = 'weekend';
-        if ($this->start->isToday())
+        if ($this->isNow())
             $classes[] = 'today';
         if ($this->isPast())
             $classes[] = 'past';

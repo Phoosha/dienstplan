@@ -1,7 +1,7 @@
 {{-- PARAMS: shift, loop --}}
 <tr class="{{ $shift->classes() }}">
     @if ($loop->first)
-        <td rowspan="{{ $shift->shiftsPerDay() }}" class="day-name" id="day-{{ $shift->day }}">
+        <td rowspan="{{ $shift->shiftsPerDay() }}" class="day-name {{ $shift->start->isToday() ? 'today' : '' }}" id="day-{{ $shift->day }}">
             {{ dayname($shift->start) }},<br/>
             {{ $shift->start->format('j.n.Y') }}
         </td>
