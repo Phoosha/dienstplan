@@ -20,6 +20,16 @@ class UsersTableSeeder extends Seeder {
             'password' => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm', // secret
             'remember_token' => str_random(10),
         ]);
+        User::create([
+            'first_name' => 'Erika',
+            'last_name' => 'Mustermann',
+            'login' => 'emuster',
+            'email' => 'erika@mustermail.de',
+            'phone' => '0176 / 97423',
+            'password' => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm', // secret
+            'remember_token' => str_random(10),
+            'is_admin' => true,
+        ]);
         factory(App\User::class, 10)->create();
     }
 
