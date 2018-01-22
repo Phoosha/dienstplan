@@ -32,7 +32,7 @@ class StoreDuty extends FormRequest {
         $time_format = config('dienstplan.time_format');
         return [
             'duties'              => 'required|array|max:12|integer_keys',
-            'duties.*.user_id'    => 'required|integer|exists:users,id',
+            'duties.*.user_id'    => 'sometimes|integer|exists:users,id',
             'duties.*.slot_id'    => 'required|integer|exists:slots,id',
             'duties.*.comment'    => 'nullable|string|max:255',
             'duties.*.start-date' => "required|date_format:{$date_format}|after_or_equal:1.1.1970|before:1.1.2038",
@@ -84,9 +84,10 @@ class StoreDuty extends FormRequest {
 
             $duty = new Duty($dutyAttrs);
 
-            $duty->user_id = $dutyAttrs['user_id'];
             if (Auth::user()->cannot('impersonate', Duty::class))
-                $duty->user()->associate(Auth::user());
+                $duty->user_id = Auth::user()->id;
+            else
+                $duty->user_id = $dutyAttrs['user_id'] ?? Auth::user()->id;
 
             $duties->push($duty);
         }
