@@ -29,6 +29,7 @@ use InvalidArgumentException;
  * @property-read \Carbon\Carbon $start
  * @property-read \Carbon\Carbon $end
  * @property-read Collection $shiftslots
+ * @property-read Collection $duties
  *
  * @property-read int $year
  * @property-read int $yearIso
@@ -62,6 +63,7 @@ class Shift {
     protected $start;
     protected $end;
     protected $shiftslots;
+    protected $duties;
 
     /**
      * Configures available shifts.
@@ -79,6 +81,7 @@ class Shift {
      */
     public function __construct($dt = null) {
         $this->shiftslots = new Collection();
+        $this->duties     = new Collection();
 
         $dt = Carbon::instance($dt ?? now());
 
@@ -207,6 +210,8 @@ class Shift {
      */
     public function next() {
         $this->shiftslots = new Collection();
+        $this->duties     = new Collection();
+
         $this->shift = ($this->shift + 1) % Shift::shiftsPerDay();
         $this->start = $this->end;
 
@@ -231,6 +236,8 @@ class Shift {
      */
     public function prev() {
         $this->shiftslots = new Collection();
+        $this->duties     = new Collection();
+
         $this->shift = $this->shift - 1;
         $this->end = $this->start;
 
@@ -259,6 +266,8 @@ class Shift {
                 return $this->shift;
             case 'shiftslots':
                 return $this->shiftslots;
+            case 'duties':
+                return $this->duties;
             default:
                 return $this->start->__get($name);
         }
@@ -396,11 +405,69 @@ class Shift {
      */
     public function setShiftSlots(Collection $slots, Collection $duties = null) {
         $duties = $duties ?? new Collection();
-        $this->shiftslots = $slots->map(function ($slot) use ($duties) {
-            return ShiftSlot::create($this, $slot)->setDuties($duties);
+
+        $this->duties = $duties->filter(function ($duty) {
+            return ( $duty->start >= $this->start && $duty->start <  $this->end )
+                || ( $duty->end   >  $this->start && $duty->end   <= $this->end )
+                || ( $duty->start <= $this->start && $duty->end   >= $this->end );
+        });
+        $this->shiftslots = $slots->map(function ($slot) {
+            return ShiftSlot::create($this, $slot)->setDuties($this->duties);
         });
 
         return $this;
+    }
+
+    /**
+     * Checks whether <code>$duties</code> cover this <code>ShiftSlot</code>
+     * at most <code>$times</code> redundantly.
+     *
+     * @param int $times
+     * @param Collection $duties
+     * @return int actual coverage between 0 and <code>$times</code>
+     */
+    public function analyzeCoverage(int $times, Collection $duties) {
+        $offsets = array_fill(0, $times, $this->start);
+
+        $duties->sortBy('start');
+
+        /*
+         * Using the the next smallest Duty replace the smallest time
+         * in $offsets if we can reach further using that Duty and
+         * otherwise drop that offset.
+         */
+        foreach ($duties as $duty) {
+            if (empty($offsets) || $offsets[0] >= $this->end)
+                break;
+
+            while ($smallest_offset = array_shift($offsets)) {
+                if ($duty->start <= $smallest_offset) {
+                    $offsets[] = $duty->end;
+                    break;
+                }
+            }
+
+            sort($offsets);
+        }
+
+        // Now remove all offsets which did not reach the shift end
+        while (! empty($offsets) && $offsets[0] < $this->end) {
+            array_shift($offsets);
+        }
+
+        return count($offsets);
+    }
+
+    /**
+     * Returns the overall coverage of this instance.
+     *
+     * @return int between 0 and 2
+     */
+    public function getCoverage() {
+        return $this->analyzeCoverage(
+            2,
+            $this->duties->where('type', '!=', Duty::SERVICE)
+        );
     }
 
 }

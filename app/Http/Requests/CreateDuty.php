@@ -46,7 +46,7 @@ class CreateDuty extends FormRequest {
     public function withValidator($validator) {
         $validator->after(function ($validator) {
             // bail if there have been errors so far
-            if ($validator->messages()->isNotEmpty())
+            if ($validator->messages()->isNotEmpty() || empty($this->year))
                 return;
 
             $month = new CalendarMonth($this->year, $this->month);

@@ -200,6 +200,21 @@ class Duty extends Model {
     }
 
     /**
+     * Returns duties that are in conflict with this instance.
+     *
+     * @return Collection
+     */
+    public function getConflicts() {
+        return self::between($this->start, $this->end)
+            ->where(function ($query) {
+                $query->takenBy($this->user_id)
+                    ->orWhere(function ($query) {
+                        $query->where('slot_id', '=', $this->slot_id)->where('type', '=', Duty::SERVICE);
+                    });
+            })->get();
+    }
+
+    /**
      * Get the <code>User</code> that has taken this <code>Duty</code>.
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

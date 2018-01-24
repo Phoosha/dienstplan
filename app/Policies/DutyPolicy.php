@@ -56,7 +56,7 @@ class DutyPolicy {
      * @return mixed
      */
     public function store(User $user, Duty $duty) {
-        return $this->create($user, $duty);
+        return $this->create($user, $duty) && $duty->type !== Duty::SERVICE;
     }
 
     /**

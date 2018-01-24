@@ -4,7 +4,6 @@ namespace App\Http\Requests;
 
 use App\Duty;
 use App\Slot;
-use App\User;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
@@ -12,6 +11,8 @@ use Illuminate\Support\Collection;
 use Illuminate\Validation\Rule;
 
 class StoreDuty extends FormRequest {
+
+    protected $parsedDuties;
 
     /**
      * Determine if the user is authorized to make this request.
@@ -50,49 +51,57 @@ class StoreDuty extends FormRequest {
      * @return void
      */
     public function withValidator($validator) {
-        foreach ($this->duties as $key => $duty) {
+        foreach ($this->input('duties') as $key => $duty) {
             // validate end-time > start-time if end-date = start-date
             $validator->sometimes("duties.{$key}.end-time", "after:duties.{$key}.start-time", function () use ($duty) {
-                    return $duty['start-date'] === $duty['end-date'];
-                });
+                return $duty['start-date'] === $duty['end-date'];
+            });
 
-            $validator->after(function ($validator) use ($key, $duty) {
+            $validator->after(function ($validator) {
                 // bail if there have been errors so far
                 if ($validator->messages()->isNotEmpty())
                     return;
 
-                $start = Carbon::parse("{$duty['start-date']} {$duty['start-time']}");
+                $this->parsedDuties = new Collection();
 
-                if (! Slot::find($duty['slot_id'])->slot_config->isActive($start))
-                    $validator->errors()->add("duties.{$key}.slot_id",
-                        'Gewähltes Fahrzeug ist zu dieser Zeit nicht aktiv');
+                foreach ($this->input('duties') as $key => $dutyAttrs) {
+                    $dutyAttrs['start'] = Carbon::parse("{$dutyAttrs['start-date']} {$dutyAttrs['start-time']}");
+                    $dutyAttrs['end'] = Carbon::parse("{$dutyAttrs['end-date']} {$dutyAttrs['end-time']}");
+
+                    $duty = new Duty($dutyAttrs);
+
+                    if (Auth::user()->cannot('impersonate', Duty::class))
+                        $duty->user_id = Auth::user()->id;
+                    else
+                        $duty->user_id = $dutyAttrs['user_id'] ?? Auth::user()->id;
+
+                    if (!Slot::find($duty->slot_id)->slot_config->isActive($duty->start))
+                        $validator->errors()->add("duties.{$key}.slot_id",
+                            'Gewähltes Fahrzeug ist zu dieser Zeit nicht aktiv');
+
+                    $conflicts = $duty->getConflicts();
+                    if ($conflicts->isNotEmpty()) {
+                        if ($conflicts->first()->type === Duty::SERVICE)
+                            $validator->errors()->add("duties.{$key}",
+                                "Das Fahrzeug \"{$duty->slot->name}\" ist zu dieser Zeit außer Dienst");
+                        else
+                            $validator->errors()->add("duties.{$key}",
+                                'Du bist zu dieser Zeit schon für einen Dienst eingetragen');
+                    }
+
+                    $this->parsedDuties->push($duty);
+                }
             });
         }
     }
 
     /**
-     * Returns the duties to be stored.
+     * Returns the duties whose storage has been requested.
      *
      * @return Collection
      */
     public function getDuties() {
-        $duties = new Collection();
-
-        foreach ($this->duties as $dutyAttrs) {
-            $dutyAttrs['start'] = Carbon::parse("{$dutyAttrs['start-date']} {$dutyAttrs['start-time']}");
-            $dutyAttrs['end']   = Carbon::parse("{$dutyAttrs['end-date']} {$dutyAttrs['end-time']}");
-
-            $duty = new Duty($dutyAttrs);
-
-            if (Auth::user()->cannot('impersonate', Duty::class))
-                $duty->user_id = Auth::user()->id;
-            else
-                $duty->user_id = $dutyAttrs['user_id'] ?? Auth::user()->id;
-
-            $duties->push($duty);
-        }
-
-        return $duties;
+        return $this->parsedDuties;
     }
 
 }

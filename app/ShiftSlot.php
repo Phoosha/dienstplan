@@ -78,64 +78,10 @@ class ShiftSlot {
      */
     public function setDuties(Collection $duties) {
         $this->duties = $duties->filter(function ($duty) {
-            return $duty->slot_id === $this->slot->id && (
-                ( $duty->start >= $this->shift->start && $duty->start <  $this->shift->end ) ||
-                ( $duty->end   >  $this->shift->start && $duty->end   <= $this->shift->end ) ||
-                ( $duty->start <= $this->shift->start && $duty->end   >= $this->shift->end )
-            );
+            return $duty->slot_id === $this->slot->id;
         });
 
         return $this;
-    }
-
-    /**
-     * Checks whether <code>$duties</code> cover this <code>ShiftSlot</code>
-     * at most <code>$times</code> redundantly.
-     *
-     * @param int $times
-     * @param Collection $duties
-     * @return int actual coverage between 0 and <code>$times</code>
-     */
-    private function analyzeCoverage(int $times, Collection $duties) {
-        $offsets = array_fill(0, $times, $this->shift->start);
-        $target  = $this->shift->end;
-
-        $duties->sortBy('start');
-
-        /*
-         * Using the the next smallest Duty replace the smallest time
-         * in $offsets if we can reach further using that Duty and
-         * otherwise drop that offset.
-         */
-        foreach ($duties as $duty) {
-            if (empty($offsets) || $offsets[0] >= $target)
-                break;
-
-            while ($smallest_offset = array_shift($offsets)) {
-                if ($duty->start <= $smallest_offset) {
-                    $offsets[] = $duty->end;
-                    break;
-                }
-            }
-
-            sort($offsets);
-        }
-
-        // Now remove all offsets which did not reach the shift end
-        while (! empty($offsets) && $offsets[0] < $target) {
-            array_shift($offsets);
-        }
-
-        return count($offsets);
-    }
-
-    /**
-     * Returns the overall coverage of this instance.
-     *
-     * @return int between 0 and 2
-     */
-    public function getCoverage() {
-        return $this->analyzeCoverage(2, $this->duties);
     }
 
     /**
@@ -145,15 +91,18 @@ class ShiftSlot {
      * @return bool
      */
     public function isSelectable() {
-        $serviceCoverage = $this->analyzeCoverage(
+        $serviceCoverage = $this->shift->analyzeCoverage(
             1,
             $this->duties->where('type', Duty::SERVICE));
-        $meCoverage = $this->analyzeCoverage(
+        $meCoverage = $this->shift->analyzeCoverage(
             1,
-            $this->duties->where('user_id', Auth::user()->id)
+            $this->shift->duties
+                ->where('user_id', Auth::user()->id)
+                ->where('type', '!=', Duty::SERVICE)
         );
 
-        return $serviceCoverage === 0 && $meCoverage === 0;
+        return $serviceCoverage === 0
+            && ( $meCoverage === 0 || Auth::user()->can('impersonate', Duty::class));
     }
 
     /**
@@ -164,7 +113,7 @@ class ShiftSlot {
     public function classes() {
         $classes = [];
 
-        switch ($this->getCoverage()) {
+        switch ($this->shift->getCoverage()) {
             case 0:
                 $classes[] = 'empty-slot';
                 break;
