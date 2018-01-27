@@ -32,9 +32,9 @@
             <button type="submit" class="pure-button primary-button">
                 <i class="fa fa-save" aria-hidden="true"></i>&nbsp;@yield('duties.save')
             </button>
-            <button type="reset" class="pure-button secondary-button">
+            <a href="{{ url()->current() }}" class="pure-button secondary-button">
                 <i class="fa fa-undo" aria-hidden="true"></i>&nbsp;@yield('duties.reset')
-            </button>
+            </a>
         </fieldset>
     </form>
 @endsection

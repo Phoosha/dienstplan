@@ -22,9 +22,9 @@
                 <button type="submit" name="_method" value="put" class="pure-button primary-button">
                     <i class="fa fa-save" aria-hidden="true"></i>&nbsp;Speichern
                 </button>
-                <button type="reset" class="pure-button secondary-button">
+                <a href="{{ url()->current() }}" class="pure-button secondary-button">
                     <i class="fa fa-undo" aria-hidden="true"></i>&nbsp;Zurücksetzen
-                </button>
+                </a>
             @endcan
             @can('delete', $duty)
                 <button type="submit" name="_method" value="delete" class="pure-button primary-button danger-button" onclick="return confirm('Dienst wirklich löschen?')">

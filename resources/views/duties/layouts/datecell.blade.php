@@ -3,12 +3,12 @@
     <label for="{{ $index }}-{{ $type }}-date">{{ $label }}: </label>
     <div class="pure-g">
         <div class="pure-u-13-24"><div class="input-box">
-            <input type="text" id="{{ $index }}-{{ $type }}-date" name="duties[{{ $index }}][{{ $type }}-date]" value="{{ $dt->format(config('dienstplan.date_format')) }}" class="date {{ $type }}-date" @yield('duties.disabled')/>
+            <input type="text" id="{{ $index }}-{{ $type }}-date" name="duties[{{ $index }}][{{ $type }}-date]" value="{{ old("duties.{$index}.{$type}-date") ?? $dt->format(config('dienstplan.date_format')) }}" class="date {{ $type }}-date" @yield('duties.disabled')/>
         </div></div>
         <div class="pure-u-11-24"><div class="input-box">
             <select id="{{ $index }}-{{ $type }}-time" name="duties[{{ $index }}][{{ $type }}-time]" class="time {{ $type }}-time" @yield('duties.disabled')>
                 @foreach (time_dropdown($dt) as $time)
-                    <option {!! selected($dt->format(config('dienstplan.time_format')), $time->format(config('dienstplan.time_format'))) !!}>
+                    <option {!! selected(old("duties.{$index}.{$type}-time") ?? $dt->format(config('dienstplan.time_format')), $time->format(config('dienstplan.time_format'))) !!}>
                         {{ $time->format(config('dienstplan.time_format')) }}
                     </option>
                 @endforeach

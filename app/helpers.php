@@ -53,7 +53,7 @@ function minTime(Carbon $dt) {
  * @return string
  */
 function selected($sel, $cur) {
-    $selected = $cur === $sel ? ' selected' : '';
+    $selected = $cur == $sel ? ' selected' : '';
     return "value=\"{$cur}\"{$selected}";
 }
 
@@ -65,7 +65,7 @@ function selected($sel, $cur) {
  * @return string
  */
 function checked($sel, $cur) {
-    $selected = $cur === $sel ? ' checked' : '';
+    $selected = $cur == $sel ? ' checked' : '';
     return "value=\"{$cur}\"{$selected}";
 }
 
