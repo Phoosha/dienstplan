@@ -122,7 +122,7 @@ label {
 
 .tight-table td,
 .tight-table th {
-  padding: 0.4em;
+  padding: 0.3em;
 }
 
 .nowrap {
@@ -250,7 +250,7 @@ div.sep {
 }
 
 @media only screen and (max-width: 480px) {
-  .pure-form button {
+  .pure-form .pure-button {
     margin: .7em 0 0;
   }
 }
@@ -442,12 +442,27 @@ Hides the menu at `48em`, but modify this based on your app's needs.
     padding-left: 0;
     /*left: 150px;*/
   }
+
+  .mobile-small {
+    font-size: 85%;
+  }
+
+}
+
+@media (max-width: 32em) {
+
+  .mobile-small {
+    font-size: 70%;
+  }
+
 }
 
 /* -- Welcome page-specific formatting -------------------------------------*/
 
 .news-item {
   padding-bottom: 1em;
+  max-width: 38em;
+  margin: 0 auto;
 }
 
 .news-title {
@@ -475,6 +490,7 @@ Hides the menu at `48em`, but modify this based on your app's needs.
 
 .news-description p {
   margin: 0.2em;
+  text-align: justify;
 }
 
 /* -- Login page-specific formatting -------------------------------------*/
@@ -540,6 +556,11 @@ Hides the menu at `48em`, but modify this based on your app's needs.
   vertical-align: middle;
 }
 
+#nav td,
+#nav th {
+  padding: 0.5em 0.8em;
+}
+
 #nav .today a {
   font-weight: bold;
   color: #636b6f;
@@ -565,16 +586,24 @@ Hides the menu at `48em`, but modify this based on your app's needs.
 td.shift-slot {
   background-color: #cfc;
   width: 30%;
-  min-width: 8em;
-  max-width: 13em;
+  min-width: 9em;
   height: 7em;
 }
 
-.shift-slot p {
+div.duty {
   line-height: 1.2;
   margin: 0;
   padding: 0.4em 0;
+  border-bottom: 1px solid #cbcbcb;
 }
+
+  div.duty:last-child {
+    border-bottom: none;
+  }
+
+  div.duty p {
+    margin: 0;
+  }
 
 td.empty-slot {
   background-color: #fcb;
@@ -588,9 +617,9 @@ td.duty-service {
   background-color: #ccc;
 }
 
-span.duty-service {
+div.duty-service {
   font-weight: bold;
-  color: #000;
+  color: #944;
 }
 
 td.selected {
@@ -612,12 +641,29 @@ td.dehover:hover {
   box-shadow: none;
 }
 
-.duty-time {
-  font-size: 105%;
+div.duty-time {
+  font-size: 95%;
+  margin: 0 0.4em;
 }
+
+  div.duty-time-start {
+    float: left;
+  }
+
+  div.duty-time-end {
+    float: right;
+  }
+
+  // clearfix
+  div.duty-time::after {
+    content: "";
+    display: block;
+    clear: both;
+  }
 
 .duty-user {
   font-weight: bold;
+  color: #444;
 }
 
 .duty-comment {

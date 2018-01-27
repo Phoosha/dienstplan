@@ -4,6 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="Dienstplan für den Responder einer Feuerwehr">
+        <meta name="theme-color" content="#E91C23">
 
         <title>@yield('title') - FRS Irgendwo</title>
         <link rel="shortcut icon" href='{{ asset('favicon.ico') }}'>

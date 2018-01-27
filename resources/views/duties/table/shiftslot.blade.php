@@ -1,37 +1,38 @@
 {{-- PARAMS: shiftslot, shift, slot, duties --}}
 <td class="shift-slot {{ $shiftslot->classes() }}" data-shift="{{ $shift->day }}-{{ $shift->shift }}">
+    <input type="radio" name="shifts[{{ $shift->day }}][{{ $shift->shift }}]" value="{{ $slot->id }}" class="shift-slot-select" />
     @foreach ($duties as $duty)
-        <p>
-            <span class="duty-time">
-                @if ($duty->start > $shift->start && $duty->end < $shift->end)
-                    Von {{ minTime($duty->start) }} bis {{ minTime($duty->end) }} Uhr<br/>
-                @elseif ($duty->start > $shift->start)
-                    Von {{ minTime($duty->start) }} Uhr<br/>
-                @elseif ($duty->end < $shift->end)
-                    Bis {{ minTime($duty->end) }} Uhr<br/>
-                @endif
-            </span>
-            <span class="{{ $duty->type === Duty::SERVICE ? 'duty-service' : 'duty-user' }}">
+        <div class="duty">
+            @if ($duty->start > $shift->start || $duty->end < $shift->end)
+                <div class="duty-time">
+                    @if ($duty->start > $shift->start && $duty->end < $shift->end)
+                        <div class="duty-time-between">{{ minTime($duty->start) }} &ndash; {{ minTime($duty->end) }} Uhr</div>
+                    @elseif ($duty->start > $shift->start)
+                        <div class="duty-time-start">Ab {{ minTime($duty->start) }} Uhr</div>
+                    @elseif ($duty->end < $shift->end)
+                        <div class="duty-time-end">Bis {{ minTime($duty->end) }} Uhr</div>
+                    @endif
+                </div>
+            @endif
+            <div class="{{ $duty->type === Duty::SERVICE ? 'duty-service' : 'duty-user' }}">
                 @can('edit', $duty)
                 <a href="{{ url('duties', [ $duty->id ]) }}">
                 @endcan
                     @if ($duty->type === Duty::SERVICE)
-                        <i class="fa fa-wrench inline-icon" aria-hidden="true"></i>Außer Dienst<i class="fa fa-wrench inline-icon" aria-hidden="true"></i>
+                        <i class="fa fa-wrench" aria-hidden="true"></i>&nbsp;Außer&nbsp;Dienst&nbsp;<i class="fa fa-wrench" aria-hidden="true"></i>
                     @else
                         {{ $duty->user->getFullName() }}
                     @endif
                 @can('edit', $duty)
                 </a>
                 @endcan
-            </span>
-            <br/>
-            <span class="duty-comment">
+            </div>
+            <div class="duty-comment">
                 @if ($duty->type === Duty::WITH_INTERNEE)
                     mit Praktikant<br/>
                 @endif
                 {{ $duty->comment }}
-            </span>
-        </p>
+            </div>
+        </div>
     @endforeach
-    <input type="radio" name="shifts[{{ $shift->day }}][{{ $shift->shift }}]" value="{{ $slot->id }}" class="shift-slot-select" />
 </td>
