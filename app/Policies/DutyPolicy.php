@@ -6,11 +6,54 @@ use App\CalendarMonth;
 use App\Shift;
 use App\User;
 use App\Duty;
+use Carbon\Carbon;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use InvalidArgumentException;
 
 class DutyPolicy {
 
     use HandlesAuthorization;
+
+    protected $store_start;
+    protected $store_end;
+    protected $view_start;
+
+    public function __construct() {
+        $this->store_start = self::getStoreStart();
+        $this->store_end   = self::getStoreEnd();
+        $this->view_start  = self::getViewStart();
+    }
+
+    /**
+     * Determines starting from when duties may be stored.
+     *
+     * @return Carbon
+     */
+    public static function getStoreStart() {
+        $now_shift = new Shift(now());
+        return $now_shift->start;
+    }
+
+    /**
+     * Determines starting up to when duties may be stored in advance.
+     *
+     * @return Carbon
+     */
+    public static function getStoreEnd() {
+        $now_shift = new Shift(now());
+        return $now_shift->end->add(config('dienstplan.store_threshold'));
+    }
+
+    /**
+     * Determines starting from when past duties may be viewed.
+     *
+     * @return Carbon
+     */
+    public static function getViewStart() {
+        return now()
+            ->subMonths(config('dienstplan.view_past_months'))
+            ->firstOfMonth();
+    }
 
     public function before(User $user, $ability) {
         if ($user->is_admin)
@@ -27,11 +70,7 @@ class DutyPolicy {
      * @return mixed
      */
     public function view(User $user, Duty $duty) {
-        $threshold_dt = now()
-            ->subMonths(config('dienstplan.view_past_months'))
-            ->firstOfMonth();
-
-        return $duty->end >= $threshold_dt;
+        return $duty->end >= $this->view_start;
     }
 
     /**
@@ -42,10 +81,7 @@ class DutyPolicy {
      * @return mixed
      */
     public function create(User $user, Duty $duty) {
-        $threshold_dt = now()->add(config('dienstplan.store_threshold'));
-        $now_shift    = new Shift(now());
-
-        return $duty->end <= $threshold_dt && $duty->start >= $now_shift->start;
+        return $duty->end <= $this->store_end && $duty->start >= $this->store_start;
     }
 
     /**

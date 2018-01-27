@@ -111,7 +111,8 @@ class ShiftSlot {
         );
 
         return $serviceCoverage === 0
-            && ( $meCoverage === 0 || Auth::user()->can('impersonate', Duty::class));
+            && ( $meCoverage === 0 || Auth::user()->can('impersonate', Duty::class))
+            && Auth::user()->can('create', $this->shift->toDuty());
     }
 
     /**

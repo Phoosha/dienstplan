@@ -23,9 +23,12 @@ $.fn.filterSameFieldsetAs = function (element) {
 $(function() {
 
     var startDates = $('input.start-date');
-    var endDates = $('input.end-date');
+    var endDates   = $('input.end-date');
     var startTimes = $('select.start-time');
     var endTimes   = $('select.end-time');
+
+    var minDate = $('input#min-date').val();
+    var maxDate = $('input#max-date').val();
 
     startDates.datepicker({
         onClose: function () {
@@ -41,7 +44,9 @@ $(function() {
         },
         beforeShow: function () {
             $(this).attr("disabled", true);
-        }
+        },
+        minDate: minDate,
+        maxDate: maxDate
     });
     endDates.datepicker({
         onClose: function () {
@@ -54,7 +59,8 @@ $(function() {
             var myStartInput = startDates.filterSameFieldsetAs(this);
 
             $(this).datepicker("option", "minDate", myStartInput.datepicker("getDate"));
-        }
+        },
+        maxDate: maxDate
     });
 
 

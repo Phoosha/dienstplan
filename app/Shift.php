@@ -352,15 +352,6 @@ class Shift {
     }
 
     /**
-     * Returns a human readable name for the instance.
-     *
-     * @return string
-     */
-    public function name() {
-        return Shift::shifts()[$this->shift] . ' Uhr';
-    }
-
-    /**
      * Helper returning a list of classes that apply to the instance.
      *
      * @return string space-separated classes of the instance
