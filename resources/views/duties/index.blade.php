@@ -22,7 +22,7 @@
             <table class="pure-table pure-table-bordered tight-table" id="plan">
                 <thead><tr>
                     <th>Tag</th>
-                    <th>Beginn</th>
+                    <th>Zeit</th>
                     @foreach ($cur_month->slots as $slot)
                         <th>{{ $slot->name }}</th>
                     @endforeach
