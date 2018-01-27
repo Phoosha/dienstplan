@@ -85,15 +85,24 @@ class ShiftSlot {
     }
 
     /**
+     * Returns <code>1</code> if this <code>ShiftSlot</code> is completely
+     * covered by a service duty and <code>0</code> otherwise.
+     * @return int
+     */
+    public function getServiceCoverage(): int {
+        return $this->shift->analyzeCoverage(
+            1,
+            $this->duties->where('type', Duty::SERVICE));
+    }
+
+    /**
      * Checks whether this instance should be selectable for the currently
      * logged in <code>User</code>.
      *
      * @return bool
      */
     public function isSelectable() {
-        $serviceCoverage = $this->shift->analyzeCoverage(
-            1,
-            $this->duties->where('type', Duty::SERVICE));
+        $serviceCoverage = $this->getServiceCoverage();
         $meCoverage = $this->shift->analyzeCoverage(
             1,
             $this->shift->duties
@@ -113,14 +122,17 @@ class ShiftSlot {
     public function classes() {
         $classes = [];
 
-        switch ($this->shift->getCoverage()) {
-            case 0:
-                $classes[] = 'empty-slot';
-                break;
-            case 1:
-                $classes[] = 'alone-slot';
-                break;
-        }
+        if ($this->getServiceCoverage() === 1)
+            $classes[] = 'service-slot';
+        else
+            switch ($this->shift->getCoverage()) {
+                case 0:
+                    $classes[] = 'empty-slot';
+                    break;
+                case 1:
+                    $classes[] = 'alone-slot';
+                    break;
+            }
 
         if ($this->isSelectable())
             $classes[] = 'selectable';
