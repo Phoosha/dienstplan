@@ -6,10 +6,12 @@ use App\Duty;
 use App\CalendarMonth;
 use App\Http\Requests\CreateDuty;
 use App\Http\Requests\StoreDuty;
+use App\Http\Requests\UpdateDuty;
 use App\Shift;
 use Carbon\Exceptions\InvalidDateException;
 use DB;
 use Gate;
+use Illuminate\Auth\Access\AuthorizationException;
 use Throwable;
 
 class DutyController extends Controller {
@@ -73,26 +75,33 @@ class DutyController extends Controller {
         try {
             DB::transaction(function () use ($duties) {
                 foreach ($duties as $duty) {
-                    $this->authorize('store', $duty);
+                    $this->authorize('save', $duty);
                     $duty->saveOrFail();
                 }
             });
+        } catch (AuthorizationException $e) {
+            throw $e;
         } catch (Throwable $e) {
-            return back()->withInput($request->all())->withErrors('Dienst konnte nicht gespeichert werden.');
+            return back()->withInput($request->all())->withErrors('Dienst konnte nicht gespeichert werden');
         }
 
         return redirect(planWithDuty($duties->first()));
     }
 
-    public function update() {
-        // FIXME
-        dd('update');
-        // $this->authorize('update', $duty);
+    public function update(UpdateDuty $request) {
+        $duty = $request->getDuty();
+
+        $this->authorize('save', $duty);
+        try {
+            $duty->saveOrFail();
+        } catch (Throwable $e) {
+            return back()->withInput($request->all())->withErrors('Dienst konnte nicht aktualisiert werden');
+        }
+
+        return redirect(planWithDuty($duty));
     }
 
-    public function destroy($id) {
-        $duty = Duty::find($id);
-
+    public function destroy(Duty $duty) {
         $this->authorize('delete', $duty);
         $duty->delete();
 

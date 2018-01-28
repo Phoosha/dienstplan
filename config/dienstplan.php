@@ -68,4 +68,7 @@ return [
 
     'modify_threshold' => CarbonInterval::week(),
 
+    'min_date' => Carbon::create(1970)->firstOfYear(),
+    'max_date' => Carbon::create(2037)->endOfYear(),
+
 ];

@@ -14,47 +14,14 @@ class DutyPolicy {
 
     use HandlesAuthorization;
 
-    protected $store_start;
-    protected $store_end;
-    protected $view_start;
-
-    public function __construct() {
-        $this->store_start = self::getStoreStart();
-        $this->store_end   = self::getStoreEnd();
-        $this->view_start  = self::getViewStart();
-    }
-
     /**
-     * Determines starting from when duties may be stored.
+     * Runs before any <code>$ability</code> and may overwrite its
+     * result for <code>$user</code>.
      *
-     * @return Carbon
+     * @param User $user
+     * @param $ability
+     * @return bool|null
      */
-    public static function getStoreStart() {
-        $now_shift = new Shift(now());
-        return $now_shift->start;
-    }
-
-    /**
-     * Determines starting up to when duties may be stored in advance.
-     *
-     * @return Carbon
-     */
-    public static function getStoreEnd() {
-        $now_shift = new Shift(now());
-        return $now_shift->end->add(config('dienstplan.store_threshold'));
-    }
-
-    /**
-     * Determines starting from when past duties may be viewed.
-     *
-     * @return Carbon
-     */
-    public static function getViewStart() {
-        return now()
-            ->subMonths(config('dienstplan.view_past_months'))
-            ->firstOfMonth();
-    }
-
     public function before(User $user, $ability) {
         if ($user->is_admin)
             return true;
@@ -63,74 +30,99 @@ class DutyPolicy {
     }
 
     /**
-     * Determine whether the user can view the duty.
+     * Determine whether the <code>$user</code> can view the duty.
      *
      * @param  \App\User $user
      * @param  \App\Duty $duty
-     * @return mixed
+     * @return bool
      */
     public function view(User $user, Duty $duty) {
-        return $duty->end >= $this->view_start;
+        return $duty->end >= self::view_start($user);
     }
 
     /**
-     * Determine whether the user can create duties.
+     * Determine whether the <code>$user</code> could have permission
+     * to save some duty built from <code>$duty</code>.
      *
      * @param  \App\User $user
      * @param  \App\Duty $duty
-     * @return mixed
+     * @return bool
      */
     public function create(User $user, Duty $duty) {
-        return $duty->end <= $this->store_end && $duty->start >= $this->store_start;
+        return $user->can('store', Duty::class)
+            && $duty->start >= self::store_start($user)
+            && $duty->end   <= self::store_end($user);
     }
 
     /**
-     * Determine whether the user can store the duty.
+     * Determine whether the <code>$user</code> can store any duty.
+     *
+     * @param \App\User $user
+     * @return bool
+     */
+    public function store(User $user) {
+        return true;
+    }
+
+    /**
+     * Determine whether the <code>$user</code> can save <code>$duty</code>.
      *
      * @param  \App\User $user
      * @param  \App\Duty $duty
-     * @return mixed
+     * @return bool
      */
-    public function store(User $user, Duty $duty) {
-        return $this->create($user, $duty) && $duty->type !== Duty::SERVICE;
+    public function save(User $user, Duty $duty) {
+        return $user->can('create', $duty)
+            && ( $duty->type !== Duty::SERVICE || $user->can('service', Duty::class) )
+            && ( $duty->user->is($user) || $user->can('impersonate', Duty::class) );
     }
 
     /**
-     * Determine whether the user can store a duty for another user.
+     * Determine whether the <code>$user</code> can store duties for another user.
      *
      * @param  \App\User $user
-     * @return mixed
+     * @return bool
      */
     public function impersonate(User $user) {
         return false;
     }
 
     /**
-     * Determine whether the user can edit the duty.
+     * Determine whether the <code>$user</code> can save a duty of SERVICE type.
+     *
+     * @param \App\User $user
+     * @return bool
+     */
+    public function service(User $user) {
+        return false;
+    }
+
+    /**
+     * Determine whether the <code>$user</code> can edit the <code>$duty</code> in some way.
      *
      * @param  \App\User $user
      * @param  \App\Duty $duty
-     * @return mixed
+     * @return bool
      */
     public function edit(User $user, Duty $duty) {
-        return $this->update($user, $duty) || $this->delete($user, $duty);
+        return $user->can('update', $duty)
+            || $user->can('delete', $duty);
     }
 
     /**
-     * Determine whether the user can update the duty.
+     * Determine whether the <code>$user</code> can update the <code>$duty</code> with any change at all.
      *
      * @param  \App\User $user
      * @param  \App\Duty $duty
-     * @return mixed
+     * @return bool
      */
     public function update(User $user, Duty $duty) {
-        $threshold_dt = now()->add(config('dienstplan.modify_threshold'));
-
-        return $duty->start >= $threshold_dt && $duty->user->is($user);
+        return $duty->start >= self::update_start($user)
+            && ( $duty->user->is($user) || $user->can('impersonate', Duty::class) );
     }
 
     /**
-     * Determine whether the user can delete the duty.
+     * Determine whether the <code>$user</code> can delete the <code>$duty</code>.
      *
      * @param  \App\User $user
      * @param  \App\Duty $duty
@@ -138,6 +130,69 @@ class DutyPolicy {
      */
     public function delete(User $user, Duty $duty) {
         return $this->update($user, $duty);
+    }
+
+    /**
+     * Determines starting from when duties may be stored.
+     *
+     * @param \App\User $user
+     * @return \Carbon\Carbon
+     */
+    public static function store_start(User $user) {
+        if ($user->is_admin)
+            return config('dienstplan.min_date');
+
+        $now_shift = new Shift(now());
+        return $now_shift->start
+            ->max(config('dienstplan.min_date'));
+    }
+
+    /**
+     * Determines up to when duties may be stored in advance.
+     *
+     * @param \App\User $user
+     * @return \Carbon\Carbon
+     */
+    public static function store_end(User $user) {
+        if ($user->is_admin)
+            return config('dienstplan.max_date');
+
+        $now_shift = new Shift(now());
+        return $now_shift->end
+            ->add(config('dienstplan.store_threshold'))
+            ->min(config('dienstplan.max_date'));
+    }
+
+    /**
+     * Determines starting from when past duties may be viewed.
+     *
+     * @param \App\User $user
+     * @return \Carbon\Carbon
+     */
+    public static function view_start(User $user) {
+        if ($user->is_admin)
+            return config('dienstplan.min_date');
+
+        return now()
+            ->subMonths(config('dienstplan.view_past_months'))
+            ->firstOfMonth()
+            ->max(config('dienstplan.min_date'));
+    }
+
+    /**
+     * Determines starting from when duties may be updated.
+     *
+     * @param \App\User $user
+     * @return \Carbon\Carbon
+     */
+    public static function update_start(User $user) {
+        if ($user->is_admin)
+            return config('dienstplan.min_date');
+
+        $now_shift = new Shift(now());
+        return $now_shift->start
+            ->add(config('dienstplan.modify_threshold'))
+            ->max(config('dienstplan.min_date'));
     }
 
 }

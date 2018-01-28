@@ -202,16 +202,30 @@ class Duty extends Model {
     /**
      * Returns duties that are in conflict with this instance.
      *
+     * Conflicts are...
+     *  - either non-SERVICE duties by the same user for any slot
+     *  - or SERVICE duties by any user for the same slot
+     *
      * @return Collection
      */
     public function getConflicts() {
-        return self::between($this->start, $this->end)
+        /** @var Builder $query */
+        $query = self::between($this->start, $this->end)
             ->where(function ($query) {
-                $query->takenBy($this->user_id)
-                    ->orWhere(function ($query) {
-                        $query->where('slot_id', '=', $this->slot_id)->where('type', '=', Duty::SERVICE);
+                $query
+                    ->where(function ($query) { /* ME conflicts */
+                        $query->takenBy($this->user_id)->where('type', '<>', Duty::SERVICE);
+                    })
+                    ->orWhere(function ($query) { /* SERVICE conflicts */
+                        $query->where('slot_id', $this->slot_id)->where('type', Duty::SERVICE);
                     });
-            })->get();
+            });
+
+        // do not count $this as a conflict
+        if (isset($this->id))
+            $query->whereKeyNot($this->id);
+
+        return $query->get();
     }
 
     /**

@@ -76,7 +76,8 @@ function checked($sel, $cur) {
  * @return bool
  */
 function isValidDate(Carbon $dt) {
-    return $dt->year >= 1970 && $dt->year < 2038;
+    return $dt->gte(config('dienstplan.min_date'))
+        && $dt->lt(config('dienstplan.max_date'));
 }
 
 /**
@@ -87,8 +88,10 @@ function isValidDate(Carbon $dt) {
  * @return bool
  */
 function isValidDateOrFail(Carbon $dt) {
+    $minDate = config('dienstplan.min_date');
+    $maxDate = config('dienstplan.max_date');
     if (! isValidDate($dt))
-        throw new OutOfBoundsException("Date was not between 1970 and 2038");
+        throw new OutOfBoundsException("Date was not between ${minDate} and ${maxDate}");
     else
         return true;
 }

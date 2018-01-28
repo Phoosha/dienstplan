@@ -28,8 +28,10 @@ class CreateDuty extends FormRequest {
      * @return array
      */
     public function rules() {
+        $minDate = config('dienstplan.min_date');
+        $maxDate = config('dienstplan.max_date');
         return [
-            'year' => 'sometimes|integer|min:1970|max:2037',
+            'year' => "sometimes|integer|min:{$minDate->year}|max:{$maxDate->year}",
             'month' => 'required_with:year|integer|min:1|max:12',
             'shifts' => 'required_with:year|array|max:31|integer_keys',
             'shifts.*' => 'required_with:year|array|max:14|integer_keys',
