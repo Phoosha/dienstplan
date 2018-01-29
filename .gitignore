@@ -16,3 +16,7 @@ yarn-error.log
 composer.lock
 package-lock.json
 .env
+resources/lang/*/auth.php
+resources/lang/*/pagination.php
+resources/lang/*/passwords.php
+resources/lang/*/validation.php
