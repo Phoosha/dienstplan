@@ -23,7 +23,7 @@
                     @component('layouts.menuentry', [ 'uri' => 'user/phonelist' ])
                         <i class="fa fa-phone fa-fw" aria-hidden="true"></i> Telefonliste</a>
                     @endcomponent
-                    @component('layouts.menuentry', [ 'uri' => 'user/settings' ])
+                    @component('layouts.menuentry', [ 'uri' => "users/" . Auth::user()->id ])
                         <i class="fa fa-user fa-fw" aria-hidden="true"></i> Mein Konto</a>
                     @endcomponent
                     @component('layouts.menuentry', [ 'uri' => 'admin' ])
@@ -34,13 +34,13 @@
             @guest
                 @if (! Request::is('login'))
                     <a href="{{ url('login') }}" class="primary-button pure-button primary-button">
-                        <i class="fa fa-sign-in" aria-hidden="true"></i> Anmelden
+                        <i class="fa fa-sign-in" aria-hidden="true"></i>&nbsp;Anmelden
                     </a>
                 @endif
             @endguest
             @auth
                 <a href="{{ url('logout') }}" class="primary-button pure-button danger-button">
-                    <i class="fa fa-sign-out" aria-hidden="true"></i> Abmelden
+                    <i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp;Abmelden
                 </a>
             @endauth
         </div>

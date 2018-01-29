@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\CalendarMonth;
 use App\Duty;
 use App\Policies\DutyPolicy;
+use App\Policies\UserPolicy;
 use App\Shift;
 use App\User;
 use Gate;
@@ -19,6 +20,7 @@ class AuthServiceProvider extends ServiceProvider {
      */
     protected $policies = [
         Duty::class => DutyPolicy::class,
+        User::class => UserPolicy::class,
     ];
 
     /**

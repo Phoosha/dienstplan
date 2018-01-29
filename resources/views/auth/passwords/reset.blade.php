@@ -18,8 +18,8 @@
         <input type="text" id="email" name="email" placeholder="E-Mail" value="{{ $email }}" size="25" tabindex="1" autofocus required />
 
         <fieldset class="pure-group">
-            <input type="password" id="password" name="password" placeholder="Passwort" size="25" tabindex="2" required />
-            <input type="password" id="password_confirmation" name="password_confirmation" size="25" placeholder="Passwort (Wdh.)" tabindex="3" required />
+            <input type="password" id="password" name="password" placeholder="Neues Passwort" size="25" tabindex="2" required />
+            <input type="password" id="password_confirmation" name="password_confirmation" size="25" placeholder="Neues Passwort (Wdh.)" tabindex="3" required />
         </fieldset>
 
         <button type="submit" class="pure-button primary-button" tabindex="4">

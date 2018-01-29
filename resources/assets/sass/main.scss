@@ -148,6 +148,61 @@ label {
   color: #555;
 }
 
+.pure-form .pure-button {
+  margin: .7em 0 0;
+}
+
+.pure-form-aligned {
+  text-align: left;
+  width: 80%;
+  margin: 0 0 0 auto;
+}
+
+@media (max-width: 1000px) {
+  .pure-form-aligned {
+    width: 90%;
+  }
+}
+
+@media (max-width: 850px) {
+  .pure-form-aligned {
+    width: 100%;
+  }
+}
+
+@media (min-width: 481px) {
+  .pure-form-aligned .pure-control-group {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .pure-control-group input {
+    height: fit-content;
+  }
+
+  .pure-control-group label {
+    padding-top: .3em;
+  }
+
+  .pure-control-group input,
+  .pure-control-group label {
+    flex: 0 0 auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .pure-form-aligned .pure-control-group,
+  .pure-form-aligned .pure-controls {
+    max-width: max-content;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .pure-form-aligned .pure-controls {
+    text-align: center;
+  }
+}
+
 a {
   text-decoration: none;
   color: #1f8dd6;
@@ -247,12 +302,6 @@ div.sep {
 
 .pure-button:hover {
   text-decoration: none;
-}
-
-@media only screen and (max-width: 480px) {
-  .pure-form .pure-button {
-    margin: .7em 0 0;
-  }
 }
 
 /* -- Menu -----------------------------------------------------------------*/
