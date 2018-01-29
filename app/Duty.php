@@ -210,8 +210,12 @@ class Duty extends Model {
      */
     public function getConflicts() {
         /** @var Builder $query */
-        $query = self::between($this->start, $this->end)
-            ->where(function ($query) {
+        $query = self::between($this->start, $this->end);
+
+        if ($this->type == Duty::SERVICE)
+            $query->where('slot_id', $this->slot_id);
+        else
+            $query->where(function ($query) {
                 $query
                     ->where(function ($query) { /* ME conflicts */
                         $query->takenBy($this->user_id)->where('type', '<>', Duty::SERVICE);

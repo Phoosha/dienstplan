@@ -16,20 +16,36 @@
                 @endforeach
             </select>
         </div>
-        <label for="{{ $index }}-internee" class="pure-checkbox">
-            <input type="checkbox" id="{{ $index }}-internee" name="duties[{{ $index }}][type]" {!! checked(old("duties.{$index}.type") ?? $duty->type, Duty::WITH_INTERNEE) !!}/> mit Praktikant
-        </label>
+        @can('service', App\Duty::class)
+            <label for="{{ $index }}-internee" class="pure-radio">
+                <input type="radio" id="{{ $index }}-internee" name="duties[{{ $index }}][type]" {!! checked(old("duties.{$index}.type") ?? $duty->type, Duty::WITH_INTERNEE) !!}/> mit Praktikant
+            </label>
+            <label for="{{ $index }}-normal" class="pure-radio">
+                <input type="radio" id="{{ $index }}-normal" name="duties[{{ $index }}][type]" {!! checked(old("duties.{$index}.type") ?? $duty->type, Duty::NORMAL) !!}/> ohne Praktikant
+            </label>
+        @else
+            <label for="{{ $index }}-internee" class="pure-checkbox">
+                <input type="checkbox" id="{{ $index }}-internee" name="duties[{{ $index }}][type]" {!! checked(old("duties.{$index}.type") ?? $duty->type, Duty::WITH_INTERNEE) !!}/> mit Praktikant
+            </label>
+        @endcan
     </div>
 
     {{-- FAHRZEUG --}}
-    <div class="pure-u-3-8"><div class="input-box">
-        <label for="{{ $index }}-slot">Fahrzeug: </label>
-        <select id="{{ $index }}-slot" name="duties[{{ $index }}][slot_id]" @yield('duties.disabled')>
-            @foreach ($duty->availableSlots() as $slot)
-                <option {!! selected(old("duties.{$index}.slot_id") ?? $duty->slot_id, $slot->id) !!}>{{ $slot->name }}</option>
-            @endforeach
-        </select>
-    </div></div>
+    <div class="pure-u-3-8">
+        <div class="input-box">
+            <label for="{{ $index }}-slot">Fahrzeug: </label>
+            <select id="{{ $index }}-slot" name="duties[{{ $index }}][slot_id]" @yield('duties.disabled')>
+                @foreach ($duty->availableSlots() as $slot)
+                    <option {!! selected(old("duties.{$index}.slot_id") ?? $duty->slot_id, $slot->id) !!}>{{ $slot->name }}</option>
+                @endforeach
+            </select>
+        </div>
+        @can('service', App\Duty::class)
+            <label for="{{ $index }}-service" class="pure-radio">
+                <input type="radio" id="{{ $index }}-service" name="duties[{{ $index }}][type]" {!! checked(old("duties.{$index}.type") ?? $duty->type, Duty::SERVICE) !!}/> außer Dienst
+            </label>
+        @endcan
+    </div>
 
     {{-- KOMMENTAR --}}
     <div class="pure-u-1"><div class="input-box">

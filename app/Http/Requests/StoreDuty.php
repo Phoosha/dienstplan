@@ -104,9 +104,12 @@ class StoreDuty extends FormRequest {
                     // check for existing conflicting duties
                     $conflicts = $duty->getConflicts();
                     if ($conflicts->isNotEmpty()) {
-                        if ($conflicts->first()->type === Duty::SERVICE)
+                        if ($conflicts->first()->type == Duty::SERVICE)
                             $validator->errors()->add("duties.{$key}.slot_id",
                                 "Fahrzeug \"{$duty->slot->name}\" ist zu dieser Zeit außer Dienst");
+                        elseif ($duty->type == Duty::SERVICE)
+                            $validator->errors()->add("duties.{$key}",
+                                'Existierende Dienste verhindern, dass das Fahrzeug außer Betrieb genommen wird');
                         else
                             $validator->errors()->add("duties.{$key}",
                                 'Der Fahrer ist zu dieser Zeit schon eingetragen');
