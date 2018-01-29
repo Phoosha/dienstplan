@@ -20,7 +20,7 @@
                     @component('layouts.menuentry', [ 'uri' => 'plan' ])
                         <i class="fa fa-calendar fa-fw" aria-hidden="true"></i> Dienstplan</a>
                     @endcomponent
-                    @component('layouts.menuentry', [ 'uri' => 'user/phonelist' ])
+                    @component('layouts.menuentry', [ 'uri' => 'phones' ])
                         <i class="fa fa-phone fa-fw" aria-hidden="true"></i> Telefonliste</a>
                     @endcomponent
                     @component('layouts.menuentry', [ 'uri' => "users/" . Auth::user()->id ])
