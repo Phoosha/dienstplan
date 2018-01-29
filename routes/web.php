@@ -30,6 +30,9 @@ Route::put('duties/{id}', 'DutyController@update');
 Route::delete('duties/{duty}', 'DutyController@destroy');
 
 Route::get('phones', 'PhoneController@index');
+Route::post('phones', 'PhoneController@store');
+Route::get('phones/edit', 'PhoneController@edit');
+Route::delete('phones/{phone}', 'PhoneController@destroy');
 
 Route::get('users/{user}', 'UserController@edit');
 Route::post('users/{user}', 'UserController@update');

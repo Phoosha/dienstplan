@@ -297,7 +297,7 @@ div.sep {
 
 .icon-button {
   padding: 0.5em;
-  margin: 0 0.2em;
+  margin: 0 0.2em !important;
 }
 
 .pure-button:hover {
@@ -736,4 +736,8 @@ div.duty-time {
 .phonelist td,
 .phonelist th {
   text-align: left;
+}
+
+#phone input {
+  width: 100%;
 }

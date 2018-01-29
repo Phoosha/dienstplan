@@ -71,4 +71,6 @@ return [
     'min_date' => Carbon::create(1970)->firstOfYear(),
     'max_date' => Carbon::create(2037)->endOfYear(),
 
+    'phone_regex' => '/^(0[0-9]+ )*[0-9][0-9][0-9]+(-[0-9]+)*$/',
+
 ];

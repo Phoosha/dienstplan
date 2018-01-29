@@ -26,7 +26,7 @@ class UserController extends Controller {
             'last_name' => 'required|alpha_dash|max:35',
             'login' => "sometimes|alpha_num|max:35|unique:users,login,{$user->id}",
             'email' => 'required|email|max:100',
-            'phone' => 'present|max:35|regex:/^(0[0-9]+ )*[0-9][0-9][0-9]+(-[0-9]+)*$/',
+            'phone' => [ 'present', 'max:35', 'regex:' . config('dienstplan.phone_regex') ],
             'is_admin' => 'sometimes|boolean'
         ]);
 
