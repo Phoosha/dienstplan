@@ -7,7 +7,7 @@
         {{ csrf_field() }}
         <h2 class="content-subhead">Passwort zurücksetzen</h2>
 
-        <div id="infoMessage">
+        <div class="status">
             @foreach ($errors->all() as $message)
                 <p class="error">{{ $message }}</p>
             @endforeach

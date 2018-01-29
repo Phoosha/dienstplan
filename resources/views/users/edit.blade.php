@@ -4,7 +4,7 @@
 
 @section('content')
     <h2 class="content-subhead">Deine Nutzerdaten</h2>
-    <div id="infoMessage">
+    <div class="status">
         @if (session()->has('status'))
             <p class="success">{{ session('status') }}</p>
         @endif
@@ -79,7 +79,7 @@
     </form>
 
     <h2 class="content-subhead">Passwort ändern</h2>
-    <div id="infoMessage">
+    <div class="status">
         @if (session()->has('password-status'))
             <p class="success">{{ session('password-status') }}</p>
         @endif
