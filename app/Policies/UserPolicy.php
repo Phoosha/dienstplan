@@ -13,6 +13,7 @@ class UserPolicy {
         switch ($ability) {
             case 'promote':
             case 'delete':
+            case 'resetAuthless':
                 return null;
         }
 
@@ -28,6 +29,11 @@ class UserPolicy {
 
     public function reset(User $asUser, User $user) {
         return $asUser->can('edit', $user);
+    }
+
+    public function resetAuthless(User $asUser, User $user) {
+        return $asUser->can('reset', $user)
+            && $asUser->isNot($user);
     }
 
     public function update(User $asUser, User $user) {

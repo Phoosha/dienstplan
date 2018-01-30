@@ -158,6 +158,11 @@ label {
   margin: 0 0 0 auto;
 }
 
+.pure-control-group .pure-group {
+  display: inline-block;
+  margin: 0;
+}
+
 @media (max-width: 1000px) {
   .pure-form-aligned {
     width: 90%;
@@ -188,14 +193,21 @@ label {
   .pure-control-group label {
     flex: 0 0 auto;
   }
+
+  .pure-form-message-inline {
+    padding-top: 10px;
+  }
 }
 
 @media (max-width: 480px) {
   .pure-form-aligned .pure-control-group,
   .pure-form-aligned .pure-controls {
+    max-width: 100%;
+  }
+
+  .pure-form-aligned {
     max-width: max-content;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 0 auto;
   }
 
   .pure-form-aligned .pure-controls {
