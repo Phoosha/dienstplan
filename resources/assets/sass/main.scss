@@ -506,6 +506,7 @@ Hides the menu at `48em`, but modify this based on your app's needs.
 
 }
 
+
 /* -- Welcome page-specific formatting -------------------------------------*/
 
 .news-item {
@@ -515,15 +516,11 @@ Hides the menu at `48em`, but modify this based on your app's needs.
 }
 
 .news-title {
-  font-size: 2em;
+  font-size: 200%;
+  line-height: 1.2;
   color: #c55;
   margin-top: 0.5em;
   margin-bottom: 0.2em;
-}
-
-.news-title a {
-  color: #c55;
-  text-decoration: none;
 }
 
 .news-meta {
@@ -534,13 +531,32 @@ Hides the menu at `48em`, but modify this based on your app's needs.
 
 .news-description {
   color: #555;
-  line-height: 1.8em;
 }
 
-.news-description p {
-  margin: 0.2em;
+  .news-description p {
+    margin: 0.3em 0;
+    text-align: justify;
+  }
+
+#title,
+#body {
+  width: 100%;
+}
+
+#title {
+  font-weight: bold;
+}
+
+#body {
+  resize: none;
   text-align: justify;
 }
+
+#create-news label {
+  display: inline-block;
+  margin-right: .7em;
+}
+
 
 /* -- Login page-specific formatting -------------------------------------*/
 

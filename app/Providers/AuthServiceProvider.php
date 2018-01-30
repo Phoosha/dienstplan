@@ -7,7 +7,9 @@ use App\Duty;
 use App\Phone;
 use App\Policies\DutyPolicy;
 use App\Policies\PhonePolicy;
+use App\Policies\PostPolicy;
 use App\Policies\UserPolicy;
+use App\Post;
 use App\Shift;
 use App\User;
 use Gate;
@@ -24,6 +26,7 @@ class AuthServiceProvider extends ServiceProvider {
         Duty::class => DutyPolicy::class,
         User::class => UserPolicy::class,
         Phone::class => PhonePolicy::class,
+        Post::class => PostPolicy::class,
     ];
 
     /**

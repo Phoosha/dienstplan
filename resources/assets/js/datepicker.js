@@ -22,6 +22,11 @@ $.fn.filterSameFieldsetAs = function (element) {
 
 $(function() {
 
+    var dutyMode = true;
+    if ($('#create-post').empty())
+        dutyMode = false;
+
+
     var startDates = $('input.start-date');
     var endDates   = $('input.end-date');
     var startTimes = $('select.start-time');
@@ -32,14 +37,17 @@ $(function() {
 
     startDates.datepicker({
         onClose: function () {
-            var myEndDate = endDates.filterSameFieldsetAs(this)
+            var myEndInput = endDates.filterSameFieldsetAs(this);
             var newDate = $(this).datepicker("getDate");
+            console.log(myEndInput.val());
 
-            if (newDate > myEndDate.datepicker("getDate")) {
-                myEndDate.datepicker("setDate", newDate);
+            if (myEndInput.val() !== "nie" && newDate > myEndInput.datepicker("getDate")) {
+                myEndInput.datepicker("setDate", newDate);
             }
 
-            updateEndTime(this);
+            if (dutyMode)
+                updateEndTime(this);
+
             $(this).attr("disabled", false);
         },
         beforeShow: function () {
@@ -50,15 +58,27 @@ $(function() {
     });
     endDates.datepicker({
         onClose: function () {
-            updateEndTime(this);
+            if (dutyMode)
+                updateEndTime(this);
+            else if (this.value === "")
+                this.value = "nie";
+
             $(this).attr("disabled", false);
+        },
+        onSelect: function (date, picker) {
+            if (! dutyMode && date === picker.lastVal)
+                this.value = "nie";
         },
         beforeShow: function () {
             $(this).attr("disabled", true);
 
             var myStartInput = startDates.filterSameFieldsetAs(this);
+            var myStartDate  = myStartInput.datepicker("getDate");
 
-            $(this).datepicker("option", "minDate", myStartInput.datepicker("getDate"));
+            if (! dutyMode)
+                myStartDate.setDate(myStartDate.getDate() + 1);
+
+            $(this).datepicker("option", "minDate", myStartDate);
         },
         maxDate: maxDate
     });

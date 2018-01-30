@@ -12,6 +12,9 @@
 */
 
 Route::get('/', 'PostController@index')->name('home');
+Route::post('posts', 'PostController@store');
+Route::get('posts/edit', 'PostController@edit');
+Route::delete('posts/{post}', 'PostController@destroy');
 
 Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
 Route::post('login', 'Auth\LoginController@login');
