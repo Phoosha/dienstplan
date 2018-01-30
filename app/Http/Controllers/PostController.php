@@ -15,7 +15,7 @@ class PostController extends Controller {
         if ($edit)
             $posts = Post::ordering()->get();
         else
-            $posts = Post::active();
+            $posts = Post::ordering()->active()->get();
 
         return view('welcome', compact('posts', 'edit'));
     }

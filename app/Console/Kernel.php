@@ -2,6 +2,8 @@
 
 namespace App\Console;
 
+use App\Post;
+use Carbon\Carbon;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -24,8 +26,13 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        // Delete posts expired before the start of yesterday
+        $schedule->call(function () {
+            Post::expired(Carbon::yesterday())
+                ->each(function ($post) {
+                    $post->delete();
+                });
+        })->daily();
     }
 
     /**

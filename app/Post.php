@@ -2,6 +2,8 @@
 
 namespace App;
 
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -58,13 +60,49 @@ class Post extends Model {
      * The natural ordering of <code>Post</code>s.
      *
      * @param $query
-     * @return mixed
+     * @return Builder
      */
     public function scopeOrdering($query) {
         return $query->orderBy('release_on', 'DESC')
             ->orderByRaw('case when expire_on is null then 1 else 0 end')
             ->orderBy('expire_on')
             ->orderBy('created_at');
+    }
+
+    /**
+     * Selects all <code>Post</code>s that have expired.
+     *
+     * @param $query
+     * @param \Carbon\Carbon|\DateTime $now
+     * @param bool $not if <code>true</code> inverts the scope
+     * @return Builder
+     */
+    public function scopeExpired($query, $now = null, $not = false) {
+        $now = Carbon::instance($now ?? now());
+        return $not
+            ? $query->whereNotNull('expire_on')->where('expire_on', '<=', $now)
+            : $query->whereNull('expire_on')->where('expire_on', '>', $now);
+    }
+
+    /**
+     * Selects all <code>Post</code>s that have not expired.
+     *
+     * @param $query
+     * @param \Carbon\Carbon|\DateTime $now
+     * @return Builder
+     */
+    public function scopeNotExpired($query, $now = null) {
+        return $query->expired($now, true);
+    }
+
+    /**
+     * Selects all active (released and not expired) <code>Post</code>s.
+     *
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeActive(Builder $query) {
+        return $query->notExpired()->where('release_on', '<=', now());
     }
 
     /**
