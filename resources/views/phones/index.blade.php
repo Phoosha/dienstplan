@@ -6,22 +6,9 @@
     <h2 class="content-subhead">
         Wichtige Telefonnummern
         @can('edit', App\Phone::class)
-        @if (! $edit)
-            <a href="{{ url('phones/edit') }}" class="pure-button primary-button icon-button">
-                <i class="fa-fw fa fa-edit" aria-hidden="true"></i>
-            </a>
-        @else
-            <a href="{{ url('phones') }}" class="pure-button secondary-button icon-button">
-                <i class="fa-fw fa fa-close" aria-hidden="true"></i>
-            </a>
-        @endif
+        @include('layouts.editable', [ 'editUrl' => url('phones/edit'), 'viewUrl' => url('phones') ])
         @endcan
     </h2>
-    <div class="status">
-        @foreach($errors->all() as $message)
-        <p class="error">{{ $message }}</p>
-        @endforeach
-    </div>
     <table class="pure-table phonelist" id="phone">
         <thead>
             <tr>
