@@ -4,11 +4,9 @@
 
 @section('content')
     <h2 class="content-subhead">Deine Nutzerdaten</h2>
-    <div class="status">
-        @if (session()->has('status'))
-            <p class="success">{{ session('status') }}</p>
-        @endif
-    </div>
+
+    @include('layouts.status', [ 'errors' => null ])
+
     <form method="post" action="{{ url('users', $user->id) }}" class="pure-form pure-form-aligned">
         {{ csrf_field() }}
         <fieldset>
@@ -79,11 +77,9 @@
     </form>
 
     <h2 class="content-subhead">Passwort ändern</h2>
-    <div class="status">
-        @if (session()->has('password-status'))
-            <p class="success">{{ session('password-status') }}</p>
-        @endif
-    </div>
+
+    @include('layouts.status', [ 'errors' => null, 'statusKey' => 'password-status' ])
+
     <form method="post" action="{{ url('users', [ $user->id, 'password' ]) }}" class="pure-form pure-form-aligned">
         {{ csrf_field() }}
         {{ method_field('put') }}

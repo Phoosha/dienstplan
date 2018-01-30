@@ -7,11 +7,7 @@
         {{ csrf_field() }}
         <h2 class="content-subhead">Neues Passwort festlegen</h2>
 
-        <div class="status">
-            @foreach ($errors->all() as $message)
-                <p class="error">{{ $message }}</p>
-            @endforeach
-        </div>
+        @include('layouts.status')
 
         <input type="hidden" name="token" value="{{ $token }}" />
 

@@ -1,3 +1,4 @@
+<h2 class="content-subhead">Ankündigungen</h2>
 <div class="news">
 
     @forelse ($posts as $post)

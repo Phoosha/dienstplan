@@ -7,11 +7,7 @@
         {{ csrf_field() }}
         <h2 class="content-subhead">Passwort zurücksetzen</h2>
 
-        <div class="status">
-            @foreach ($errors->all() as $message)
-                <p class="error">{{ $message }}</p>
-            @endforeach
-        </div>
+        @include('layouts.status')
 
         <p>Gib hier bitte die E-Mail, mit der du registriert bist, an.
             Dann schicken wir dir eine Nachricht mit einem Link,

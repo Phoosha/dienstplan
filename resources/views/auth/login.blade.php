@@ -7,11 +7,7 @@
         {{ csrf_field() }}
         <h2 class="content-subhead">Anmeldung</h2>
 
-        <div class="status">
-            @foreach ($errors->all() as $message)
-                <p class="error">{{ $message }}</p>
-            @endforeach
-        </div>
+        @include('layouts.status')
 
         <fieldset>
             <label for="user">Nutzername</label>

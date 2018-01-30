@@ -42,7 +42,7 @@
                 <td><form method="post" action="{{ url('phones', $entry->id) }}">
                     {{ csrf_field() }}
                     {{ method_field('delete') }}
-                    <button type="submit" title="Löschen" class="pure-button secondary-button icon-button danger-button">
+                    <button type="submit" title="Löschen" class="pure-button secondary-button icon-button danger-button" onclick="return confirm('Telefoneintrag wirklich löschen?')">
                         <i class="fa-fw fa fa-trash-o" aria-hidden="true"></i>
                     </button>
                 </form></td>
