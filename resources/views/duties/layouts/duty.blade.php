@@ -67,7 +67,7 @@
 
     <div class="pure-u-1">
         <div class="status">
-            @foreach (array_flatten([ $errors->get("duties.{$index}"), $errors->get("duties.{$index}.*") ]) as $message)
+            @foreach (array_flatten($errors->get("duties.{$index}.*")) as $message)
                 <p class="error">{{ $message }}</p>
             @endforeach
         </div>

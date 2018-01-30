@@ -108,10 +108,10 @@ class StoreDuty extends FormRequest {
                             $validator->errors()->add("duties.{$key}.slot_id",
                                 "Fahrzeug \"{$duty->slot->name}\" ist zu dieser Zeit außer Dienst");
                         elseif ($duty->type == Duty::SERVICE)
-                            $validator->errors()->add("duties.{$key}",
+                            $validator->errors()->add("duties.{$key}.type",
                                 'Existierende Dienste verhindern, dass das Fahrzeug außer Betrieb genommen wird');
                         else
-                            $validator->errors()->add("duties.{$key}",
+                            $validator->errors()->add("duties.{$key}.user_id",
                                 'Der Fahrer ist zu dieser Zeit schon eingetragen');
                     }
 
