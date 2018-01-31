@@ -19,6 +19,15 @@
 @endif
 
 @section('content')
+    <h2 class="content-subhead">
+        @yield('duties.head')
+        @unless (empty($back))
+            <a href="{{ $back }}" class="pure-button secondary-button icon-button">
+                <i class="fa-fw fa fa-close" aria-hidden="true"></i>
+            </a>
+        @endunless
+    </h2>
+
 	<form method="post" action="{{ url('duties') }}" class="pure-form pure-form-stacked" id="duty-form">
         {{csrf_field() }}
 

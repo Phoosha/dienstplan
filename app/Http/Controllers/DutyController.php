@@ -49,24 +49,28 @@ class DutyController extends Controller {
             $duty->availableSlots()->first()
         );
 
+        $back = url('plan');
+
         $this->authorize('create', $duty);
 
-        return view('duties.create', compact('duty', 'from_scratch'));
+        return view('duties.create', compact('duty', 'back'));
     }
 
     public function createFromShifts(CreateDuty $request) {
         $duties = $request->getDuties();
+        $back = url('plan', [ $request->year, $request->month ]);
 
         foreach ($duties as $duty)
             $this->authorize('create', $duty);
 
-        return view('duties.create', compact('duties', 'from_scratch'));
+        return view('duties.create', compact('duties', 'back'));
     }
 
     public function edit(Duty $duty) {
         $this->authorize('edit', $duty);
+        $back = url(planWithDuty($duty));
 
-        return view('duties.edit', compact('duty'));
+        return view('duties.edit', compact('duty', 'back'));
     }
 
     public function store(StoreDuty $request) {

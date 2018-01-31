@@ -3,8 +3,6 @@
     $duties = $duties ?? [ $duty ];
 @endphp
 
-<h2 class="content-subhead">@yield('duties.head')</h2>
-
 <div class="pure-g">
     @foreach ($duties as $duty)
         @can('impersonate', App\Duty::class)
