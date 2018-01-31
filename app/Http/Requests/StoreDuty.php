@@ -54,11 +54,22 @@ class StoreDuty extends FormRequest {
             'duties.*.user_id'    => 'sometimes|integer|exists:users,id',
             'duties.*.slot_id'    => 'required|integer|exists:slots,id',
             'duties.*.comment'    => 'nullable|string|max:255',
-            'duties.*.start-date' => "required|date_format:{$date_format}|after_or_equal:{$this->min_date}|before:{$this->max_date}",
-            'duties.*.end-date'   => "required|date_format:{$date_format}|after_or_equal:{$this->min_date}|before:{$this->max_date}|after_or_equal:duties.*.start-date",
+            'duties.*.start-date' => [
+                'required',
+                "date_format:{$date_format}",
+                "after_or_equal:{$this->min_date->startOfDay()}",
+                "before:{$this->max_date->startOfDay()}",
+            ],
+            'duties.*.end-date'   => [
+                'required',
+                "date_format:{$date_format}",
+                "after_or_equal:{$this->min_date->startOfDay()}",
+                "before:{$this->max_date->startOfDay()}",
+                'after_or_equal:duties.*.start-date',
+            ],
             'duties.*.start-time' => "required|date_format:{$time_format}",
             'duties.*.end-time'   => "required|date_format:{$time_format}",
-            'duties.*.type'       => 'sometimes|integer|' . Rule::in(Duty::TYPES),
+            'duties.*.type'       => [ 'sometimes', 'integer', Rule::in(Duty::TYPES) ],
         ];
     }
 
