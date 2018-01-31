@@ -46,6 +46,16 @@ function minTime(Carbon $dt) {
 }
 
 /**
+ * Returns a Zulu (UTC) string representation of <code>$dt</code> as specified by RFC5545.
+ *
+ * @param Carbon $dt
+ * @return string
+ */
+function icsZuluDateTime(Carbon $dt) {
+    return $dt->setTimezone('UTC')->format('Ymd\THis\Z');
+}
+
+/**
  * Outputs value and selection state for an HTML option tag.
  *
  * @param mixed $sel value of the selected option

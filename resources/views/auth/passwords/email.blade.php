@@ -9,7 +9,7 @@
 
         @include('layouts.status')
 
-        <p>Gib hier bitte die E-Mail, mit der du registriert bist, an.
+        <p class="remark">Gib hier bitte die E-Mail, mit der du registriert bist, an.
             Dann schicken wir dir eine Nachricht mit einem Link,
             um deine Identität zu bestätigen und ein neues Passwort
             festzulegen.</p>

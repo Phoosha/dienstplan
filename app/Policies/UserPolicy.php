@@ -14,6 +14,8 @@ class UserPolicy {
             case 'promote':
             case 'delete':
             case 'resetAuthless':
+            case 'viewApiToken':
+            case 'resetApiToken':
                 return null;
         }
 
@@ -59,6 +61,14 @@ class UserPolicy {
            return true;
        else
            return false;
+    }
+
+    public function viewApiToken(User $asUser, User $user) {
+        return $asUser->is($user);
+    }
+
+    public function resetApiToken(User $asUser, User $user) {
+        return $asUser->is($user);
     }
 
 }

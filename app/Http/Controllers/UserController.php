@@ -65,6 +65,14 @@ class UserController extends Controller {
         return redirect(url('users', $user->id))->with('password-status', 'Passwort wurde geändert');
     }
 
+    public function resetToken(User $user) {
+        $this->authorize('resetApiToken', $user);
+
+        $user->cycleApiToken();
+
+        return redirect(url('users', $user->id))->with('api-status', 'Adresse wurde zurückgesetzt');
+    }
+
     protected function reauthenticate($password) {
         $credentials = [
             'id' => Auth::user()->id,

@@ -41,3 +41,4 @@ Route::get('users/{user}', 'UserController@edit');
 Route::post('users/{user}', 'UserController@update');
 Route::delete('users/{user}', 'UserController@destroy');
 Route::put('users/{user}/password', 'UserController@reset');
+Route::delete('users/{user}/api_token', 'UserController@resetToken');

@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 
 /**
@@ -19,16 +20,20 @@ use Illuminate\Support\Collection;
  * @property int $id
  * @property int $user_id
  * @property User $user
- * @property \Carbon\Carbon $start
- * @property \Carbon\Carbon $end
  * @property int $slot_id
  * @property int $slot
+ * @property \Carbon\Carbon $start
+ * @property \Carbon\Carbon $end
  * @property int $type <code>null</code> unless, the instance is of a special type
  * @property string $comment
+ * @property int $sequence incremented for every update
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
+ * @property \Carbon\Carbon $deleted_at
  */
 class Duty extends Model {
+
+    use SoftDeletes;
 
     const NORMAL = 0;
     const WITH_INTERNEE = 1;
@@ -56,6 +61,18 @@ class Duty extends Model {
     protected $dates = [
         'start', 'end', 'created_at', 'updated_at'
     ];
+
+    /**
+     * Performs a model update incrementing the sequence counter.
+     *
+     * @param Builder $query
+     * @return bool
+     * @see Model::performUpdate()
+     */
+    protected function performUpdate(Builder $query) {
+        $this->sequence += 1;
+        return parent::performUpdate($query);
+    }
 
     /**
      * Tries to merge the instance with <code>$duty</code>.

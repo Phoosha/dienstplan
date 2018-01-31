@@ -1,0 +1,25 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Duty;
+use Auth;
+use Carbon\Carbon;
+
+class CalendarController extends Controller {
+
+    public function view() {
+        $duties = Duty::takenBy(Auth::user())
+            ->between(
+                Carbon::now()->subMonths(config('dienstplan.view_past_months')),
+                Carbon::now()->add(config('dienstplan.store_threshold'))
+            )->get();
+        $cal_name  = config('app.name') . ' ' . Auth::user()->getFullName();
+        $file_name = str_replace(' ', '-', $cal_name) . '.ics';
+
+        return response(view('api.duties', compact('duties', 'cal_name')))
+            ->header('Content-Type', 'text/calendar; charset=utf-8')
+            ->header('Content-Disposition', "inline; filename={$file_name}");
+    }
+
+}

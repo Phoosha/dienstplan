@@ -21,8 +21,9 @@ class CreateUsersTable extends Migration
             $table->string('email', 100);
             $table->string('phone', 35)->default('');
             $table->string('password');
-            $table->rememberToken();
             $table->boolean('is_admin')->default(false);
+            $table->string('api_token')->unique();
+            $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
         });

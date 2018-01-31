@@ -134,6 +134,10 @@ label {
   height: auto;
 }
 
+h2 {
+  margin-top: 1.6em;
+}
+
 .content-subhead {
   text-transform: uppercase;
   color: #555;
@@ -142,6 +146,14 @@ label {
   font-size: 90%;
   font-weight: 500;
   letter-spacing: 0.1em;
+}
+
+.remark {
+  font-size: 85%;
+  width: 30em;
+  text-align: justify;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .pure-form legend {
@@ -161,6 +173,10 @@ label {
 .pure-control-group .pure-group {
   display: inline-block;
   margin: 0;
+}
+
+.pure-form-aligned .pure-controls {
+  margin-top: 0.7em;
 }
 
 @media (max-width: 1000px) {
@@ -309,7 +325,7 @@ div.sep {
 
 .icon-button {
   padding: 0.5em;
-  margin: 0 0.2em !important;
+  margin: 0 0.2em;
 }
 
 .pure-button:hover {
@@ -606,12 +622,6 @@ Hides the menu at `48em`, but modify this based on your app's needs.
   margin-right: auto;
 }
 
-#reset-form > p {
-  font-size: 85%;
-  max-width: 30em;
-  text-align: justify;
-}
-
 /* -- Duty page-specific formatting -------------------------------------*/
 
 #duty-form fieldset {
@@ -759,6 +769,7 @@ div.duty-time {
   display: none;
 }
 
+
 /* -- Phonelist page-specific formatting -------------------------------------*/
 
 .phonelist td,
@@ -767,5 +778,18 @@ div.duty-time {
 }
 
 #phone input {
+  width: 100%;
+}
+
+
+/* -- User page-specific formatting ------------------------------------------*/
+
+#cal-form {
+  max-width: none;
+}
+
+#cal-form input {
+  min-width: fit-content;
+  max-width: 38em;
   width: 100%;
 }

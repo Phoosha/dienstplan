@@ -3,8 +3,10 @@
 namespace App;
 
 use App\Notifications\ResetPassword;
+use DB;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\QueryException;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -20,6 +22,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property string $email
  * @property string $phone
  * @property string $password
+ * @property string $api_token
  * @property string $remember_token
  * @property boolean $is_admin
  * @property \Carbon\Carbon $created_at
@@ -48,7 +51,7 @@ class User extends Authenticatable {
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'api_token', 'remember_token',
     ];
 
     /**
@@ -68,6 +71,29 @@ class User extends Authenticatable {
      */
     public function sendPasswordResetNotification($token) {
         $this->notify(new ResetPassword($token));
+    }
+
+    /**
+     * Sets and stores a new <code>api_token</code> for this <code>User</code>.
+     */
+    public function cycleApiToken() {
+        $this->api_token = str_random(60);
+        $result = DB::table('users')
+            ->where('id', $this->id)
+            ->update([ 'api_token' => $this->api_token]);
+        $this->syncOriginalAttribute('api_token');
+    }
+
+    /**
+     * Returns an API URL to the iCalendar of the <code>User</code>.
+     *
+     * @return \Illuminate\Contracts\Routing\UrlGenerator|string
+     */
+    public function getCalendarURL() {
+        if (empty($this->api_token))
+            $this->cycleApiToken();
+
+        return url("api/ics/duties?api_token={$this->api_token}");
     }
 
     /**

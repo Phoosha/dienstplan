@@ -21,7 +21,9 @@ class CreateDutiesTable extends Migration
             $table->timestamp('end')->nullable();
             $table->tinyInteger('type')->unsigned()->default(Duty::NORMAL);
             $table->string('comment')->nullable();
+            $table->tinyInteger('sequence')->default(0);
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('user_id')->references('id')->on('users')
                 ->onDelete('cascade');
