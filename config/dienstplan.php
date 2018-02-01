@@ -73,4 +73,6 @@ return [
 
     'phone_regex' => '/^(0[0-9]+ )*[0-9][0-9][0-9]+(-[0-9]+)*$/',
 
+    'training_threshold' => CarbonInterval::months(6),
+
 ];

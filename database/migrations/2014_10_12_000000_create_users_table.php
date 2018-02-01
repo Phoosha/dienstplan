@@ -22,7 +22,8 @@ class CreateUsersTable extends Migration
             $table->string('phone', 35)->default('');
             $table->string('password');
             $table->boolean('is_admin')->default(false);
-            $table->string('api_token')->unique();
+            $table->timestamp('last_training')->nullable()->default(null);
+            $table->string('api_token')->unique()->nullable();
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

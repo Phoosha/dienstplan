@@ -21,5 +21,6 @@ $factory->define(App\User::class, function (Faker $faker) {
         'email' => $faker->unique()->safeEmail,
         'phone' => "0{$faker->numberBetween(100, 9999)} {$faker->numberBetween(100, 99999999)}",
         'password' => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm', // secret
+        'last_training' => $faker->dateTimeThisYear(),
     ];
 });

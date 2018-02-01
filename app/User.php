@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Notifications\ResetPassword;
+use Carbon\Carbon;
 use DB;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -25,6 +26,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property string $api_token
  * @property string $remember_token
  * @property boolean $is_admin
+ * @property \Carbon\Carbon $last_training
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property \Carbon\Carbon $deleted_at
@@ -53,6 +55,25 @@ class User extends Authenticatable {
     protected $hidden = [
         'password', 'api_token', 'remember_token',
     ];
+
+    /**
+     * The attributes that are dates.
+     *
+     * @var array
+     */
+    protected $dates = [
+        'last_training', 'created_at', 'updated_at', 'deleted_at',
+    ];
+
+    /**
+     * Mutator for <code>$last_training</code> ensuring it is always
+     * set to the same time of day, i.e. the end.
+     *
+     * @param $value
+     */
+    public function setLastTrainingAttribute($value) {
+        $this->attributes['last_training'] = Carbon::instance($value)->endOfDay();
+    }
 
     /**
      * Returns the full (first + last) name of the <code>User</code>.
