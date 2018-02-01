@@ -145,14 +145,16 @@ class CalendarMonth {
         $first_shift = Shift::firstOfDay($this->start);
         $duties = Duty::betweenByDay($this->start, $this->end)->get();
 
-        $days = [];
-        $shift = $first_shift->copy();
-        for ($day = 1; $day <= $this->daysInMonth; $day++) {
-            $days[$day] = [];
-            do {
-                $days[$day][] = $shift->setShiftSlots($this->slots, $duties);
-                $shift = $shift->copy()->next();
-            } while (! $shift->isFirstShift());
+        $days = array_fill(0, count($first_shift->daysInMonth), []);
+        for ($shift = $first_shift->copy();
+             $shift->start->isSameMonth($first_shift->start);
+             $shift = $shift->copy()->next()
+        ) {
+            // drop all past duties
+            while ($duties->isNotEmpty() && $duties->first()->end <= $shift->start)
+                $duties->shift();
+
+            $days[$shift->day - 1][] = $shift->setShiftSlots($this->slots, $duties);
         }
 
         $this->daysAndShifts = $days;
