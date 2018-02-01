@@ -75,4 +75,6 @@ return [
 
     'training_threshold' => CarbonInterval::months(6),
 
+    'duties_hard_delete_threshold' => CarbonInterval::month(),
+
 ];

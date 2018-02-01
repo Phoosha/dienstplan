@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Duty;
 use App\Post;
 use Carbon\Carbon;
 use Illuminate\Console\Scheduling\Schedule;
@@ -29,10 +30,19 @@ class Kernel extends ConsoleKernel
         // Delete posts expired before the start of yesterday
         $schedule->call(function () {
             Post::expired(Carbon::yesterday())
-                ->each(function ($post) {
+                ->each(function (Post $post) {
                     $post->delete();
                 });
         })->daily();
+
+        // Hard delete trashed duties after a grace period
+        $threshold_dt = now()->sub(config('dienstplan.duties_hard_delete_threshold'));
+        $schedule->call(function () use ($threshold_dt) {
+           Duty::onlyTrashed()->where('deleted_at', '<', $threshold_dt)
+               ->each(function (Duty $duty) {
+                   $duty->forceDelete();
+               });
+        })->monthly();
     }
 
     /**
