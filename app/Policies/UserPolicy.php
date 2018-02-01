@@ -25,6 +25,10 @@ class UserPolicy {
             return false;
     }
 
+    public function administrate(User $asUser) {
+        return false;
+    }
+
     public function edit(User $asUser, User $user) {
         return $asUser->is($user);
     }

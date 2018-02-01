@@ -333,6 +333,20 @@ div.sep {
   text-decoration: none;
 }
 
+.pure-button-group .pure-button:first-child {
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+.pure-button-group .pure-button:last-child {
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+td.pure-button-group {
+  white-space: nowrap;
+}
+
 /* -- Menu -----------------------------------------------------------------*/
 
 #logo {
@@ -793,4 +807,21 @@ div.duty-time {
   min-width: fit-content;
   max-width: 38em;
   width: 100%;
+}
+
+
+/* -- Admin page-specific formatting ------------------------------------------*/
+
+.users-table td,
+.users-table th {
+  padding: .7em .5em;
+  text-align: left;
+}
+
+.overdue {
+  color: #c55;
+}
+
+.users-table td.pure-button-group {
+  padding: .7em .3em;
 }

@@ -24,7 +24,7 @@
             @foreach ($phones as $entry)
             <tr{!! tableOdd($loop->index) !!}>
                 <td>{{ $entry->name }}</td>
-                <td><a href="tel:{{ $entry->phone }}">{{ $entry->phone }}</a></td>
+                <td><a href="tel:{{ $entry->phone }}">{!! str_replace(' ', '&nbsp', e($entry->phone)) !!}</a></td>
                 @if($edit && Auth::user()->can('delete', App\Phone::class))
                 <td><form method="post" action="{{ url('phones', $entry->id) }}">
                     {{ csrf_field() }}
@@ -67,7 +67,7 @@
             <tr{!! tableOdd($loop->index) !!}>
                 <td>{{ $user->last_name }}</td>
                 <td>{{ $user->first_name }}</td>
-                <td><a href="tel:{{ $user->phone }}">{{ $user->phone }}</a></td>
+                <td><a href="tel:{{ $user->phone }}">{!! str_replace(' ', '&nbsp', e($user->phone)) !!}</a></td>
             </tr>
             @endforeach
         </tbody>

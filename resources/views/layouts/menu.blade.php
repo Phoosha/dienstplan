@@ -23,12 +23,14 @@
                     @component('layouts.menuentry', [ 'uri' => 'phones' ])
                         <i class="fa fa-phone fa-fw" aria-hidden="true"></i> Telefonliste</a>
                     @endcomponent
-                    @component('layouts.menuentry', [ 'uri' => "users/" . Auth::user()->id ])
+                    @component('layouts.menuentry', [ 'uri' => "user" ])
                         <i class="fa fa-user fa-fw" aria-hidden="true"></i> Mein Konto</a>
                     @endcomponent
+                    @if (Gate::allows('administrate'))
                     @component('layouts.menuentry', [ 'uri' => 'admin' ])
                         <i class="fa fa-users fa-fw" aria-hidden="true"></i> Verwaltung</a>
                     @endcomponent
+                    @endif
                 @endauth
             </ul>
             @guest

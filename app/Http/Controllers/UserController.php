@@ -16,6 +16,19 @@ class UserController extends Controller {
         $this->middleware('throttle:3,5')->only('reset');
     }
 
+    public function view() {
+        $this->authorize('administrate', User::class);
+
+        $users = User::ordering()->get();
+        $trashed = User::onlyTrashed()->ordering()->get();
+
+        return view('admin.users', compact('users', 'trashed'));
+    }
+
+    public function editMe() {
+        return $this->edit(Auth::user());
+    }
+
     public function edit(User $user) {
         $this->authorize('edit', $user);
 
@@ -39,7 +52,7 @@ class UserController extends Controller {
 
         $user->save();
 
-        return redirect(url('users', $user->id))->with('status', 'Nutzerdaten wurden aktualisiert');
+        return back()->with('status', 'Nutzerdaten wurden aktualisiert');
     }
 
     public function reset(User $user) {
@@ -62,7 +75,7 @@ class UserController extends Controller {
         $this->resetPassword($user, $request['new-password']);
         $this->guard()->login($authUser);
 
-        return redirect(url('users', $user->id))->with('password-status', 'Passwort wurde geändert');
+        return back()->with('password-status', 'Passwort wurde geändert');
     }
 
     public function resetToken(User $user) {
@@ -70,7 +83,7 @@ class UserController extends Controller {
 
         $user->cycleApiToken();
 
-        return redirect(url('users', $user->id))->with('api-status', 'Adresse wurde zurückgesetzt');
+        return back()->with('api-status', 'Adresse und Zugriffscode wurden zurückgesetzt');
     }
 
     protected function reauthenticate($password) {
@@ -86,7 +99,7 @@ class UserController extends Controller {
         $this->authorize('delete', $user);
         $user->delete();
 
-        return redirect('/'); // FIXME
+        return back();
     }
 
 }

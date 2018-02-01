@@ -130,6 +130,20 @@ class User extends Authenticatable {
     }
 
     /**
+     * Helper returning a list of classes that apply to the <code>$last_training</code> attribute.
+     *
+     * @return string space-separated classes of the instance
+     */
+    public function lastTrainingClasses() {
+        $threshold_dt = now()->sub(config('dienstplan.training_threshold'));
+
+        if (empty($this->last_training) || $this->last_training->lt($threshold_dt))
+            return 'overdue';
+
+        return '';
+    }
+
+    /**
      * Get the <code>Post</code>s made by that <code>User</code>
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

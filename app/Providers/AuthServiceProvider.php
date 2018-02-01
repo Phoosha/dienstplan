@@ -41,6 +41,9 @@ class AuthServiceProvider extends ServiceProvider {
             $first_shift = Shift::firstOfDay($month->start);
             return $user->can('view', $first_shift->toDuty());
         });
+        Gate::define('administrate', function (User $user) {
+            return $user->can('administrate', User::class);
+        });
     }
 
 }
