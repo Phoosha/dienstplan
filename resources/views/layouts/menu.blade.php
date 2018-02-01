@@ -27,7 +27,7 @@
                         <i class="fa fa-user fa-fw" aria-hidden="true"></i> Mein Konto</a>
                     @endcomponent
                     @if (Gate::allows('administrate'))
-                    @component('layouts.menuentry', [ 'uri' => 'admin' ])
+                    @component('layouts.menuentry', [ 'match' => 'admin', 'uri' => 'admin/users' ])
                         <i class="fa fa-users fa-fw" aria-hidden="true"></i> Verwaltung</a>
                     @endcomponent
                     @endif
