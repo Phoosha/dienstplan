@@ -29,6 +29,7 @@ Add transition to containers so they can push in and out.
 #layout {
   height: 100%;
   padding-left: 0;
+  overflow: auto;
 }
 
 #layout.active #menu {
