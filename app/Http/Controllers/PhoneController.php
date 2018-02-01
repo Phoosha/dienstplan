@@ -13,8 +13,8 @@ class PhoneController extends Controller {
     }
 
     public function index(bool $edit = false) {
-        $users = User::orderBy('last_name')->get();
-        $phones = Phone::orderBy('name')->get();
+        $users = User::ordering()->get();
+        $phones = Phone::ordering()->get();
 
         return view('phones.index', compact('users', 'phones', 'edit'));
     }

@@ -24,4 +24,14 @@ class Phone extends Model {
         'name', 'phone',
     ];
 
+    /**
+     * The natural ordering of <code>Phone</code>s.
+     *
+     * @param $query
+     * @return Builder
+     */
+    public function scopeOrdering($query) {
+        return $query->orderBy('name')->orderBy('phone');
+    }
+
 }

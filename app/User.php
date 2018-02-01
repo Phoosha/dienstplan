@@ -97,6 +97,18 @@ class User extends Authenticatable {
     }
 
     /**
+     * The natural ordering of <code>User</code>s.
+     *
+     * @param $query
+     * @return Builder
+     */
+    public function scopeOrdering($query) {
+        return $query->orderBy('last_name')
+            ->orderBy('first_name')
+            ->orderBy('created_at');
+    }
+
+    /**
      * Get the <code>Post</code>s made by that <code>User</code>
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
