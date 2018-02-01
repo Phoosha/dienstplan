@@ -414,13 +414,15 @@ class Shift {
      * at most <code>$times</code> redundantly.
      *
      * @param int $times
-     * @param Collection $duties
+     * @param Collection $duties <code>Duty</code>s sorted by their <code>start</code> key
+     * @param bool $sort whether to sort <code>$duties</code> by their <code>start>/code> key
      * @return int actual coverage between 0 and <code>$times</code>
      */
-    public function analyzeCoverage(int $times, Collection $duties) {
+    public function analyzeCoverage(int $times, Collection $duties, bool $sort = false) {
         $offsets = array_fill(0, $times, $this->start);
 
-        $duties->sortBy('start');
+        if ($sort)
+            $duties->sortBy('start');
 
         /*
          * Using the the next smallest Duty replace the smallest time
