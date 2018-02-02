@@ -80,7 +80,7 @@ class StoreDuty extends FormRequest {
      * @return void
      */
     public function withValidator($validator) {
-        foreach ($this->input('duties') as $key => $duty) {
+        foreach ($this->validated()['duties'] as $key => $duty) {
             /*
              * validate end-time > start-time if end-date = start-date
              */
