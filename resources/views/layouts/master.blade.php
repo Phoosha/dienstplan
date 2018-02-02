@@ -17,11 +17,13 @@
     <body>
         <div id="layout">
             @include('layouts.menu')
-            <div id="main">
-                <div class="content">
-                    @yield('content')
+            <div id="x-scrollbox">
+                <div id="main">
+                    <div class="content">
+                        @yield('content')
+                    </div>
+                    @include('layouts.footer')
                 </div>
-                @include('layouts.footer')
             </div>
         </div>
 

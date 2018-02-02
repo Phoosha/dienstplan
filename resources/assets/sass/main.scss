@@ -29,7 +29,7 @@ Add transition to containers so they can push in and out.
 #layout {
   height: 100%;
   padding-left: 0;
-  overflow: auto;
+  overflow-x: hidden;
 }
 
 #layout.active #menu {
@@ -39,6 +39,11 @@ Add transition to containers so they can push in and out.
 
 #layout.active .menu-link {
   left: 150px;
+}
+
+#x-scrollbox {
+  height: 100%;
+  overflow-x: auto;
 }
 
 /*
@@ -58,6 +63,7 @@ The content `<div>` is where all your content goes.
   padding: 2em 0.5em 7em 0.5em;
   line-height: 1.6em;
   max-width: 1000px;
+  min-width: min-content;
   margin: 0 auto;
   text-align: center;
 }
