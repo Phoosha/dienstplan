@@ -22,10 +22,12 @@ $.fn.filterSameFieldsetAs = function (element) {
 
 $(function() {
 
-    var dutyMode = true;
-    if ($('#create-post').empty())
-        dutyMode = false;
-
+    var dutyMode = false;
+    var userMode = false;
+    if (document.getElementById('duty-form'))
+        dutyMode = true;
+    if (document.getElementById('last_training'))
+        userMode = true;
 
     var startDates = $('input.start-date');
     var endDates   = $('input.end-date');
@@ -39,16 +41,22 @@ $(function() {
         onClose: function () {
             var myEndInput = endDates.filterSameFieldsetAs(this);
             var newDate = $(this).datepicker("getDate");
-            console.log(myEndInput.val());
 
-            if (myEndInput.val() !== "nie" && newDate > myEndInput.datepicker("getDate")) {
+            if (myEndInput && myEndInput.val() !== "nie" && newDate > myEndInput.datepicker("getDate")) {
+                newDate.setDate(newDate.getDate() + 1);
                 myEndInput.datepicker("setDate", newDate);
             }
 
             if (dutyMode)
                 updateEndTime(this);
+            else if (userMode && this.value === "")
+                this.value = "nie";
 
             $(this).attr("disabled", false);
+        },
+        onSelect: function (date, picker) {
+            if (userMode && date === picker.lastVal)
+                this.value = "nie";
         },
         beforeShow: function () {
             if ($(this).attr("readonly"))

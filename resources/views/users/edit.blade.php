@@ -46,6 +46,23 @@
                 <span class="pure-form-message-inline error">{{ $errors->first('phone') }}</span>
             @endif
         </div>
+        <div class="pure-control-group">
+            @can('setLastTraining', $user)
+                @push('late')
+                    <script src="{{ mix('js/manifest.js') }}"></script>
+                    <script src="{{ mix('js/vendor.js') }}"></script>
+                    <script src="{{ mix('js/datepicker.js') }}"></script>
+                @endpush
+                @section('training.readonly', '')
+            @else
+                @section('training.readonly', 'readonly')
+            @endcan
+            <label for="last_training">Letzte Unterweisung:</label>
+            <input type="text" class="date start-date" id="last_training" name="last_training" value="{{ old('last_training') ?? isset($user->last_training) ? $user->last_training->format(config('dienstplan.date_format')) : 'nie' }}" size="25" required @yield('training.readonly')/>
+            @if ($errors->has('last_training'))
+                <span class="pure-form-message-inline error">{{ $errors->first('last_training') }}</span>
+            @endif
+        </div>
         @can('promote', $user)
             <div class="pure-control-group">
                 <label for="is_admin">Rolle:</label>

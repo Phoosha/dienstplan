@@ -38,7 +38,7 @@ Route::get('phones/edit', 'PhoneController@edit');
 Route::delete('phones/{phone}', 'PhoneController@destroy');
 
 Route::get('user', 'UserController@editMe');
-Route::post('users/{user}', 'UserController@update');
+Route::post('users/{id}', 'UserController@update');
 Route::delete('users/{user}', 'UserController@destroy');
 Route::put('users/{user}/password', 'UserController@reset');
 Route::delete('users/{user}/api_token', 'UserController@resetToken');

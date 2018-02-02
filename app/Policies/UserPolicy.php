@@ -45,7 +45,8 @@ class UserPolicy {
     public function update(User $asUser, User $user) {
         return $asUser->can('edit', $user)
             && ( ! $user->wasChanged('is_admin') || $asUser->can('promote', $user) )
-            && ( ! $user->wasChanged('login') || $asUser->can('changeLogin', $user));
+            && ( ! $user->wasChanged('login') || $asUser->can('changeLogin', $user))
+            && ( ! $user->wasChanged('last_training') || $asUser->can('setLastTraining', $user));
     }
 
     public function promote(User $asUser, User $user) {
@@ -58,6 +59,10 @@ class UserPolicy {
 
     public function changeLogin(User $asUser, User $user) {
         return $asUser->is($user);
+    }
+
+    public function setLastTraining(User $asUser) {
+        return false;
     }
 
     public function delete(User $asUser, User $user) {
