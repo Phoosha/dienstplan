@@ -113,10 +113,6 @@ table {
   display: inline-table;
 }
 
-th {
-  text-align: center;
-}
-
 label {
   text-align: left;
 }
@@ -347,6 +343,10 @@ td.pure-button-group {
   white-space: nowrap;
 }
 
+.pure-table .pure-button {
+  margin: 0;
+}
+
 /* -- Menu -----------------------------------------------------------------*/
 
 #logo {
@@ -434,6 +434,58 @@ This styles the menu heading.
   margin: 0;
   padding: 0.6em;
 }
+
+
+/* -- Pure Table CSS Table port (partial) -------------------------------------*/
+
+.td, .th {
+  display: table-cell;
+  border-left: 1px solid #cbcbcb;
+  font-size: inherit;
+  margin: 0;
+  overflow: visible;
+  padding: .5em 1em;
+  vertical-align: inherit;
+}
+
+.table {
+  display: table;
+}
+
+.thead {
+  display: table-header-group;
+}
+
+.tbody {
+  display: table-row-group;
+}
+
+.tr {
+  display: table-row;
+}
+
+.th {
+  font-weight: bold;
+  text-align: -internal-center;
+}
+
+.pure-table .thead {
+  background-color: #e0e0e0;
+  color: #000;
+  text-align: left;
+  vertical-align: bottom;
+}
+
+.pure-table .td:first-child,
+.pure-table .th:first-child {
+  border-left-width: 0;
+}
+
+.pure-table-odd .td,
+.pure-table-striped .tr:nth-child(2n-1) .td {
+  background-color: #f2f2f2;
+}
+
 
 /* -- Dynamic Button For Responsive Menu -------------------------------------*/
 
@@ -654,6 +706,11 @@ Hides the menu at `48em`, but modify this based on your app's needs.
 
 /* -- Plan page-specific formatting -------------------------------------*/
 
+#nav td, #nav th,
+#plan td, #plan th {
+  text-align: center;
+}
+
 #nav {
   vertical-align: middle;
 }
@@ -787,13 +844,13 @@ div.duty-time {
 
 /* -- Phonelist page-specific formatting -------------------------------------*/
 
-.phonelist td,
-.phonelist th {
+.phonelist {
   text-align: left;
 }
 
 #phone input {
   width: 100%;
+  min-width: 10em;
 }
 
 

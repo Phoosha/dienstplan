@@ -10,7 +10,7 @@
     </thead>
     <tbody>
         @foreach ($users as $user)
-        <tr{!! tableOdd($loop->index) !!}>
+        <tr class="{!! tableOdd($loop->index) !!}">
             <td>{{ $user->last_name }}, {{ $user->first_name }}</td>
             <td>{{ $user->login }}</td>
             <td><a href="mailto:{{ $user->email }}">{{ $user->email }}</a></td>

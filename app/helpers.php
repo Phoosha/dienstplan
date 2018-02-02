@@ -80,13 +80,13 @@ function checked($sel, $cur) {
 }
 
 /**
- * Outputs a pure-table-odd class attribute if <code>$index</code> is odd.
+ * Outputs pure-table-odd class if <code>$index</code> is odd.
  *
  * @param int $index
  * @return string
  */
 function tableOdd(int $index) {
-    return $index % 2 === 0 ? '' : ' class="pure-table-odd"';
+    return $index % 2 === 0 ? '' : 'pure-table-odd';
 }
 
 /**
