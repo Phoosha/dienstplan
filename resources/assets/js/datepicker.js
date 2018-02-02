@@ -51,6 +51,8 @@ $(function() {
             $(this).attr("disabled", false);
         },
         beforeShow: function () {
+            if ($(this).attr("readonly"))
+                return false;
             $(this).attr("disabled", true);
         },
         minDate: minDate,
@@ -70,6 +72,8 @@ $(function() {
                 this.value = "nie";
         },
         beforeShow: function () {
+            if ($(this).attr("readonly"))
+                return false;
             $(this).attr("disabled", true);
 
             var myStartInput = startDates.filterSameFieldsetAs(this);

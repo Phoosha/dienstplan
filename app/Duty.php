@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Auth;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -190,10 +191,15 @@ class Duty extends Model {
     /**
      * Returns the list of <code>User</code>s, which are able to take that <code>Duty</code>.
      *
-     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     * @param string $action
+     * @return Collection
      */
-    public function possibleTakers() {
-       return User::all();
+    public function possibleTakers(string $action = '') {
+        if (Auth::user()->can('impersonate', Duty::class)
+                && ( empty($action) || Auth::user()->can($action, $this)))
+            return User::all();
+        else
+            return Collection::wrap($this->user ?? Auth::user());
     }
 
     /**
@@ -209,11 +215,14 @@ class Duty extends Model {
     /**
      * Returns the <code>Slot</code>s available to this <code>Duty</code> based on its <code>start</code> field.
      *
+     * @param string $action
      * @return Collection
-     * @throws ModelNotFoundException
      */
-    public function availableSlots() {
-        return $this->applicableSlotConfig()->slots;
+    public function availableSlots(string $action = '') {
+        if (Auth::user()->can($action, $this))
+            return $this->applicableSlotConfig()->slots;
+        else
+            return Collection::wrap($this->slot);
     }
 
     /**

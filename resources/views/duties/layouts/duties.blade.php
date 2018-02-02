@@ -1,15 +1,21 @@
-{{-- PARAMS: duties|duty --}}
+{{-- PARAMS: duties|duty [readonly] --}}
 @php
     $duties = $duties ?? [ $duty ];
+    $readonly = $readonly ?? false
 @endphp
 
 <div class="pure-g">
     @foreach ($duties as $duty)
         @can('impersonate', App\Duty::class)
-            @section('duties.driver.disabled', '')
+            @section('duties.driver.readonly', '')
         @else
-            @section('duties.driver.disabled', 'disabled')
+            @section('duties.driver.readonly', 'readonly')
         @endcan
+        @unless($readonly)
+            @section('duties.readonly', '')
+        @else
+            @section('duties.readonly', 'readonly')
+        @endunless
         @include('duties.layouts.duty', [ 'index' => $loop->index ])
     @endforeach
 </div>

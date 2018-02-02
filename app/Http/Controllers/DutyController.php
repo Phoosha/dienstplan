@@ -8,6 +8,7 @@ use App\Http\Requests\CreateDuty;
 use App\Http\Requests\StoreDuty;
 use App\Http\Requests\UpdateDuty;
 use App\Shift;
+use Auth;
 use Carbon\Exceptions\InvalidDateException;
 use DB;
 use Gate;
@@ -67,10 +68,10 @@ class DutyController extends Controller {
     }
 
     public function edit(Duty $duty) {
-        $this->authorize('edit', $duty);
         $back = url(planWithDuty($duty));
+        $readonly = Auth::user()->cannot('edit', $duty);
 
-        return view('duties.edit', compact('duty', 'back'));
+        return view('duties.edit', compact('duty', 'back', 'readonly'));
     }
 
     public function store(StoreDuty $request) {

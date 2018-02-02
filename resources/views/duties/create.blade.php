@@ -31,7 +31,7 @@
 	<form method="post" action="{{ url('duties') }}" class="pure-form pure-form-stacked" id="duty-form">
         {{csrf_field() }}
 
-        @include('duties.layouts.duties')
+        @include('duties.layouts.duties', [ 'action' => 'create' ])
 
         @if (isset($duty) || count($duties) > 1)
             <div class="sep"></div>

@@ -1,15 +1,9 @@
-{{-- PARAMS: duty --}}
+{{-- PARAMS: duty, readonly --}}
 @extends('layouts.master')
 
 @section('title', 'Dienst ändern')
 
 @section('duties.head', 'Dienst ändern?')
-
-@can('update', $duty)
-    @section('duties.disabled', '')
-@else
-    @section('duties.disabled', ' disabled')
-@endcan
 
 @section('content')
     <h2 class="content-subhead">
@@ -24,7 +18,7 @@
     <form method="post" action="{{ url('duties', $duty->id) }}" class="pure-form pure-form-stacked" id="duty-form">
         {{ csrf_field() }}
 
-        @include('duties.layouts.duties')
+        @include('duties.layouts.duties', [ 'action' => 'edit' ])
 
         <fieldset>
             @can('update', $duty)

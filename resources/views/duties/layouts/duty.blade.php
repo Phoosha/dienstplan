@@ -1,4 +1,4 @@
-{{-- PARAMS: index, duty, duties --}}
+{{-- PARAMS: index, duty, duties, action --}}
 <div class="pure-u-1 pure-u-xl-11-24"><fieldset><div class="pure-g">
     <div class="pure-u-1">
         @if (count($duties) > 1)
@@ -10,8 +10,8 @@
     <div class="pure-u-5-8">
         <div class="input-box">
             <label for="{{ $index }}-user">Fahrer: </label>
-            <select id="{{ $index }}-user" name="duties[{{ $index }}][user_id]" @yield('duties.disabled') @yield('duties.driver.disabled')>
-                @foreach ($duty->possibleTakers() as $user)
+            <select id="{{ $index }}-user" name="duties[{{ $index }}][user_id]" @yield('duties.readonly') @yield('duties.driver.readonly')>
+                @foreach ($duty->possibleTakers($action) as $user)
                     <option {!! selected(old("duties.{$index}.user_id") ?? $duty->user_id, $user->id) !!}>{{ $user->getFullName() }}</option>
                 @endforeach
             </select>
@@ -34,8 +34,8 @@
     <div class="pure-u-3-8">
         <div class="input-box">
             <label for="{{ $index }}-slot">Fahrzeug: </label>
-            <select id="{{ $index }}-slot" name="duties[{{ $index }}][slot_id]" @yield('duties.disabled')>
-                @foreach ($duty->availableSlots() as $slot)
+            <select id="{{ $index }}-slot" name="duties[{{ $index }}][slot_id]" @yield('duties.readonly')>
+                @foreach ($duty->availableSlots($action) as $slot)
                     <option {!! selected(old("duties.{$index}.slot_id") ?? $duty->slot_id, $slot->id) !!}>{{ $slot->name }}</option>
                 @endforeach
             </select>
@@ -50,7 +50,7 @@
     {{-- KOMMENTAR --}}
     <div class="pure-u-1"><div class="input-box">
         <label for="{{ $index }}-comment">Kommentar: </label>
-        <input type="text" id="{{ $index }}-comment" name="duties[{{ $index }}][comment]" placeholder="Kommentar" value="{{ old("duties.{$index}.comment") ?? $duty->comment }}" @yield('duties.disabled')/>
+        <input type="text" id="{{ $index }}-comment" name="duties[{{ $index }}][comment]" placeholder="Kommentar" value="{{ old("duties.{$index}.comment") ?? $duty->comment }}" @yield('duties.readonly')/>
     </div></div>
 
     {{-- ANFANG --}}
