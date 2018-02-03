@@ -77,4 +77,6 @@ return [
 
     'duties_hard_delete_threshold' => CarbonInterval::month(),
 
+    'register_expires' => CarbonInterval::week(),
+
 ];

@@ -16,6 +16,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Carbon::setLocale(config('app.locale'));
+
         Validator::extend('integer_keys', function($attribute, $value, $parameters, $validator) {
             return is_array($value)
                 && count(array_filter(array_keys($value), 'is_string')) === 0;
@@ -32,6 +33,5 @@ class AppServiceProvider extends ServiceProvider
         if ($this->app->environment() === 'local') {
             $this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
         }
-        //
     }
 }

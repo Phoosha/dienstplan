@@ -24,10 +24,11 @@ class StorePost extends FormRequest {
      * @return array
      */
     public function rules() {
+        $date_format = config('dienstplan.date_format');
         return [
             'title' => 'required|string|max:255',
             'body' => 'present|string|max:65553',
-            'release_on' => 'required|date',
+            'release_on' => "required|date_format:{$date_format}",
             'expire_on' => 'required',
         ];
     }
@@ -39,9 +40,11 @@ class StorePost extends FormRequest {
      * @return void
      */
     public function withValidator($validator) {
-        $validator->sometimes('expire_on', 'date', function ($data) {
-            return $data->expire_on !== 'nie';
-        });
+        $date_format = config('dienstplan.date_format');
+        $validator->sometimes('expire_on', "date_format:{$date_format}",
+            function ($data) {
+                return $data->expire_on !== 'nie';
+            });
     }
 
     public function getPost() {

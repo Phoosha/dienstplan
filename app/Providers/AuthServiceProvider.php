@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Auth\RegisterTokenGuard;
 use App\CalendarMonth;
 use App\Duty;
 use App\Phone;
@@ -12,8 +13,10 @@ use App\Policies\UserPolicy;
 use App\Post;
 use App\Shift;
 use App\User;
+use Auth;
 use Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Log;
 
 class AuthServiceProvider extends ServiceProvider {
 
@@ -36,6 +39,13 @@ class AuthServiceProvider extends ServiceProvider {
      */
     public function boot() {
         $this->registerPolicies();
+
+        Auth::extend('register_token', function ($app, $name, array $config) {
+            return new RegisterTokenGuard(
+                Auth::createUserProvider($config['provider']),
+                $app['request']
+            );
+        });
 
         Gate::define('month.view', function (User $user, CalendarMonth $month) {
             $first_shift = Shift::firstOfDay($month->start);

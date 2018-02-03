@@ -13,7 +13,7 @@
             </a>
 
             <ul class="pure-menu-list">
-                @auth
+                @auth('web')
                     @component('layouts.menuentry', [ 'uri' => '/' ])
                         <i class="fa fa-home fa-fw" aria-hidden="true"></i> Start</a>
                     @endcomponent
@@ -40,7 +40,7 @@
                     </a>
                 @endif
             @endguest
-            @auth
+            @auth('web')
                 <a href="{{ url('logout') }}" class="primary-button pure-button danger-button">
                     <i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp;Abmelden
                 </a>

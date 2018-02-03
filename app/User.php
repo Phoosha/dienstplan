@@ -2,12 +2,12 @@
 
 namespace App;
 
+use App\Notifications\CompleteRegistration;
 use App\Notifications\ResetPassword;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\QueryException;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -24,6 +24,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property string $phone
  * @property string $password
  * @property string $api_token
+ * @property string $register_token
  * @property string $remember_token
  * @property boolean $is_admin
  * @property \Carbon\Carbon $last_training
@@ -66,13 +67,16 @@ class User extends Authenticatable {
     ];
 
     /**
-     * Mutator for <code>$last_training</code> ensuring it is always
-     * set to the same time of day, i.e. the end.
+     * Mutator for the <code>password</code> field, that invalidates the
+     * <code>register_token</code> whenever the password is set to non-empty.
      *
      * @param $value
      */
-    public function setLastTrainingAttribute($value) {
-        $this->attributes['last_training'] = Carbon::instance($value)->endOfDay();
+    public function setPasswordAttribute($value) {
+        if (! empty($value))
+            $this->register_token = null;
+
+        $this->attributes['password'] = $value;
     }
 
     /**
@@ -82,27 +86,6 @@ class User extends Authenticatable {
      */
     public function getFullName() {
         return "{$this->first_name} {$this->last_name}";
-    }
-
-    /**
-     * Send the password reset notification.
-     *
-     * @param  string $token
-     * @return void
-     */
-    public function sendPasswordResetNotification($token) {
-        $this->notify(new ResetPassword($token));
-    }
-
-    /**
-     * Sets and stores a new <code>api_token</code> for this <code>User</code>.
-     */
-    public function cycleApiToken() {
-        $this->api_token = str_random(60);
-        $result = DB::table('users')
-            ->where('id', $this->id)
-            ->update([ 'api_token' => $this->api_token]);
-        $this->syncOriginalAttribute('api_token');
     }
 
     /**
@@ -118,6 +101,38 @@ class User extends Authenticatable {
     }
 
     /**
+     * Send the password reset notification.
+     *
+     * @param  string $token
+     * @return void
+     */
+    public function sendPasswordResetNotification($token) {
+        $this->notify(new ResetPassword($token));
+    }
+
+    /**
+     * Send a notification to the user after registration.
+     *
+     * @param $token
+     * @return void
+     */
+    public function sendRegisterNotification($token) {
+        $this->notify(new CompleteRegistration($token));
+    }
+
+    /**
+     * Sets and stores a new <code>api_token</code> for this <code>User</code>.
+     */
+    public function cycleApiToken() {
+        $this->api_token = str_random(60);
+        $result = DB::table('users')
+            ->where('id', $this->id)
+            ->update([ 'api_token' => $this->api_token]);
+        if ($result > 0)
+            $this->syncOriginalAttribute('api_token');
+    }
+
+    /**
      * The natural ordering of <code>User</code>s.
      *
      * @param $query
@@ -127,6 +142,25 @@ class User extends Authenticatable {
         return $query->orderBy('last_name')
             ->orderBy('first_name')
             ->orderBy('created_at');
+    }
+
+    /**
+     * Returns a human readable string representation of the
+     * <code>last_training</code> field.
+     *
+     * @param Carbon|null $other    whether to return a difference {@see Carbon::diffForHumans}
+     * @param bool        $absolute removes time difference modifiers ago, after, etc
+     * @param bool        $short    displays short format of time units
+     *
+     * @return string
+     */
+    public function getLastTrainingForHumans(Carbon $other = null, $absolute = false, $short = false) {
+        if (empty($this->last_training))
+            return 'nie';
+        elseif (isset($other))
+            return $this->last_training->diffForHumans($other, $absolute, $short);
+        else
+            return $this->last_training->format(config('dienstplan.date_format'));
     }
 
     /**

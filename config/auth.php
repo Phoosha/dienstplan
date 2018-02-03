@@ -20,7 +20,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Authentication Guards
+    | Authentication Auth
     |--------------------------------------------------------------------------
     |
     | Next, you may define every authentication guard for your application.
@@ -45,6 +45,10 @@ return [
             'driver' => 'token',
             'provider' => 'users',
         ],
+        'register' => [
+            'driver' => 'register_token',
+            'provider' => 'users',
+        ]
     ],
 
     /*

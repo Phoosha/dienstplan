@@ -9,16 +9,22 @@
 
     <h2 class="content-subhead">
         Aktive Nutzer
-        <a href="{{ url('admin/users/create') }}" title="Nutzer anlegen" class="pure-button primary-button icon-button">
+        @component('layouts.editable', [
+            'edit' => $add,
+            'editUrl' => url('admin/users/create'),
+            'viewUrl' => url('admin/users'),
+            'modeTitle' => 'Hinzufügemodus'
+        ])
             <i class="fa-fw fa fa-plus" aria-hidden="true"></i>
-        </a>
+        @endcomponent
     </h2>
+    @include('layouts.status')
     @include('admin.layouts.userstable', [ 'tablebuttons' => 'admin.layouts.activetablebuttons' ])
 
 
     @unless (empty($trashed))
     <h2 class="content-subhead">Gelöschte Nutzer</h2>
-    @include('admin.layouts.userstable', [ 'users' => $trashed, 'tablebuttons' => 'admin.layouts.trashedtablebuttons' ])
+    @include('admin.layouts.userstable', [ 'users' => $trashed, 'tablebuttons' => 'admin.layouts.trashedtablebuttons', 'add' => false ])
     @endunless
 </div>
 @endsection

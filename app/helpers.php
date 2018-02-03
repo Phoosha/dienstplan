@@ -145,4 +145,3 @@ function planWithDay(Carbon $day, CalendarMonth $cur_month) {
 
    return "{$prefix}#day-{$day->day}";
 }
-

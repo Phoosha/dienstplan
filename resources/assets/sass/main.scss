@@ -345,8 +345,10 @@ div.sep {
   border-bottom-right-radius: 8px;
 }
 
-td.pure-button-group {
+.pure-table .pure-button-group {
   white-space: nowrap;
+  padding: 0;
+  vertical-align: middle;
 }
 
 .pure-table .pure-button {
@@ -875,8 +877,8 @@ div.duty-time {
 
 /* -- Admin page-specific formatting ------------------------------------------*/
 
-.users-table td,
-.users-table th {
+.users-table .td,
+.users-table .th {
   padding: .7em .5em;
   text-align: left;
 }
@@ -885,6 +887,18 @@ div.duty-time {
   color: #c55;
 }
 
-.users-table td.pure-button-group {
-  padding: .7em .3em;
+.users-table input {
+  width: 100%;
+  min-width: 8em;
+}
+
+@media (min-width: 88em) {
+  .users-table input {
+    min-width: 10em;
+  }
+}
+
+.users-table .pure-button-group {
+  min-width: 4.7em;
+  text-align: center;
 }

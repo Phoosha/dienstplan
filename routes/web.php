@@ -38,15 +38,18 @@ Route::get('phones/edit', 'PhoneController@edit');
 Route::delete('phones/{phone}', 'PhoneController@destroy');
 
 Route::get('user', 'UserController@editMe');
-Route::post('users/{id}', 'UserController@update');
+Route::get('register', 'UserController@register');
+Route::put('users/{id}', 'UserController@update');
 Route::delete('users/{user}', 'UserController@destroy');
-Route::put('users/{user}/password', 'UserController@reset');
+Route::put('users/{user}/password', 'UserController@setPassword');
 Route::delete('users/{user}/api_token', 'UserController@resetToken');
 
 Route::group([ 'prefix' => 'admin' ], function () {
 
     Route::redirect('/', 'admin/users');
     Route::get('users', 'UserController@view');
+    Route::post('users', 'UserController@store');
+    Route::get('users/create', 'UserController@create');
     Route::get('users/{user}', 'UserController@edit');
 
     Route::get('reports', 'AdminController@reports');
