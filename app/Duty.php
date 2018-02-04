@@ -196,10 +196,17 @@ class Duty extends Model {
      */
     public function possibleTakers(string $action = '') {
         if (Auth::user()->can('impersonate', Duty::class)
-                && ( empty($action) || Auth::user()->can($action, $this)))
-            return User::all();
-        else
+                && ( empty($action) || Auth::user()->can($action, $this))) {
+            $users = User::all();
+
+            // Ensure the current user is always a possible taker
+            if (isset($this->user_id) && $this->user->trashed())
+                $users->push($this->user);
+
+            return $users;
+        } else {
             return Collection::wrap($this->user ?? Auth::user());
+        }
     }
 
     /**
@@ -263,7 +270,7 @@ class Duty extends Model {
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user() {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->withTrashed();
     }
 
     /**
