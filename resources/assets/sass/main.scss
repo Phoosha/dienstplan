@@ -367,6 +367,14 @@ div.sep {
   margin: auto;
 }
 
+#cur-user {
+  text-align: center;
+  color: #1f8dd6;
+  font-size: 90%;
+  padding: 1em .3em;
+  border-top: 1px solid #333;
+}
+
 #menu {
   margin-left: -150px; /* "#menu" width */
   width: 150px;
@@ -581,6 +589,7 @@ Hides the menu at `48em`, but modify this based on your app's needs.
   #layout.active .menu-link {
     left: 150px;
   }
+
 }
 
 @media (max-width: 48em) {

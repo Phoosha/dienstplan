@@ -12,6 +12,10 @@
                 <div id="logo"></div>
             </a>
 
+            @auth('web')
+            <div id="cur-user">{{ Auth::user()->getFullName() }}</div>
+            @endauth
+
             <ul class="pure-menu-list">
                 @auth('web')
                     @component('layouts.menuentry', [ 'uri' => '/' ])
