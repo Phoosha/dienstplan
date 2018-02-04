@@ -22,7 +22,7 @@
             <div class="td">{{ $user->login }}</div>
             <div class="td"><a href="mailto:{{ $user->email }}">{{ $user->email }}</a></div>
             <div class="td"><a href="tel:{{ $user->phone }}">{!! str_replace(' ', '&nbsp;', e($user->phone)) !!}</a></div>
-            <div class="td {{ $user->lastTrainingClasses() }}">{{ $user->getLastTrainingForHumans(now()) }}</div>
+            <div class="td {{ $user->lastTrainingClasses() }}">{{ $user->getLastTrainingForHumans(null) }}</div>
             @include($tablebuttons)
         </div>
         @endforeach

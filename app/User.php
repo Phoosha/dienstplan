@@ -148,19 +148,21 @@ class User extends Authenticatable {
      * Returns a human readable string representation of the
      * <code>last_training</code> field.
      *
-     * @param Carbon|null $other    whether to return a difference {@see Carbon::diffForHumans}
-     * @param bool        $absolute removes time difference modifiers ago, after, etc
-     * @param bool        $short    displays short format of time units
+     * @param Carbon|null|false $other    if <code>false</code> absolute time, otherwise {@see Carbon::diffForHumans()}
+     * @param bool              $absolute removes time difference modifiers ago, after, etc
+     * @param bool              $short    displays short format of time units
      *
      * @return string
      */
-    public function getLastTrainingForHumans(Carbon $other = null, $absolute = false, $short = false) {
+    public function getLastTrainingForHumans($other = false, $absolute = false, $short = false) {
         if (empty($this->last_training))
             return 'nie';
-        elseif (isset($other))
-            return $this->last_training->diffForHumans($other, $absolute, $short);
+        elseif ($other !== false)
+            return $this->last_training
+                ->diffForHumans($other, $absolute, $short);
         else
-            return $this->last_training->format(config('dienstplan.date_format'));
+            return $this->last_training
+                ->format(config('dienstplan.date_format'));
     }
 
     /**
