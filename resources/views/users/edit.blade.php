@@ -85,9 +85,9 @@
                 <i class="fa fa-undo" aria-hidden="true"></i>&nbsp;Zurücksetzen
             </a>
             @can('delete', $user)
-                <button type="submit" name="_method" value="delete" class="pure-button primary-button danger-button" onclick="return confirm('Nutzer wirklich löschen?')">
+                <a href="{{ url('admin/users', [ $user->id, 'delete' ]) }}" class="pure-button primary-button danger-button">
                     <i class="fa fa-trash" aria-hidden="true"></i>&nbsp;Löschen
-                </button>
+                </a>
             @endcan
         </div>
     </form>

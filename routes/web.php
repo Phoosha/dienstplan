@@ -40,7 +40,6 @@ Route::delete('phones/{phone}', 'PhoneController@destroy');
 Route::get('user', 'UserController@editMe');
 Route::get('register', 'UserController@register');
 Route::put('users/{id}', 'UserController@update');
-Route::delete('users/{user}', 'UserController@destroy');
 Route::put('users/{user}/password', 'UserController@setPassword');
 Route::delete('users/{user}/api_token', 'UserController@resetToken');
 
@@ -50,6 +49,8 @@ Route::group([ 'prefix' => 'admin' ], function () {
     Route::get('users', 'UserController@view');
     Route::post('users', 'UserController@store');
     Route::get('users/create', 'UserController@create');
+    Route::delete('users/{user}', 'UserController@destroy');
+    Route::get('users/{user}/delete', 'UserController@confirmDestroy');
     Route::get('users/{user}', 'UserController@edit');
     Route::put('users/trashed/{id}/restore', 'TrashedUserController@restore');
     Route::get('users/trashed/{id}/delete', 'TrashedUserController@confirmDestroy');

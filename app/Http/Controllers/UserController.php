@@ -230,6 +230,20 @@ class UserController extends Controller {
     }
 
     /**
+     * Renders a page to confirm the (soft-)deletion of a user.
+     *
+     * @param \App\User $user
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function confirmDestroy(User $user) {
+        $this->authorize('delete', $user);
+
+        return view('users.confirmdelete', compact('user'));
+    }
+
+    /**
      * Checks whether a register_token is still valid and returns a redirect
      * with an error message otherwise.
      *

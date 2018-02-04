@@ -163,7 +163,8 @@ h2 {
   color: #555;
 }
 
-.pure-form .pure-button {
+.pure-form-stacked .pure-button,
+.pure-form-aligned .pure-button {
   margin: .7em 0 0;
 }
 
@@ -898,7 +899,35 @@ div.duty-time {
   }
 }
 
+.users-table input[type=checkbox] {
+  width: inherit;
+  min-width: unset;
+}
+
 .users-table .pure-button-group {
   min-width: 4.7em;
   text-align: center;
 }
+
+#users-form {
+  display: inline-block;
+}
+
+  #users-form fieldset {
+    margin-top: .7em;
+    text-align: left;
+  }
+
+    #users-form fieldset label {
+      margin-bottom: inherit;
+      display: inline;
+    }
+
+    #users-form fieldset input {
+      margin-bottom: inherit;
+      display: inline-block;
+    }
+
+    #users-form fieldset button {
+      margin-top: 0;
+    }
