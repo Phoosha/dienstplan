@@ -1,5 +1,5 @@
 {{-- PARAMS: user --}}
-<form method="post" action="{{ url('admin/users/trashed', [ $user->id, 'recover' ]) }}" class="td pure-button-group">
+<form method="post" action="{{ url('admin/users/trashed', [ $user->id, 'restore' ]) }}" class="td pure-button-group">
     <button type="submit" title="Wiederherstellen" class="pure-button primary-button icon-button">
         <i class="fa-fw fa fa-undo" aria-hidden="true"></i>
     </button>

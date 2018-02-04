@@ -49,7 +49,7 @@ class UserController extends Controller {
         $users = User::ordering()->get();
         $trashed = User::onlyTrashed()->ordering()->get();
 
-        return view('admin.users', compact('users', 'trashed', 'add'));
+        return view('admin.users.index', compact('users', 'trashed', 'add'));
     }
 
     /**

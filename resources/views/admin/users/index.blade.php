@@ -18,13 +18,23 @@
             <i class="fa-fw fa fa-plus" aria-hidden="true"></i>
         @endcomponent
     </h2>
+
     @include('layouts.status')
-    @include('admin.layouts.userstable', [ 'tablebuttons' => 'admin.layouts.activetablebuttons' ])
+
+    @include('admin.users.layouts.userstable', [ 'tablebuttons' => 'admin.users.layouts.activetablebuttons' ])
 
 
-    @unless (empty($trashed))
-    <h2 class="content-subhead">Gelöschte Nutzer</h2>
-    @include('admin.layouts.userstable', [ 'users' => $trashed, 'tablebuttons' => 'admin.layouts.trashedtablebuttons', 'add' => false ])
+    @unless ($trashed->isEmpty() && ! session()->has('trash-status'))
+    <h2 class="content-subhead" id="trash">Gelöschte Nutzer</h2>
+    @endunless
+
+    @include('layouts.status', [ 'statusKey' => 'trash-status' ])
+
+    @unless ($trashed->isEmpty())
+    @include('admin.users.layouts.userstable', [
+        'users' => $trashed,
+        'tablebuttons' => 'admin.users.layouts.trashedtablebuttons',
+        'add' => false ])
     @endunless
 </div>
 @endsection

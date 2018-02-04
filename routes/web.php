@@ -51,6 +51,9 @@ Route::group([ 'prefix' => 'admin' ], function () {
     Route::post('users', 'UserController@store');
     Route::get('users/create', 'UserController@create');
     Route::get('users/{user}', 'UserController@edit');
+    Route::put('users/trashed/{id}/restore', 'TrashedUserController@restore');
+    Route::get('users/trashed/{id}/delete', 'TrashedUserController@confirmDestroy');
+    Route::delete('users/trashed/{id}', 'TrashedUserController@destroy');
 
     Route::get('reports', 'AdminController@reports');
     Route::get('slots', 'AdminController@slots');

@@ -198,4 +198,28 @@ class UserPolicy {
         return $asUser->is($user);
     }
 
+    /**
+     * <code>$asUser</code> can irrevocably delete <code>$user</code>.
+     *
+     * @param \App\User $asUser
+     * @param \App\User $user
+     *
+     * @return bool
+     */
+    public function forceDelete(User $asUser, User $user) {
+        return $asUser->can('delete', $user);
+    }
+
+    /**
+     * <code>$asUser</code> can un-delete a soft-deleted <code>$user</code>.
+     *
+     * @param \App\User $asUser
+     * @param \App\User $user
+     *
+     * @return bool
+     */
+    public function restore(User $asUser, User $user) {
+        return false;
+    }
+
 }
