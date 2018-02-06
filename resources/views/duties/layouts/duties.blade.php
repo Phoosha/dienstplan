@@ -19,5 +19,5 @@
         @include('duties.layouts.duty', [ 'index' => $loop->index ])
     @endforeach
 </div>
-<input type="hidden" id="min-date" value="{{ now()->diffInDays(App\Policies\DutyPolicy::store_start(Auth::user()), false) }}" disabled/>
-<input type="hidden" id="max-date" value="{{ now()->diffInDays(App\Policies\DutyPolicy::store_end(Auth::user()), false) }}" disabled/>
+<input type="hidden" id="min-date" value="{{ App\Policies\DutyPolicy::store_start(Auth::user())->format('d.m.Y') }}" disabled/>
+<input type="hidden" id="max-date" value="{{ App\Policies\DutyPolicy::store_end(Auth::user())->format('d.m.Y') }}" disabled/>

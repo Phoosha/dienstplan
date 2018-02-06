@@ -37,8 +37,8 @@
             <label for="last_training">
                 Unterweisung:
                 <input type="text" id="last_training" name="last_training" value="{{ old('last_training') ?? now()->format(config('dienstplan.date_format')) }}" size="9" class="date start-date" required/>
-                <input type="hidden" id="min-date" value="{{ now()->diffInDays(config('dienstplan.min_date'), false) }}" disabled/>
-                <input type="hidden" id="max-date" value="{{ now()->diffInDays(config('dienstplan.max_date')) }}" disabled/>
+                <input type="hidden" id="min-date" value="{{ config('dienstplan.min_date')->format('d.m.Y') }}" disabled/>
+                <input type="hidden" id="max-date" value="{{ config('dienstplan.max_date')->format('d.m.Y') }}" disabled/>
             </label>
             &ensp;
             <button type="submit" title="Unterweisung für Auswahl setzen" class="pure-button primary-button">

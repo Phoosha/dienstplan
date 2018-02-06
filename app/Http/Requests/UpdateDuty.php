@@ -18,8 +18,8 @@ class UpdateDuty extends StoreDuty {
         parent::__construct($query, $request, $attributes, $cookies, $files, $server, $content);
 
         $this->max_duties = 1;
-        $this->min_date   = DutyPolicy::update_start(Auth::user());
-        $this->max_date   = DutyPolicy::store_end(Auth::user());
+        $this->min_dt     = DutyPolicy::update_start(Auth::user());
+        $this->max_dt     = DutyPolicy::store_end(Auth::user());
     }
 
     /**

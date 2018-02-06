@@ -15,8 +15,8 @@ class StoreDuty extends FormRequest {
 
     protected $parsedDuties;
     protected $max_duties;
-    protected $min_date;
-    protected $max_date;
+    protected $min_dt;
+    protected $max_dt;
 
     public function __construct(array $query = array(),
                                 array $request = array(),
@@ -28,8 +28,8 @@ class StoreDuty extends FormRequest {
         parent::__construct($query, $request, $attributes, $cookies, $files, $server, $content);
 
         $this->max_duties = 12;
-        $this->min_date   = DutyPolicy::store_start(Auth::user());
-        $this->max_date   = DutyPolicy::store_end(Auth::user());
+        $this->min_dt     = DutyPolicy::store_start(Auth::user());
+        $this->max_dt     = DutyPolicy::store_end(Auth::user());
     }
 
     /**
@@ -49,6 +49,9 @@ class StoreDuty extends FormRequest {
     public function rules() {
         $date_format = config('dienstplan.date_format');
         $time_format = config('dienstplan.time_format');
+        $min_date    = $this->min_dt->copy()->startOfDay();
+        $max_date    = $this->max_dt->copy()->startOfDay();
+
         return [
             'duties'              => "required|array|max:{$this->max_duties}|integer_keys",
             'duties.*.user_id'    => 'sometimes|integer|exists:users,id',
@@ -57,14 +60,14 @@ class StoreDuty extends FormRequest {
             'duties.*.start-date' => [
                 'required',
                 "date_format:{$date_format}",
-                "after_or_equal:{$this->min_date->startOfDay()}",
-                "before:{$this->max_date->startOfDay()}",
+                "after_or_equal:{$min_date}",
+                "before:{$max_date}",
             ],
             'duties.*.end-date'   => [
                 'required',
                 "date_format:{$date_format}",
-                "after_or_equal:{$this->min_date->startOfDay()}",
-                "before:{$this->max_date->startOfDay()}",
+                "after_or_equal:{$min_date}",
+                "before:{$max_date}",
                 'after_or_equal:duties.*.start-date',
             ],
             'duties.*.start-time' => "required|date_format:{$time_format}",
@@ -106,6 +109,14 @@ class StoreDuty extends FormRequest {
 
                     // set the user_id, authorization is handled later with the 'save' ability
                     $duty->user_id = $dutyAttrs['user_id'] ?? Auth::user()->id;
+
+                    $time_format = config('dienstplan.time_format');
+                    if ($duty->start < $this->min_dt)
+                        $validator->errors()->add("duties.{$key}.start-time",
+                            "Dienstanfang muss nach oder auf {$this->min_dt->format($time_format)} Uhr liegen");
+                    if ($duty->end >= $this->max_dt)
+                        $validator->errors()->add("duties.{$key}.end-time",
+                            "Dienstende muss vor {$this->max_dt->format($time_format)} Uhr liegen");
 
                     // slot needs to be active
                     if (! Slot::find($duty->slot_id)->slot_config->isActive($duty->start))

@@ -17,8 +17,8 @@
     </div>
     <div class="td">
         <input type="text" name="last_training" id="last_training" value="{{ old('last_training') ?? 'nie' }}" class="date start-date"/>
-        <input type="hidden" id="min-date" value="{{ now()->diffInDays(config('dienstplan.min_date'), false) }}" disabled/>
-        <input type="hidden" id="max-date" value="{{ now()->diffInDays(config('dienstplan.max_date')) }}" disabled/>
+        <input type="hidden" id="min-date" value="{{ config('dienstplan.min_date')->format('d.m.Y') }}" disabled/>
+        <input type="hidden" id="max-date" value="{{ config('dienstplan.max_date')->format('d.m.Y') }}" disabled/>
     </div>
     <div class="td pure-button-group">
         <button type="submit" title="Hinzufügen" class="pure-button primary-button icon-button">
