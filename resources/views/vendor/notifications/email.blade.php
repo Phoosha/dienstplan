@@ -1,6 +1,6 @@
 @component('mail::message')
 {{-- Greeting --}}
-@if (! empty($greeting))
+@unless (empty($greeting))
 # {{ $greeting }}
 @else
 @if ($level == 'error')
@@ -8,7 +8,7 @@
 @else
 # Hallo!
 @endif
-@endif
+@endunless
 
 {{-- Intro Lines --}}
 @foreach ($introLines as $line)

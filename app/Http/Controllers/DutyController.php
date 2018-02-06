@@ -4,15 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Duty;
 use App\CalendarMonth;
+use App\Events\DutyCreated;
+use App\Events\DutyDeleted;
+use App\Events\DutyReassigned;
+use App\Events\DutyUpdated;
 use App\Http\Requests\CreateDuty;
 use App\Http\Requests\StoreDuty;
 use App\Http\Requests\UpdateDuty;
 use App\Shift;
+use App\User;
 use Auth;
 use Carbon\Exceptions\InvalidDateException;
 use DB;
+use Exception;
 use Gate;
 use Illuminate\Auth\Access\AuthorizationException;
+use Log;
 use Throwable;
 
 class DutyController extends Controller {
@@ -87,28 +94,47 @@ class DutyController extends Controller {
         } catch (AuthorizationException $e) {
             throw $e;
         } catch (Throwable $e) {
+            Log::error('Error saving duties', [ $duties, $e ]);
             return back()->withInput($request->all())->withErrors('Dienst konnte nicht gespeichert werden');
         }
+
+        $duties->each(function ($duty) {
+            DutyCreated::dispatch($duty, Auth::user());
+        });
 
         return redirect(planWithDuty($duties->first()));
     }
 
     public function update(UpdateDuty $request) {
-        $duty = $request->getDuty();
+        $duty    = $request->getDuty();
+        $changes = $duty->getDirty();
 
         $this->authorize('save', $duty);
         try {
             $duty->saveOrFail();
         } catch (Throwable $e) {
+            Log::error('Error updating duty', [ $duty, $e ]);
             return back()->withInput($request->all())->withErrors('Dienst konnte nicht aktualisiert werden');
         }
+
+        if (isset($changes['user_id']))
+            DutyReassigned::dispatch($duty, Auth::user(), User::find($changes['user_id']));
+        else
+            DutyUpdated::dispatch($duty, Auth::user());
 
         return redirect(planWithDuty($duty));
     }
 
     public function destroy(Duty $duty) {
         $this->authorize('delete', $duty);
-        $duty->delete();
+        try {
+            $duty->delete();
+        } catch (Exception $e) {
+            Log::error('Error deleting duty', [ $duty, $e ]);
+            return back()->withErrors('Dienst konnte nicht gelöscht werden');
+        }
+
+        DutyDeleted::dispatch($duty, Auth::user());
 
         return redirect(planWithDuty($duty));
     }

@@ -61,6 +61,7 @@ return [
     */
     'date_format' => 'd.m.Y',
     'time_format' => 'H:i',
+    'datetime_format' => 'd.m.Y H:i',
 
     'view_past_months' => 2,
 

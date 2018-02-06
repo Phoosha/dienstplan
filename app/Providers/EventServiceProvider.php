@@ -2,7 +2,12 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\Event;
+use App\Events\DutyCreated;
+use App\Events\DutyDeleted;
+use App\Events\DutyEvent;
+use App\Events\DutyReassigned;
+use App\Events\DutyUpdated;
+use App\Listeners\DispatchDutyNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -13,8 +18,17 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'App\Events\Event' => [
-            'App\Listeners\EventListener',
+        DutyCreated::class => [
+            DispatchDutyNotification::class,
+        ],
+        DutyUpdated::class => [
+            DispatchDutyNotification::class,
+        ],
+        DutyReassigned::class => [
+            DispatchDutyNotification::class,
+        ],
+        DutyDeleted::class => [
+            DispatchDutyNotification::class,
         ],
     ];
 
