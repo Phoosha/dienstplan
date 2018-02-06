@@ -22,7 +22,7 @@ use Illuminate\Support\Collection;
  * @property int $user_id
  * @property User $user
  * @property int $slot_id
- * @property int $slot
+ * @property Slot $slot
  * @property \Carbon\Carbon $start
  * @property \Carbon\Carbon $end
  * @property int $type <code>null</code> unless, the instance is of a special type
@@ -73,6 +73,15 @@ class Duty extends Model {
     protected function performUpdate(Builder $query) {
         $this->sequence += 1;
         return parent::performUpdate($query);
+    }
+
+    /**
+     * Returns the <code>sequence</code> field or <code>0</code> if uninitialized.
+     *
+     * @return int
+     */
+    public function getSequenceAttribute() {
+        return $this->attributes['sequence'] ?? 0;
     }
 
     /**
