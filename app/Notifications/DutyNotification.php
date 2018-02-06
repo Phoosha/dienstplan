@@ -12,6 +12,8 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use InvalidArgumentException;
+use Log;
+use Throwable;
 
 class DutyNotification extends Notification {
 
@@ -46,22 +48,26 @@ class DutyNotification extends Notification {
      *
      * @param  mixed $notifiable
      *
-     * @return \Illuminate\Notifications\Messages\MailMessage
+     * @return MailMessage
      */
     public function toMail($notifiable) {
-        $class = get_class($this->event);
+        $attach = false;
+        $class  = get_class($this->event);
         switch ($class) {
             case DutyCreated::class:
                 $view    = 'emails.duty.created';
                 $subject = 'Dienst wurde eingetragen';
+                $attach  = true;
                 break;
             case DutyReassigned::class:
                 $view    = 'emails.duty.reassigned';
                 $subject = 'Dienst wurde übereignet';
+                $attach  = true;
                 break;
             case DutyUpdated::class:
                 $view    = 'emails.duty.updated';
                 $subject = 'Dienst wurde aktualisiert';
+                $attach  = true;
                 break;
             case DutyDeleted::class:
                 $view    = 'emails.duty.deleted';
@@ -71,15 +77,21 @@ class DutyNotification extends Notification {
                 throw new InvalidArgumentException("Unknown DutyEvent of class: {$class}");
         }
 
-        return ( new MailMessage )
+        $mail = ( new MailMessage )
             ->subject($subject)
             ->markdown($view, $this->getData($notifiable));
+
+        if ($attach) {
+            $this->attachDuty($mail);
+        }
+
+        return $mail;
     }
 
     /**
      * Get the data for the view.
      *
-     * @param $notifiable
+     * @param mixed $notifiable
      *
      * @return array
      */
@@ -88,6 +100,33 @@ class DutyNotification extends Notification {
             'event' => $this->event,
             'rcpt' => $notifiable instanceof User ? $notifiable : null,
         ];
+    }
+
+    /**
+     * Attach the duty as iCalendar to the mail.
+     *
+     * @param MailMessage $mail
+     *
+     * @return \Illuminate\Notifications\Messages\MailMessage
+     */
+    protected function attachDuty(MailMessage $mail): MailMessage {
+        $duty = $this->event->duty;
+
+        try {
+            return $mail->attachData(
+                view('api.duties', [
+                    'duty' => $duty,
+                    'method' => 'PUBLISH',
+                    'cal_name' => config('app.name') . ' ' . $duty->user->getFullName(),
+                ])->render(),
+                "Dienst-{$duty->start->toDateString()}-v{$duty->sequence}.ics",
+                [ 'mime' => 'text/calendar; charset=utf-8; method="PUBLISH"; component="VEVENT"' ]
+            );
+        } catch (Throwable $e) {
+            Log::error('Could not generate iCalendar from duty', [ $e, $duty ]);
+        }
+
+        return $mail;
     }
 
 }

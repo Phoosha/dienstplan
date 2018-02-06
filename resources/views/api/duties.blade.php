@@ -1,6 +1,13 @@
+{{-- PARAMS: duties|duty [method] --}}
+@php
+    $duties = $duties ?? [ $duty ];
+@endphp
 BEGIN:VCALENDAR
 PRODID:{{ config('ics.fpi') }}
 VERSION:2.0
+@unless (empty($method))
+METHOD:{{ $method }}
+@endunless
 CALSCALE:GREGORIAN
 X-WR-CALNAME:{{ $cal_name }}
 X-WR-TIMEZONE:{{ config('app.timezone')  }}
