@@ -14,11 +14,11 @@
                     @endif
                 </div>
             @endif
-            <div class="{{ $duty->type === Duty::SERVICE ? 'duty-service' : 'duty-user' }}">
+            <div class="{{ $duty->type === App\Duty::SERVICE ? 'duty-service' : 'duty-user' }}">
                 @can('edit', $duty)
                 <a href="{{ url('duties', [ $duty->id ]) }}">
                 @endcan
-                    @if ($duty->type === Duty::SERVICE)
+                    @if ($duty->type === App\Duty::SERVICE)
                         <i class="fa fa-wrench" aria-hidden="true"></i>&nbsp;Außer&nbsp;Dienst&nbsp;<i class="fa fa-wrench" aria-hidden="true"></i>
                     @else
                         {{ $duty->user->getFullName() }}
@@ -28,7 +28,7 @@
                 @endcan
             </div>
             <div class="duty-comment">
-                @if ($duty->type === Duty::WITH_INTERNEE)
+                @if ($duty->type === App\Duty::WITH_INTERNEE)
                     mit Praktikant<br/>
                 @endif
                 {{ $duty->comment }}

@@ -17,7 +17,7 @@ SUMMARY:{{ config('ics.summary') }}
 ORGANIZER:{{ config('ics.organizer') }}
 LOCATION:{{ $duty->slot->name }}, {{ config('ics.location') }}
 RESOURCES:{{ $duty->slot->name }}
-DESCRIPTION:{{ $duty->type === Duty::WITH_INTERNEE ? 'Dienst mit Praktikant' : '' }}
+DESCRIPTION:{{ $duty->type === App\Duty::WITH_INTERNEE ? 'Dienst mit Praktikant' : '' }}
 URL:{{ url('duties', $duty->id) }}
 STATUS:CONFIRMED
 TRANSP:TRANSPARENT

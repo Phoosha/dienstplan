@@ -18,14 +18,14 @@
         </div>
         @can('service', App\Duty::class)
             <label for="{{ $index }}-internee" class="pure-radio">
-                <input type="radio" id="{{ $index }}-internee" name="duties[{{ $index }}][type]" {!! checked(old("duties.{$index}.type") ?? $duty->type, Duty::WITH_INTERNEE) !!}/> mit Praktikant
+                <input type="radio" id="{{ $index }}-internee" name="duties[{{ $index }}][type]" {!! checked(old("duties.{$index}.type") ?? $duty->type, App\Duty::WITH_INTERNEE) !!}/> mit Praktikant
             </label>
             <label for="{{ $index }}-normal" class="pure-radio">
-                <input type="radio" id="{{ $index }}-normal" name="duties[{{ $index }}][type]" {!! checked(old("duties.{$index}.type") ?? $duty->type, Duty::NORMAL) !!}/> ohne Praktikant
+                <input type="radio" id="{{ $index }}-normal" name="duties[{{ $index }}][type]" {!! checked(old("duties.{$index}.type") ?? $duty->type, App\Duty::NORMAL) !!}/> ohne Praktikant
             </label>
         @else
             <label for="{{ $index }}-internee" class="pure-checkbox">
-                <input type="checkbox" id="{{ $index }}-internee" name="duties[{{ $index }}][type]" {!! checked(old("duties.{$index}.type") ?? $duty->type, Duty::WITH_INTERNEE) !!}/> mit Praktikant
+                <input type="checkbox" id="{{ $index }}-internee" name="duties[{{ $index }}][type]" {!! checked(old("duties.{$index}.type") ?? $duty->type, App\Duty::WITH_INTERNEE) !!}/> mit Praktikant
             </label>
         @endcan
     </div>
@@ -42,7 +42,7 @@
         </div>
         @can('service', App\Duty::class)
             <label for="{{ $index }}-service" class="pure-radio">
-                <input type="radio" id="{{ $index }}-service" name="duties[{{ $index }}][type]" {!! checked(old("duties.{$index}.type") ?? $duty->type, Duty::SERVICE) !!}/> außer Dienst
+                <input type="radio" id="{{ $index }}-service" name="duties[{{ $index }}][type]" {!! checked(old("duties.{$index}.type") ?? $duty->type, App\Duty::SERVICE) !!}/> außer Dienst
             </label>
         @endcan
     </div>
