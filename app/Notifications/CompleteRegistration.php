@@ -44,6 +44,7 @@ class CompleteRegistration extends Notification {
     public function toMail($notifiable) {
         $appName = config('app.name');
         return (new MailMessage)
+            ->subject("Registrierung bei {$appName}")
             ->greeting("Herzlich willkommen {$notifiable->first_name}!")
             ->line("Du bekommst diese Nachricht, weil für dich ein Account bei '{$appName}' angelegt wurde.")
             ->line("Dein Nutzername lautet: {$notifiable->login}")

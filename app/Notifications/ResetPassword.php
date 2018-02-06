@@ -46,6 +46,7 @@ class ResetPassword extends Notification {
     public function toMail($notifiable)
     {
         return (new MailMessage)
+            ->subject('Passwort zurücksetzen')
             ->greeting("Hallo {$notifiable->first_name}!")
             ->line('Du bekommst diese Nachricht, weil jemand eine Anfrage gestellt hat dein Passwort zurückzusetzen.')
             ->line("Zur Erinnerung dein Nutzername lautet: {$notifiable->login}")
