@@ -80,4 +80,8 @@ return [
 
     'register_expires' => CarbonInterval::week(),
 
+    'duty_created_grace_period' => CarbonInterval::minutes(5),
+
+    'duty_notification_delay' => CarbonInterval::minute(),
+
 ];

@@ -14,7 +14,10 @@ use Carbon\Carbon;
 class DutyCreated extends DutyEvent {
 
     public function getNotificationRelease(): Carbon {
-        return $this->duty->updated_at->copy()->addMinutes(3);
+        return $this->duty->updated_at
+            ->copy()->add(
+                config('dienstplan.duty_created_grace_period')
+            );
     }
 
     public function isCoalescable(): bool {

@@ -117,7 +117,7 @@ class DutyPolicy {
      * @return bool
      */
     public function update(User $user, Duty $duty) {
-        return $duty->start >= self::update_start($user)
+        return $duty->start >= self::update_start($user, $duty)
             && ( $duty->user->is($user) || $user->can('impersonate', Duty::class) );
     }
 
@@ -180,19 +180,22 @@ class DutyPolicy {
     }
 
     /**
-     * Determines starting from when duties may be updated.
+     * Determines starting from when <code>$duty</code> may be updated.
      *
      * @param \App\User $user
+     * @param \App\Duty $duty
+     *
      * @return \Carbon\Carbon
      */
-    public static function update_start(User $user) {
-        if ($user->is_admin)
-            return config('dienstplan.min_date');
+    public static function update_start(User $user, Duty $duty) {
+        $grace_until = now()->sub(config('dienstplan.duty_created_grace_period'));
+        $from        = self::store_start($user);
 
-        $now_shift = new Shift(now());
-        return $now_shift->start
-            ->add(config('dienstplan.modify_threshold'))
-            ->max(config('dienstplan.min_date'));
+        // allow to edit a duty if it was recently created
+        if ($duty->created_at < $grace_until)
+            $from->add(config('dienstplan.modify_threshold'));
+
+        return $from->max(config('dienstplan.min_date'));
     }
 
 }

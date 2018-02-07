@@ -18,15 +18,10 @@ class StoreDuty extends FormRequest {
     protected $min_dt;
     protected $max_dt;
 
-    public function __construct(array $query = array(),
-                                array $request = array(),
-                                array $attributes = array(),
-                                array $cookies = array(),
-                                array $files = array(),
-                                array $server = array(),
-                                $content = null) {
-        parent::__construct($query, $request, $attributes, $cookies, $files, $server, $content);
-
+    /**
+     * Late initialization before returning the validation rules.
+     */
+    protected function preRulesInit() {
         $this->max_duties = 12;
         $this->min_dt     = DutyPolicy::store_start(Auth::user());
         $this->max_dt     = DutyPolicy::store_end(Auth::user());
@@ -47,6 +42,8 @@ class StoreDuty extends FormRequest {
      * @return array
      */
     public function rules() {
+        $this->preRulesInit();
+
         $date_format = config('dienstplan.date_format');
         $time_format = config('dienstplan.time_format');
         $min_date    = $this->min_dt->copy()->startOfDay();

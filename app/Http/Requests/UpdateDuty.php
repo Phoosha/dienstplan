@@ -8,17 +8,11 @@ use Auth;
 
 class UpdateDuty extends StoreDuty {
 
-    public function __construct(array $query = array(),
-                                array $request = array(),
-                                array $attributes = array(),
-                                array $cookies = array(),
-                                array $files = array(),
-                                array $server = array(),
-                                $content = null) {
-        parent::__construct($query, $request, $attributes, $cookies, $files, $server, $content);
+    protected function preRulesInit() {
+        $duty = Duty::find($this->route('id'));
 
         $this->max_duties = 1;
-        $this->min_dt     = DutyPolicy::update_start(Auth::user());
+        $this->min_dt     = DutyPolicy::update_start(Auth::user(), $duty);
         $this->max_dt     = DutyPolicy::store_end(Auth::user());
     }
 

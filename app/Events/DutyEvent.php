@@ -50,7 +50,10 @@ abstract class DutyEvent {
      * @return \Carbon\Carbon
      */
     public function getNotificationRelease(): Carbon {
-        return $this->duty->updated_at->copy()->addMinute();
+        return $this->duty->updated_at
+            ->copy()->add(
+                config('dienstplan.duty_notification_delay')
+            );
     }
 
     /**
