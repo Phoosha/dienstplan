@@ -309,8 +309,9 @@ class Shift {
      * @return bool
      */
     public function isPast() {
-        return Shift::lastOfDay($this->start)
-            ->end->lt(config('dienstplan.past_threshold'));
+        $pastEnd = now()->sub(config('dienstplan.past_threshold'));
+
+        return Shift::lastOfDay($this->start)->end < $pastEnd;
     }
 
     /**
@@ -319,7 +320,7 @@ class Shift {
      * @return bool
      */
     public function isFuture() {
-        return $this->start->gt(now());
+        return $this->start > now();
     }
 
     /**
@@ -330,7 +331,7 @@ class Shift {
      * @return bool
      */
     public function isNow() {
-        return ! $this->isFuture() && $this->end->gt(now());
+        return ! $this->isFuture() && $this->end > now();
     }
 
     /**

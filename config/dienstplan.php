@@ -33,7 +33,7 @@ return [
     | time.
     |
     */
-    'past_threshold' => Carbon::parse('10 hours ago'),
+    'past_threshold' => CarbonInterval::hours(10),
 
     /*
     |--------------------------------------------------------------------------

@@ -7,6 +7,7 @@ use App\Duty;
 use App\Shift;
 use App\Slot;
 use Auth;
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Foundation\Testing\HttpException;
 use Illuminate\Support\Collection;
@@ -28,8 +29,8 @@ class CreateDuty extends FormRequest {
      * @return array
      */
     public function rules() {
-        $minDate = config('dienstplan.min_date');
-        $maxDate = config('dienstplan.max_date');
+        $minDate = Carbon::instance(config('dienstplan.min_date'));
+        $maxDate = Carbon::instance(config('dienstplan.max_date'));
         return [
             'year' => "sometimes|integer|min:{$minDate->year}|max:{$maxDate->year}",
             'month' => 'required_with:year|integer|min:1|max:12',

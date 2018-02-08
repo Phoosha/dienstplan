@@ -69,7 +69,7 @@
             </button>
         </section>
         <input type="hidden" id="min-date" value="0" disabled/>
-        <input type="hidden" id="max-date" value="{{ config('dienstplan.max_date')->format('d.m.Y') }}" disabled/>
+        <input type="hidden" id="max-date" value="{{ Carbon\Carbon::instance(config('dienstplan.max_date'))->format('d.m.Y') }}" disabled/>
     </form>
 @endif
 

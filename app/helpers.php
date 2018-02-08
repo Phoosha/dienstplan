@@ -96,8 +96,8 @@ function tableOdd(int $index) {
  * @return bool
  */
 function isValidDate(Carbon $dt) {
-    return $dt->gte(config('dienstplan.min_date'))
-        && $dt->lt(config('dienstplan.max_date'));
+    return $dt >= config('dienstplan.min_date')
+        && $dt < config('dienstplan.max_date');
 }
 
 /**

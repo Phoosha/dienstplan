@@ -140,11 +140,13 @@ class DutyPolicy {
      */
     public static function store_start(User $user) {
         if ($user->is_admin)
-            return config('dienstplan.min_date');
+            return Carbon::instance(config('dienstplan.min_date'));
 
         $now_shift = new Shift(now());
         return $now_shift->start
-            ->max(config('dienstplan.min_date'));
+            ->max(
+                Carbon::instance(config('dienstplan.min_date'))
+            );
     }
 
     /**
@@ -155,12 +157,14 @@ class DutyPolicy {
      */
     public static function store_end(User $user) {
         if ($user->is_admin)
-            return config('dienstplan.max_date');
+            return Carbon::instance(config('dienstplan.max_date'));
 
         $now_shift = new Shift(now());
         return $now_shift->end
             ->add(config('dienstplan.store_threshold'))
-            ->min(config('dienstplan.max_date'));
+            ->min(
+                Carbon::instance(config('dienstplan.max_date'))
+            );
     }
 
     /**
@@ -171,12 +175,14 @@ class DutyPolicy {
      */
     public static function view_start(User $user) {
         if ($user->is_admin)
-            return config('dienstplan.min_date');
+            return Carbon::instance(config('dienstplan.min_date'));
 
         return now()
             ->subMonths(config('dienstplan.view_past_months'))
             ->firstOfMonth()
-            ->max(config('dienstplan.min_date'));
+            ->max(
+                Carbon::instance(config('dienstplan.min_date'))
+            );
     }
 
     /**
@@ -195,7 +201,9 @@ class DutyPolicy {
         if ($duty->created_at < $grace_until)
             $from->add(config('dienstplan.modify_threshold'));
 
-        return $from->max(config('dienstplan.min_date'));
+        return $from->max(
+            Carbon::instance(config('dienstplan.min_date'))
+        );
     }
 
 }
