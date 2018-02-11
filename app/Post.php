@@ -42,21 +42,6 @@ class Post extends Model {
     ];
 
     /**
-     * Returns all active (released and not expired) <code>Post</code>s.
-     *
-     * @return Collection
-     */
-    public static function active() {
-        return static::where('release_on', '<=', now())
-            ->where(function ($query) {
-                $query->whereNull('expire_on')
-                    ->orWhere('expire_on', '>', now());
-            })
-            ->ordering()
-            ->get();
-    }
-
-    /**
      * The natural ordering of <code>Post</code>s.
      *
      * @param $query
@@ -80,8 +65,8 @@ class Post extends Model {
     public function scopeExpired($query, $now = null, $not = false) {
         $now = Carbon::instance($now ?? now());
         return $not
-            ? $query->whereNotNull('expire_on')->where('expire_on', '<=', $now)
-            : $query->whereNull('expire_on')->where('expire_on', '>', $now);
+            ? $query->whereNull('expire_on')->orWhere('expire_on', '>', $now)
+            : $query->whereNotNull('expire_on')->where('expire_on', '<=', $now);
     }
 
     /**
@@ -92,7 +77,7 @@ class Post extends Model {
      * @return Builder
      */
     public function scopeNotExpired($query, $now = null) {
-        return $query->expired($now, true);
+        return $this->scopeExpired($query, $now, true);
     }
 
     /**
