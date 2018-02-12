@@ -275,6 +275,29 @@ class Duty extends Model {
     }
 
     /**
+     * Returns a comparison closure that takes two duties and compares them by
+     * <code>$fields</code> in that order.
+     *
+     * This function can be used as a callback to {@see usort} and the like.
+     *
+     * @param array $fields
+     *
+     * @return \Closure {@see usort} for semantics
+     */
+    public static function getCmpBy(array $fields) {
+        return function (Duty $a, Duty $b) use ($fields) {
+            foreach ($fields as $field) {
+                if ($a->{$field} === $b->{$field})
+                    continue;
+
+                return $a->{$field} > $b->{$field} ? 1 : -1;
+            }
+
+            return 0;
+        };
+    }
+
+    /**
      * Get the <code>User</code> that has taken this <code>Duty</code>.
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

@@ -9,7 +9,7 @@
 
     <td class="shift-name">{{ minTime($shift->start) }}&nbsp;&ndash; {{ minTime($shift->end) }}&nbsp;Uhr</td>
     @foreach ($shift->shiftslots as $shiftslot)
-        @include('duties.table.shiftslot', [ 'slot' => $shiftslot->slot, 'duties' => $shiftslot->duties->sortBy('end') ])
+        @include('duties.table.shiftslot', [ 'slot' => $shiftslot->slot, 'duties' => $shiftslot->duties ])
     @endforeach
     <td>
         <button type="submit" title="Eintragen" class="pure-button secondary-button icon-button fa fa-paper-plane-o"></button>

@@ -77,9 +77,10 @@ class ShiftSlot {
      * @return $this
      */
     public function setDuties(Collection $duties) {
-        $this->duties = $duties->filter(function ($duty) {
-            return $duty->slot_id === $this->slot->id;
-        });
+        $this->duties = $duties
+            ->where('slot_id', $this->slot->id)
+            ->sort(Duty::getCmpBy([ 'end', 'start' ]))
+            ->values();
 
         return $this;
     }
