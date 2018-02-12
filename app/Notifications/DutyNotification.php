@@ -120,7 +120,7 @@ class DutyNotification extends Notification {
                     'cal_name' => config('app.name') . ' ' . $duty->user->getFullName(),
                 ])->render(),
                 "Dienst-{$duty->start->toDateString()}-v{$duty->sequence}.ics",
-                [ 'mime' => 'text/calendar; charset=utf-8; method="PUBLISH"; component="VEVENT"' ]
+                [ 'mime' => 'text/calendar; charset=utf-8; method="PUBLISH"' ]
             );
         } catch (Throwable $e) {
             Log::error('Could not generate iCalendar from duty', [ $e, $duty ]);
