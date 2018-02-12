@@ -398,11 +398,9 @@ class Shift {
     public function setShiftSlots(Collection $slots, Collection $duties = null) {
         $duties = $duties ?? new Collection();
 
-        $this->duties = $duties->filter(function ($duty) {
-            return ( $duty->start >= $this->start && $duty->start <  $this->end )
-                || ( $duty->end   >  $this->start && $duty->end   <= $this->end )
-                || ( $duty->start <= $this->start && $duty->end   >= $this->end );
-        });
+        $this->duties = $duties->filter(
+            Duty::getBetweenFilter($this->start, $this->end)
+        );
         $this->shiftslots = $slots->map(function ($slot) {
             return ShiftSlot::create($this, $slot)->setDuties($this->duties);
         });

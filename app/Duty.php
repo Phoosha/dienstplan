@@ -145,6 +145,7 @@ class Duty extends Model {
      * @param Carbon $start
      * @param Carbon $end
      * @param bool $strict
+     *
      * @return Builder
      */
     public function scopeBetween(Builder $query, Carbon $start, Carbon $end, bool $strict = false) {
@@ -162,7 +163,25 @@ class Duty extends Model {
             function ($query) use ($start, $end) { // 3. encompasses the time period
                 $query->where('start', '<=', $start)->where('end', '>=', $end);
             }
-        )->orderByRaw('start, end DESC, created_at');
+        )->ordering();
+    }
+
+    /**
+     * Returns a filter closure that takes duties and filters them
+     * just like {@see scopeBetween}.
+     *
+     * @param \Carbon\Carbon $start
+     * @param \Carbon\Carbon $end
+     * @param bool           $strict
+     *
+     * @return \Closure
+     */
+    public static function getBetweenFilter(Carbon $start, Carbon $end, bool $strict = false) {
+        return function (Duty $duty) use ($start, $end, $strict) {
+            return ( $duty->start >= $start && $duty->start <  $end && ! $strict )
+                || ( $duty->end   >  $start && $duty->end   <= $end && ! $strict )
+                || ( $duty->start <= $start && $duty->end   >= $end );
+        };
     }
 
     /**
@@ -195,6 +214,20 @@ class Duty extends Model {
             $user = $user->id;
 
         return $query->where('user_id', $user);
+    }
+
+    /**
+     * The natural ordering of <code>Duty</code>.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     *
+     * @return $this
+     */
+    public function scopeOrdering(Builder $query) {
+        return $query
+            ->orderBy('start')
+            ->orderBy('end', 'desc')
+            ->orderBy('created_at');
     }
 
     /**
@@ -242,17 +275,38 @@ class Duty extends Model {
     }
 
     /**
-     * Returns duties that are in conflict with this instance.
+     * Returns the duties from <code>$duties</code> or the DB that are in
+     * conflict with this instance.
      *
      * Conflicts are...
      *  - either non-SERVICE duties by the same user for any slot
      *  - or SERVICE duties by any user for the same slot
      *
+     * @param Collection|null $duties if <code>null</code>, all duties from the
+     *                                database are used
+     *
      * @return Collection
      */
-    public function getConflicts() {
+    public function getConflicts(Collection $duties = null) {
+        if (isset($duties))
+            return $duties->filter($this->getConflictsFilter());
+
+        return $this->getConflictsQuery()->get();
+    }
+
+    /**
+     * Returns a query that selects duties from the database as specified by
+     * {@see getConflicts}
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    protected function getConflictsQuery() {
         /** @var Builder $query */
         $query = self::between($this->start, $this->end);
+
+        // do not count $this as a conflict
+        if (isset($this->id))
+            $query->whereKeyNot($this->id);
 
         if ($this->type == Duty::SERVICE)
             $query->where('slot_id', $this->slot_id);
@@ -267,11 +321,33 @@ class Duty extends Model {
                     });
             });
 
-        // do not count $this as a conflict
-        if (isset($this->id))
-            $query->whereKeyNot($this->id);
+        return $query;
+    }
 
-        return $query->get();
+    /**
+     * Returns a filter closure that takes duties and filters them as specified
+     * by {@see getConflicts}.
+     *
+     * @return \Closure
+     */
+    protected function getConflictsFilter() {
+        $between = self::getBetweenFilter($this->start, $this->end);
+
+        if ($this->type == Duty::SERVICE)
+            return function (Duty $duty) use ($between) {
+                return $between($duty) && $duty->slot_id === $this->slot_id;
+            };
+        else
+            return function (Duty $duty) use ($between) {
+                if (! $between($duty) || ( isset($this->id) && $duty->id === $this->id ))
+                    return false;
+                elseif ($duty->type != Duty::SERVICE)
+                    return $duty->user_id === $this->user_id;
+                elseif ($duty->type == Duty::SERVICE)
+                    return $duty->slot_id === $this->slot_id;
+
+                return false;
+            };
     }
 
     /**

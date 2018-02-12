@@ -121,7 +121,8 @@ class StoreDuty extends FormRequest {
                             'Gewähltes Fahrzeug gibt es zu dieser Zeit nicht');
 
                     // check for existing conflicting duties
-                    $conflicts = $duty->getConflicts();
+                    $conflicts = $duty->getConflicts()
+                        ->merge($duty->getConflicts($this->parsedDuties));
                     if ($conflicts->isNotEmpty()) {
                         if ($conflicts->first()->type == Duty::SERVICE)
                             $validator->errors()->add("duties.{$key}.slot_id",
