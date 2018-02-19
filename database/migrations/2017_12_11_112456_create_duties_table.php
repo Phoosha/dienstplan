@@ -16,6 +16,7 @@ class CreateDutiesTable extends Migration
     {
         Schema::create('duties', function (Blueprint $table) {
             $table->increments('id');
+            $table->uuid('uuid')->unique();
             $table->integer('user_id')->unsigned();
             $table->integer('slot_id')->unsigned();
             $table->timestamp('start')->nullable();

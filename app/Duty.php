@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
+use Webpatser\Uuid\Uuid;
 
 /**
  * A <code>Duty</code> taken by a <code>User</code> for a specific <code>$slot</code>.
@@ -64,21 +65,25 @@ class Duty extends Model {
     ];
 
     /**
-     * Performs a model update incrementing the sequence counter.
-     *
-     * @param Builder $query
-     * @return bool
-     * @see Model::performUpdate()
+     * Register hooks for <code>Model</code> lifetime events.
      */
-    protected function performUpdate(Builder $query) {
-        $this->sequence += 1;
-        return parent::performUpdate($query);
+    public static function boot() {
+        parent::boot();
+
+        // Initialize uuid and sequence
+        self::creating(function ($model) {
+            $model->uuid = (string) Uuid::generate(4);
+            $model->sequence = 0;
+        });
+
+        // Increment sequence on every update
+        self::updating(function ($model) {
+            $model->sequence += 1;
+        });
     }
 
     /**
      * Returns the <code>sequence</code> field or <code>0</code> if uninitialized.
-     *
-     * @return int
      */
     public function getSequenceAttribute() {
         return $this->attributes['sequence'] ?? 0;
