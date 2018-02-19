@@ -8,7 +8,6 @@ __Anfang:__    _{{ $duty->start->format(config('dienstplan.datetime_format')) }}
 __Ende:__      _{{ $duty->end->format(config('dienstplan.datetime_format')) }}_<br>
 __Fahrzeug:__  _{{ $duty->slot->name }}_<br>
 @unless (empty($duty->comment))
-__Bemerkung:__
-> {{ $duty->comment }}<br>
+__Bemerkung:__ {{ $duty->comment }}<br>
 @endunless
 @endsection

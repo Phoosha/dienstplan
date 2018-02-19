@@ -8,6 +8,7 @@
 <br>
 @yield('body')
 <br>
+<br>
 Viele Grüße,<br>
 {{ config('app.name') }}
 @endcomponent
