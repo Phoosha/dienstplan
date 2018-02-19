@@ -148,8 +148,10 @@ class User extends Authenticatable {
      * Returns a human readable string representation of the
      * <code>last_training</code> field.
      *
-     * @param Carbon|null|false $other    if <code>false</code> absolute time, otherwise {@see Carbon::diffForHumans()}
-     * @param bool              $absolute removes time difference modifiers ago, after, etc
+     * @param Carbon|null|false $other    if <code>false</code> absolute time,
+     *                                    otherwise {@see Carbon::diffForHumans()}
+     * @param bool              $absolute removes time difference modifiers ago,
+     *                                    after, etc
      * @param bool              $short    displays short format of time units
      *
      * @return string
@@ -158,8 +160,9 @@ class User extends Authenticatable {
         if (empty($this->last_training))
             return 'nie';
         elseif ($other !== false)
-            return $this->last_training
-                ->diffForHumans($other, $absolute, $short);
+            return $this->last_training->isSameDay($other ?? now())
+                ? 'heute'
+                : $this->last_training->diffForHumans($other, $absolute, $short);
         else
             return $this->last_training
                 ->format(config('dienstplan.date_format'));
