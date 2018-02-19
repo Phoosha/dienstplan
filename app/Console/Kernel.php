@@ -36,7 +36,7 @@ class Kernel extends ConsoleKernel
         })->daily();
 
         // Hard delete trashed duties after a grace period
-        $threshold_dt = now()->sub(config('dienstplan.duties_hard_delete_threshold'));
+        $threshold_dt = now()->sub(config('dienstplan.expiry.duty_soft_deleted'));
         $schedule->call(function () use ($threshold_dt) {
            Duty::onlyTrashed()->where('deleted_at', '<', $threshold_dt)
                ->each(function (Duty $duty) {

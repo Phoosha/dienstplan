@@ -16,7 +16,7 @@ class DutyCreated extends DutyEvent {
     public function getNotificationRelease(): Carbon {
         return $this->duty->updated_at
             ->copy()->add(
-                config('dienstplan.duty_created_grace_period')
+                config('dienstplan.duty.modify_grace')
             );
     }
 

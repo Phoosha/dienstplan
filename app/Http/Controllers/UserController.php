@@ -255,7 +255,7 @@ class UserController extends Controller {
      * @return \Illuminate\Http\RedirectResponse|null
      */
     protected function checkRegistration(User $user) {
-        $expired_at = now()->sub(config('dienstplan.register_expires'));
+        $expired_at = now()->sub(config('dienstplan.expiry.user_register_token'));
 
         /*
          * Here we check whether the token is too old. This assumes that a user

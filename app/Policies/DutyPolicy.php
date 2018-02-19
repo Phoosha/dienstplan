@@ -161,7 +161,7 @@ class DutyPolicy {
 
         $now_shift = new Shift(now());
         return $now_shift->end
-            ->add(config('dienstplan.store_threshold'))
+            ->add(config('dienstplan.duty.store_future'))
             ->min(
                 Carbon::instance(config('dienstplan.max_date'))
             );
@@ -178,7 +178,7 @@ class DutyPolicy {
             return Carbon::instance(config('dienstplan.min_date'));
 
         return now()
-            ->subMonths(config('dienstplan.view_past_months'))
+            ->sub(config('dienstplan.duty.view_past'))
             ->firstOfMonth()
             ->max(
                 Carbon::instance(config('dienstplan.min_date'))
@@ -194,15 +194,17 @@ class DutyPolicy {
      * @return \Carbon\Carbon
      */
     public static function update_start(User $user, Duty $duty) {
-        $grace_until = now()->sub(config('dienstplan.duty_created_grace_period'));
+        $grace_until = now()->sub(config('dienstplan.duty.modify_grace'));
         $from        = self::store_start($user);
 
         // allow to edit a duty if it was recently created
         if ($duty->created_at < $grace_until)
-            $from->add(config('dienstplan.modify_threshold'));
+            $from->add(config('dienstplan.duty.modify'));
+        else
+            $from = $duty->created_at->copy();
 
-        return $from->max(
-            Carbon::instance(config('dienstplan.min_date'))
+        return $from->min(
+            Carbon::instance(config('dienstplan.max_date'))
         );
     }
 

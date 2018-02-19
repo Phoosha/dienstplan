@@ -11,8 +11,8 @@ class CalendarController extends Controller {
     public function view() {
         $duties = Duty::takenBy(Auth::user())
             ->between(
-                Carbon::now()->subMonths(config('dienstplan.view_past_months')),
-                Carbon::now()->add(config('dienstplan.store_threshold'))
+                Carbon::now()->sub(config('dienstplan.duty.view_past')),
+                Carbon::now()->add(config('dienstplan.duty.store_future'))
             )->get();
         $cal_name  = config('app.name') . ' ' . Auth::user()->getFullName();
         $file_name = str_replace(' ', '-', $cal_name) . '.ics';

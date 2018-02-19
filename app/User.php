@@ -171,7 +171,7 @@ class User extends Authenticatable {
      * @return string space-separated classes of the instance
      */
     public function lastTrainingClasses() {
-        $threshold_dt = now()->sub(config('dienstplan.training_threshold'));
+        $threshold_dt = now()->sub(config('dienstplan.expiry.user_training'));
 
         if (empty($this->last_training) || $this->last_training->lt($threshold_dt))
             return 'overdue';
