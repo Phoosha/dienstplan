@@ -29,6 +29,9 @@ CREATED:{{ icsZuluDateTime($duty->created_at) }}
 SEQUENCE:{{ $duty->sequence }}
 SUMMARY:{{ icsEscapeText(config('ics.summary')) }}
 ORGANIZER:{{ config('ics.organizer') }}
+@if (isset($duty->user) && isset($method) && $method !== "PUBLISH")
+ATTENDEE:mailto:{{ $duty->user->email }}
+@endif
 LOCATION:{{ icsEscapeText(str_replace(':slot', $duty->slot->name, config('ics.location'))) }}
 RESOURCES:{{ $duty->slot->name }}
 DESCRIPTION:{{ $duty->type === App\Duty::WITH_INTERNEE ? 'Dienst mit Praktikant' : '' }}
