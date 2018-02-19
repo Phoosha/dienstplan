@@ -25,10 +25,12 @@ class StorePost extends FormRequest {
      */
     public function rules() {
         $date_format = config('dienstplan.date_format');
+        $min_date = config('dienstplan.min_date');
+        $max_date = config('dienstplan.max_date');
         return [
             'title' => 'required|string|max:255',
             'body' => 'present|string|max:65553',
-            'release_on' => "required|date_format:{$date_format}",
+            'release_on' => "required|date_format:${date_format}|after:${min_date}|before:${max_date}",
             'expire_on' => 'required',
         ];
     }
