@@ -17,7 +17,7 @@ class CalendarController extends Controller {
         $cal_name  = config('app.name') . ' ' . Auth::user()->getFullName();
         $file_name = str_replace(' ', '-', $cal_name) . '.ics';
 
-        return response(iCalendar($duties, "PUBLISH"))
+        return response(iCalendar($duties, "PUBLISH", null, Auth::user()->getCalendarURL()))
             ->header('Content-Type', 'text/calendar; charset=utf-8; method="PUBLISH"')
             ->header('Content-Disposition', "attachment; filename={$file_name}");
     }

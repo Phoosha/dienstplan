@@ -170,7 +170,7 @@ CONST ICS_REPLACEMENTS = [
  * @return string
  * @throws \Throwable
  */
-function iCalendar($duties, $method = null, $cal_name = null) {
+function iCalendar($duties, $method = null, $cal_name = null, $source = null) {
     $cal_name = $cal_name ?? config('app.name');
     $duties = $duties instanceof Collection ? $duties : Collection::make([ $duties ]);
 
@@ -188,7 +188,8 @@ function iCalendar($duties, $method = null, $cal_name = null) {
         );
     };
 
-    return view('api.duties', compact('duties', 'cal_name', 'method'))->render($foldLines);
+    return view('api.duties', compact('duties', 'cal_name', 'method', 'source'))
+        ->render($foldLines);
 }
 
 /**
