@@ -22,7 +22,7 @@
     </div>
     <div class="td pure-button-group">
         <button type="submit" title="Hinzufügen" class="pure-button primary-button icon-button">
-            <i class="fa-fw fa fa-send" aria-hidden="true"></i>
+            <i class="fa-fw fa fa-send-o" aria-hidden="true"></i>
         </button>
     </div>
 </form>

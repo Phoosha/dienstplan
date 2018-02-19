@@ -16,7 +16,8 @@ mix.scripts('resources/assets/js/menu.js', 'public/js/menu.js')
     .js('resources/assets/js/adminui.js', 'public/js')
     .js('resources/assets/js/datepicker.js', 'public/js');
 
-mix.sass('resources/assets/sass/main.scss', 'public/css');
+mix.sass('resources/assets/sass/main.scss', 'public/css')
+    .sass('resources/assets/sass/late.scss', 'public/css');
 
 mix.extract([ 'jquery' ]);
 

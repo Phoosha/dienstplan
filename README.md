@@ -123,12 +123,19 @@ The Dienstplan application is open-sourced software licensed under the
 
 ### Incorporated works
 
-The project layout is based on the
-[Laravel project v5.5.0](https://github.com/laravel/laravel/tree/v5.5.0),
-which is licensed under the [MIT license](http://opensource.org/licenses/MIT).
+- The project layout is based on the
+  [Laravel project v5.5.0](https://github.com/laravel/laravel/tree/v5.5.0),
+  which is licensed under the [MIT license](http://opensource.org/licenses/MIT).
 
-From the Pure CSS [Responsive Side Menu layout example](https://purecss.io/layouts/)
-licensed under the [Yahoo! BSD license](https://github.com/pure-css/pure-site/blob/master/LICENSE.md)
-the following files were incorporated:
-- `resources/assets/sass/main.scss` originally based on `css/layouts/side-menu.css`
-- `resources/assets/js/menu.js` copied from `js/ui.js`
+- From the Pure CSS [Responsive Side Menu layout example](https://purecss.io/layouts/)
+  licensed under the [Yahoo! BSD license](https://github.com/pure-css/pure-site/blob/master/LICENSE.md)
+  the following files were incorporated:
+  - `resources/assets/sass/main.scss` originally based on `css/layouts/side-menu.css`
+  - `resources/assets/js/menu.js` copied from `js/ui.js`
+
+- From [FontAwesome v4.7.0](https://fontawesome.com/v4.7.0/) the stylesheet
+  `resources\assets\fontawesome\font—awesome.css` licensed under the
+  [MIT license](http://opensource.org/licenses/MIT) has been derived.
+  Additionally, `resources\assets\fontawesome\fonts` contains a subset of the
+  FontAwesome font licensed under the
+  [SIL Open Font License 1.1](http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL).
