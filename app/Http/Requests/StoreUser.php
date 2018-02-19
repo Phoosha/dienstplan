@@ -70,7 +70,7 @@ class StoreUser extends FormRequest {
 
         $user = $this->buildUser($attrs);
 
-        $user->is_admin = $attrs['is_admin'] ?? false;
+        $user->is_admin = $attrs['is_admin'] ?? $user->is_admin ?? false;
         $user->last_training =
             $attrs['last_training'] === 'nie'
                 ? null
