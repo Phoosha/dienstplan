@@ -7,8 +7,13 @@ use App\Http\Requests\StoreUser;
 use App\Http\Requests\UpdateUser;
 use App\User;
 use Auth;
+use Carbon\Carbon;
+use DB;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Http\Request;
+use Log;
+use Throwable;
 
 class UserController extends Controller {
 
@@ -241,6 +246,45 @@ class UserController extends Controller {
         $this->authorize('delete', $user);
 
         return view('users.confirmdelete', compact('user'));
+    }
+
+    /**
+     * Handles a request to update the last_training property of multiple users.
+     *
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return $this|\Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function updateTraining(Request $request) {
+        $date_format = config('dienstplan.date_format');
+        $min_date = config('dienstplan.min_date');
+        $max_date = config('dienstplan.max_date');
+        $validated = $this->validate($request, [
+            'users' => 'required|array|min:1',
+            'users.*' => 'required|integer|exists:users,id',
+            'last_training' => "required|date_format:${date_format}|after:${min_date}|before:${max_date}",
+        ]);
+
+        $users = User::find($validated['users']);
+        $lastTraining = Carbon::parse($validated['last_training']);
+
+        try {
+            DB::transaction(function () use ($users, $lastTraining) {
+                foreach ($users as $user) {
+                    $user->last_training = $lastTraining;
+                    $this->authorize('update', $user);
+                    $user->save();
+                }
+            });
+        } catch (AuthorizationException $e) {
+            throw $e;
+        } catch (Throwable $e) {
+            Log::error('Error updating last training', [ $users, $e ]);
+            return back()->withInput($request->all())->withErrors('Unterweisung konnte nicht aktualisiert werden');
+        }
+
+        return back();
     }
 
     /**

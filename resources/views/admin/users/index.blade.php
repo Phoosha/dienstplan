@@ -22,9 +22,9 @@
     @include('layouts.status')
 
     @unless ($add)
-    <form method="post" action="{{ url('admin/users') }}" class="pure-form" id="users-form">
+    <form method="post" action="{{ url('admin/users/training') }}" class="pure-form" id="users-form">
         {{ csrf_field() }}
-        {{ method_field('patch') }}
+        {{ method_field('put') }}
     @endunless
 
         @include('admin.users.layouts.userstable', [
@@ -33,7 +33,6 @@
 
     @unless ($add)
         <fieldset>
-            &ensp;
             <label for="last_training">
                 Unterweisung:
                 <input type="text" id="last_training" name="last_training" value="{{ old('last_training') ?? now()->format(config('dienstplan.date_format')) }}" size="9" class="date start-date" required/>
@@ -60,7 +59,7 @@
         'users' => $trashed,
         'tablebuttons' => 'admin.users.layouts.trashedtablebuttons',
         'add' => false,
-         'checkboxes' => false])
+        'checkboxes' => false ])
     @endunless
 </div>
 @endsection
