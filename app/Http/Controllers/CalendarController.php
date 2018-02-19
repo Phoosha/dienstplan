@@ -18,8 +18,8 @@ class CalendarController extends Controller {
         $file_name = str_replace(' ', '-', $cal_name) . '.ics';
 
         return response(iCalendar($duties, "PUBLISH"))
-            ->header('Content-Type', 'text/calendar; charset=utf-8')
-            ->header('Content-Disposition', "inline; filename={$file_name}");
+            ->header('Content-Type', 'text/calendar; charset=utf-8; method="PUBLISH"')
+            ->header('Content-Disposition', "attachment; filename={$file_name}");
     }
 
 }
