@@ -114,11 +114,7 @@ class DutyNotification extends Notification {
 
         try {
             return $mail->attachData(
-                view('api.duties', [
-                    'duty' => $duty,
-                    'method' => 'PUBLISH',
-                    'cal_name' => config('app.name') . ' ' . $duty->user->getFullName(),
-                ])->render(),
+                iCalendar($duty, 'PUBLISH'),
                 "Dienst-{$duty->start->toDateString()}-v{$duty->sequence}.ics",
                 [ 'mime' => 'text/calendar; charset=utf-8; method="PUBLISH"' ]
             );

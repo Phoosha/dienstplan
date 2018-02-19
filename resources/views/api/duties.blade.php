@@ -20,9 +20,9 @@ DTEND:{{ icsZuluDateTime($duty->end) }}
 LAST-MODIFIED:{{ icsZuluDateTime($duty->updated_at) }}
 CREATED:{{ icsZuluDateTime($duty->created_at) }}
 SEQUENCE:{{ $duty->sequence }}
-SUMMARY:{{ config('ics.summary') }}
+SUMMARY:{{ icsEscapeText(config('ics.summary')) }}
 ORGANIZER:{{ config('ics.organizer') }}
-LOCATION:{{ str_replace(':slot', $duty->slot->name, config('ics.location')) }}
+LOCATION:{{ icsEscapeText(str_replace(':slot', $duty->slot->name, config('ics.location'))) }}
 RESOURCES:{{ $duty->slot->name }}
 DESCRIPTION:{{ $duty->type === App\Duty::WITH_INTERNEE ? 'Dienst mit Praktikant' : '' }}
 URL:{{ url('duties', $duty->id) }}

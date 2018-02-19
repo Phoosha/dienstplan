@@ -4,6 +4,7 @@
 use App\CalendarMonth;
 use App\Duty;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 
 function dayname_short($dt) {
     return __('date.' . $dt->format('D'));
@@ -144,4 +145,63 @@ function planWithDay(Carbon $day, CalendarMonth $cur_month) {
        $prefix = url('/plan', [ $day->year, $day->month ]);
 
    return "{$prefix}#day-{$day->day}";
+}
+
+const ICS_LINE_SEP = "\r\n";
+const ICS_PER_LINE = 75;
+CONST ICS_REPLACEMENTS = [
+    "\\" => "\\\\",
+    ','  => '\,',
+    ';'  => '\;',
+    "\n" => '\n',
+];
+
+/**
+ * Returns an iCalendar "VCALENDAR" component containing a representation of
+ * each of <code>$duties</code> as "VEVENT" component.
+ *
+ * @param Collection|Duty $duties
+ * @param string|null     $method   unless <code>null</code>, the value of the "METHOD"
+ *                                  property of the "VCALENDAR" component
+ * @param string|null     $cal_name the value of the "X—WR-CALNAME" property of the
+ *                                  "VCALENDAR" component defaulting to the "app.name"
+ *                                  configuration if unset
+ *
+ * @return string
+ * @throws \Throwable
+ */
+function iCalendar($duties, $method = null, $cal_name = null) {
+    $cal_name = $cal_name ?? config('app.name');
+    $duties = $duties instanceof Collection ? $duties : Collection::make([ $duties ]);
+
+    $foldLines = function ($view, $contents) {
+        return implode(ICS_LINE_SEP,
+            array_map(function ($line) {
+                $foldedLine = mb_strcut($line, 0, ICS_PER_LINE);
+                for ($pos = ICS_PER_LINE; $pos < strlen($line); $pos += ICS_PER_LINE - 1) {
+                    $nextLine = mb_strcut($line, $pos, ICS_PER_LINE - 1);
+                    $foldedLine .= ICS_LINE_SEP . ' ' . $nextLine;
+                }
+
+                return $foldedLine;
+            }, explode("\n", $contents))
+        );
+    };
+
+    return view('api.duties', compact('duties', 'cal_name', 'method'))->render($foldLines);
+}
+
+/**
+ * Escapes <code>$text</code> for usage as a value in an iCalendar.
+ *
+ * @param $text
+ *
+ * @return mixed
+ */
+function icsEscapeText($text) {
+    return str_replace(
+        array_keys(ICS_REPLACEMENTS),
+        array_values(ICS_REPLACEMENTS),
+        $text
+    );
 }
