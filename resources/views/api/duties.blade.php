@@ -13,7 +13,7 @@ X-WR-CALNAME:{{ $cal_name }}
 X-WR-TIMEZONE:{{ config('app.timezone')  }}
 @foreach ($duties as $duty)
 BEGIN:VEVENT
-UID:{{ sha1($duty->id.$duty->created_on) }}{{ '@' . URL::formatRoot('') }}
+UID:{{ sha1($duty->id.$duty->created_at) }}{{ '@' . URL::formatRoot('') }}
 DTSTAMP:{{ icsZuluDateTime($duty->updated_at) }}
 DTSTART:{{ icsZuluDateTime($duty->start) }}
 DTEND:{{ icsZuluDateTime($duty->end) }}
