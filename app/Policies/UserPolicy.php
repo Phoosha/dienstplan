@@ -133,10 +133,7 @@ class UserPolicy {
      */
     public function promote(User $asUser, User $user) {
         // prevent admins from (accidentally) demoting themselves
-        if ($asUser->is_admin && $asUser->isNot($user))
-            return true;
-        else
-            return false;
+        return $asUser->is_admin && $asUser->isNot($user);
     }
 
     /**

@@ -11,11 +11,6 @@
 |
 */
 
-Route::get('/', 'PostController@index')->name('home');
-Route::post('posts', 'PostController@store');
-Route::get('posts/edit', 'PostController@edit');
-Route::delete('posts/{post}', 'PostController@destroy');
-
 Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
 Route::post('login', 'Auth\LoginController@login');
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');
@@ -24,6 +19,11 @@ Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm'
 Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
 Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
 Route::post('password/reset', 'Auth\ResetPasswordController@reset');
+
+Route::get('/', 'PostController@index')->name('home');
+Route::post('posts', 'PostController@store');
+Route::get('posts/edit', 'PostController@edit');
+Route::delete('posts/{post}', 'PostController@destroy');
 
 Route::get('plan/{year?}/{month?}', 'DutyController@index');
 Route::get('duties/create', 'DutyController@create');
