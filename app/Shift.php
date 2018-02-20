@@ -421,7 +421,7 @@ class Shift {
         $offsets = array_fill(0, $times, $this->start);
 
         if ($sort)
-            $duties->sortBy('start');
+            $duties = $duties->sortBy('start');
 
         /*
          * Using the the next smallest Duty replace the smallest time
@@ -434,7 +434,9 @@ class Shift {
 
             while ($smallest_offset = array_shift($offsets)) {
                 if ($duty->start <= $smallest_offset) {
-                    $offsets[] = $duty->end;
+                    $offsets[] = $duty->end > $smallest_offset
+                        ? $duty->end
+                        : $smallest_offset;
                     break;
                 }
             }
