@@ -141,6 +141,9 @@ class UserController extends Controller {
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
      */
     public function register(Request $request) {
+        // logout a currently logged in user on the web instead of register guard
+        Auth::guard('web')->logout();
+
         $user = Auth::user();
         $register_token = $request->get('register_token');
 
