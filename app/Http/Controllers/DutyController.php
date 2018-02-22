@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Duty;
 use App\CalendarMonth;
+use App\Duty;
 use App\Events\DutyCreated;
 use App\Events\DutyDeleted;
 use App\Events\DutyReassigned;

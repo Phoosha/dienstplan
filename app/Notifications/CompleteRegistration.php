@@ -3,8 +3,8 @@
 namespace App\Notifications;
 
 use App\User;
-use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
 
 class CompleteRegistration extends Notification {
 

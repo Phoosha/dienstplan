@@ -5,8 +5,8 @@ namespace App\Events;
 use App\Duty;
 use App\User;
 use Carbon\Carbon;
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
 
 /**
  * Functionality common to all events about duties.

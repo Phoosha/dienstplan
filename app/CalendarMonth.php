@@ -145,7 +145,7 @@ class CalendarMonth {
         $first_shift = Shift::firstOfDay($this->start);
         $duties = Duty::betweenByDay($this->start, $this->end)->get();
 
-        $days = array_fill(0, count($first_shift->daysInMonth), []);
+        $days = array_fill(0, $first_shift->daysInMonth, []);
         for ($shift = $first_shift->copy();
              $shift->start->isSameMonth($first_shift->start);
              $shift = $shift->copy()->next()

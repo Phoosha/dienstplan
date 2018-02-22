@@ -109,7 +109,8 @@ class SlotConfig extends Model {
     private static function activeQuery(Carbon $month_start) {
         $month_start = Carbon::instance($month_start ?? now())->firstOfMonth();
 
-        return self::where('available_on', '<=', $month_start)->orderBy('available_on', 'desc');
+        return self::where('available_on', '<=', $month_start)
+            ->orderBy('available_on', 'desc');
     }
 
 }

@@ -19,20 +19,20 @@
             <ul class="pure-menu-list">
                 @auth('web')
                     @component('layouts.menuentry', [ 'uri' => '/' ])
-                        <i class="fa fa-home fa-fw" aria-hidden="true"></i> Start</a>
+                        <i class="fa fa-home fa-fw" aria-hidden="true"></i> Start
                     @endcomponent
                     @component('layouts.menuentry', [ 'uri' => 'plan' ])
-                        <i class="fa fa-calendar fa-fw" aria-hidden="true"></i> Dienstplan</a>
+                        <i class="fa fa-calendar fa-fw" aria-hidden="true"></i> Dienstplan
                     @endcomponent
                     @component('layouts.menuentry', [ 'uri' => 'phones' ])
-                        <i class="fa fa-phone fa-fw" aria-hidden="true"></i> Telefonliste</a>
+                        <i class="fa fa-phone fa-fw" aria-hidden="true"></i> Telefonliste
                     @endcomponent
                     @component('layouts.menuentry', [ 'uri' => "user" ])
-                        <i class="fa fa-user fa-fw" aria-hidden="true"></i> Mein Konto</a>
+                        <i class="fa fa-user fa-fw" aria-hidden="true"></i> Mein Konto
                     @endcomponent
                     @if (Gate::allows('administrate'))
                     @component('layouts.menuentry', [ 'match' => 'admin', 'uri' => 'admin/users' ])
-                        <i class="fa fa-users fa-fw" aria-hidden="true"></i> Verwaltung</a>
+                        <i class="fa fa-users fa-fw" aria-hidden="true"></i> Verwaltung
                     @endcomponent
                     @endif
                 @endauth

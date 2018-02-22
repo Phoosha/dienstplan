@@ -5,8 +5,8 @@ namespace Tests;
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
 use Config;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Contracts\Console\Kernel;
+use Illuminate\Support\Facades\Hash;
 
 trait CreatesApplication {
 

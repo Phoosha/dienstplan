@@ -4,7 +4,6 @@ namespace App\Providers;
 
 use App\Events\DutyCreated;
 use App\Events\DutyDeleted;
-use App\Events\DutyEvent;
 use App\Events\DutyReassigned;
 use App\Events\DutyUpdated;
 use App\Listeners\DispatchDutyNotification;

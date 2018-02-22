@@ -52,7 +52,7 @@
         <section class="news-item">
             <fieldset class="pure-group">
                 <input type="text" id="title" name="title" placeholder="Titel der Ankündigung" value="{{ old('title') }}" required/>
-                <textarea id="body" name="body" placeholder="Inhalt der Ankündigung" value="{{ old('body') }}" rows="7" spellcheck="true" required>{{ old('body') }}</textarea>
+                <textarea id="body" name="body" placeholder="Inhalt der Ankündigung" rows="7" spellcheck="true" required>{{ old('body') }}</textarea>
             </fieldset>
             <fieldset>
                 <label for="release_on">

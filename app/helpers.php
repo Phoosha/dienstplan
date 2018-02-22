@@ -166,6 +166,8 @@ CONST ICS_REPLACEMENTS = [
  * @param string|null     $cal_name the value of the "X—WR-CALNAME" property of the
  *                                  "VCALENDAR" component defaulting to the "app.name"
  *                                  configuration if unset
+ * @param string|null     $source   URL from which this iCalendar may be retrieved
+ *                                  possibly including updates
  *
  * @return string
  * @throws \Throwable

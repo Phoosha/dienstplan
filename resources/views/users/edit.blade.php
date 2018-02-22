@@ -67,7 +67,7 @@
         @can('promote', $user)
             <div class="pure-control-group">
                 <label for="is_admin">Rolle:</label>
-                <select id="is_admin" name="is_admin" style="width: 14.5125em">
+                <select id="is_admin" name="is_admin" style="width: 14.5125em;">
                     <option {!! selected(old('is_admin') ?? $user->is_admin, 0) !!}>Normaler Nutzer</option>
                     <option {!! selected(old('is_admin') ?? $user->is_admin, 1) !!}>Administrator</option>
                 </select>

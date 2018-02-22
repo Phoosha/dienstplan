@@ -2,13 +2,11 @@
 
 namespace App\Policies;
 
-use App\CalendarMonth;
+use App\Duty;
 use App\Shift;
 use App\User;
-use App\Duty;
 use Carbon\Carbon;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use InvalidArgumentException;
 
 class DutyPolicy {
 

@@ -226,7 +226,7 @@ class Duty extends Model {
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
      *
-     * @return $this
+     * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeOrdering(Builder $query) {
         return $query
