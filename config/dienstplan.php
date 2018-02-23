@@ -86,8 +86,10 @@ return [
     | date range supported by the configured database application.
     |
     */
-    'min_date' => Carbon::create(1970)->firstOfYear(),
-    'max_date' => Carbon::create(2037)->endOfYear(),
+    'min_date' => Carbon::now(config('app.timezone'))
+        ->year(1970)->firstOfYear(),
+    'max_date' => Carbon::now(config('app.timezone'))
+        ->year(2037)->endOfYear(),
 
     /*
     |--------------------------------------------------------------------------

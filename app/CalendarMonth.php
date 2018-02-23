@@ -73,8 +73,8 @@ class CalendarMonth {
      * @throws InvalidDateException
      */
     protected static function firstOfMonth($year, $month) {
-        $year  = isset($year)  ? (int) $year  : $year;
-        $month = isset($month) ? (int) $month : $month;
+        $year  = isset($year)  && is_numeric($year)  ? (int) $year  : $year;
+        $month = isset($month) && is_numeric($month) ? (int) $month : $month;
 
         return Carbon::createSafe($year, $month, 1, 0);
     }

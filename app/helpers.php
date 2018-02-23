@@ -3,6 +3,7 @@
 
 use App\CalendarMonth;
 use App\Duty;
+use App\Shift;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
@@ -125,7 +126,7 @@ function isValidDateOrFail(Carbon $dt) {
  * @return string
  */
 function planWithDuty(Duty $duty) {
-    $start  = $duty->start;
+    $start  = (new Shift($duty->start))->start;
 
     return "plan/{$start->year}/{$start->month}#day-{$start->day}";
 }
