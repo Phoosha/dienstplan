@@ -38,13 +38,8 @@ class PhoneRoutesTest extends TestCaseWithAuth {
         $response = $this->actingByString($user)
             ->post('/phones', $this->phone->attributesToArray());
 
-        if ($this->guestAssertions($response))
+        if ($this->adminOnlyAssertions($response))
             return;
-        if (! Auth::user()->is_admin) {
-            $response->assertStatus(403);
-
-            return;
-        }
 
         $response->assertRedirect('/phones')->assertSessionMissing('errors');
         $this->assertDatabaseHas('phones', $this->phone->refresh()->attributesToArray());
@@ -56,15 +51,8 @@ class PhoneRoutesTest extends TestCaseWithAuth {
     public function testPhonesEditReturnsOKOnlyIfAdmin($user) {
         $response = $this->actingByString($user)->get('/phones/edit');
 
-        if ($this->guestAssertions($response))
-            return;
-        if (! Auth::user()->is_admin) {
-            $response->assertStatus(403);
-
-            return;
-        }
-
-        $response->assertStatus(200);
+        if (! $this->adminOnlyAssertions($response))
+            $response->assertStatus(200);
     }
 
     /**
@@ -75,13 +63,8 @@ class PhoneRoutesTest extends TestCaseWithAuth {
 
         $response = $this->actingByString($user)->delete("/phones/{$this->phone->id}");
 
-        if ($this->guestAssertions($response))
+        if ($this->adminOnlyAssertions($response))
             return;
-        if (! Auth::user()->is_admin) {
-            $response->assertStatus(403);
-
-            return;
-        }
 
         $response->assertRedirect('/phones/edit')->assertSessionMissing('errors');
         $this->assertDatabaseMissing('phones', $this->phone->attributesToArray());

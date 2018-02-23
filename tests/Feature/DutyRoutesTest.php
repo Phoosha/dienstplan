@@ -208,13 +208,8 @@ class DutyRoutesTest extends TestCaseWithAuth {
 
         $response = $this->actingByString($user)->delete("/duties/{$duty->id}");
 
-        if ($this->guestAssertions($response))
+        if ($this->adminOnlyAssertions($response))
             return;
-        if (! Auth::user()->is_admin) {
-            $response->assertStatus(403);
-
-            return;
-        }
 
         $response->assertRedirect(planWithDuty($duty))->assertSessionMissing('errors');
         $this->assertDatabaseMissing('duties', $duty->attributesToArray());

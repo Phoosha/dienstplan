@@ -45,15 +45,8 @@ class PostRoutesTest extends TestCaseWithAuth {
     public function testPostsEditReturnsOKOnlyIfAdmin($user) {
         $response = $this->actingByString($user)->get("/posts/edit");
 
-        if ($this->guestAssertions($response))
-            return;
-        if (! Auth::user()->is_admin) {
-            $response->assertStatus(403);
-
-            return;
-        }
-
-        $response->assertStatus(200);
+        if (! $this->adminOnlyAssertions($response))
+            $response->assertStatus(200);
     }
 
     /**
@@ -72,13 +65,8 @@ class PostRoutesTest extends TestCaseWithAuth {
         $this->actingByString($user)->get('/posts/edit');
         $response = $this->actingByString($user)->post('/posts', $post);
 
-        if ($this->guestAssertions($response))
+        if ($this->adminOnlyAssertions($response))
             return;
-        if (! Auth::user()->is_admin) {
-            $response->assertStatus(403);
-
-            return;
-        }
 
         $resultingPost = $this->post->attributesToArray();
         $resultingPost['user_id'] = Auth::id();
@@ -96,13 +84,8 @@ class PostRoutesTest extends TestCaseWithAuth {
         $this->actingByString($user)->get('/posts/edit');
         $response = $this->actingByString($user)->delete("/posts/{$this->post->id}");
 
-        if ($this->guestAssertions($response))
+        if ($this->adminOnlyAssertions($response))
             return;
-        if (! Auth::user()->is_admin) {
-            $response->assertStatus(403);
-
-            return;
-        }
 
         $response->assertRedirect('/posts/edit')->assertSessionMissing('errors');
         self::assertEquals(null, Post::find($this->post->id));

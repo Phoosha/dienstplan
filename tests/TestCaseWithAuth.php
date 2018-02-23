@@ -3,6 +3,7 @@
 namespace Tests;
 
 use App\User;
+use Auth;
 use Illuminate\Foundation\Testing\TestResponse;
 
 abstract class TestCaseWithAuth extends TestCase {
@@ -33,6 +34,19 @@ abstract class TestCaseWithAuth extends TestCase {
     protected function guestAssertions(TestResponse $response) {
         if (! $this->isAuthenticated()) {
             $response->assertRedirect('/login');
+
+            return true;
+        }
+
+        return false;
+    }
+
+    protected function adminOnlyAssertions(TestResponse $response) {
+        if ($this->guestAssertions($response))
+            return true;
+
+        if (! Auth::user()->is_admin) {
+            $response->assertStatus(403);
 
             return true;
         }
