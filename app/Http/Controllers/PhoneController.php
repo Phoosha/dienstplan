@@ -42,7 +42,7 @@ class PhoneController extends Controller {
         $this->authorize('delete', $phone);
         $phone->delete();
 
-        return redirect('phones')->with('status', 'Telefoneintrag erfolgreich gelöscht');
+        return redirect('phones/edit')->with('status', 'Telefoneintrag erfolgreich gelöscht');
     }
 
 }
