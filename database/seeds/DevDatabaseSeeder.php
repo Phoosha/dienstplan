@@ -16,6 +16,7 @@ class DevDatabaseSeeder extends Seeder
             PostsTableSeeder::class,
             SlotsTableSeeder::class,
             PhonesTableSeeder::class,
+            DutiesTableSeeder::class,
         ]);
     }
 }
