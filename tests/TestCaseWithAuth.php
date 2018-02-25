@@ -5,6 +5,7 @@ namespace Tests;
 use App\User;
 use Auth;
 use Illuminate\Foundation\Testing\TestResponse;
+use Illuminate\Support\Collection;
 
 abstract class TestCaseWithAuth extends TestCase {
 
@@ -15,12 +16,18 @@ abstract class TestCaseWithAuth extends TestCase {
      */
     protected $users;
 
+    /**
+     * @var int[]
+     */
+    protected $userIds;
+
     protected function setUp() {
         parent::setUp();
         $this->users = [
             'normal' => factory(User::class)->create(),
             'admin' => factory(User::class)->create([ 'is_admin' => true ]),
         ];
+        $this->userIds = Collection::make($this->users)->pluck('id');
     }
 
     protected function actingByString($user, $driver = null) {
