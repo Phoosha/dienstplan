@@ -28,7 +28,7 @@ class StoreUser extends FormRequest {
         return [
             'first_name' => 'required|alpha_dash|max:35',
             'last_name' => 'required|alpha_dash|max:35',
-            'login' => "sometimes|alpha_num|min:3|max:35|unique:users,login,{$this->route('id')}",
+            'login' => "sometimes|regex:/^[a-z]+(\.[a-z]+)?[0-9]*$/|min:3|max:35|unique:users,login,{$this->route('id')}",
             'email' => 'required|email|max:100',
             'phone' => [ 'present', 'max:35', 'regex:' . config('dienstplan.phone_regex') ],
             'last_training' => 'required',
