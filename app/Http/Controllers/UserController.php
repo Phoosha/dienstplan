@@ -129,7 +129,7 @@ class UserController extends Controller {
         $user->save();
         $user->sendRegisterNotification($user->register_token);
 
-        return back()->with('status', 'Neuer Nutzer wurde angelegt und wird per Mail benachrichtigt');
+        return redirect('admin/users/create')->with('status', 'Neuer Nutzer wurde angelegt und wird per Mail benachrichtigt');
     }
 
     /**
@@ -287,7 +287,7 @@ class UserController extends Controller {
             return back()->withInput($request->all())->withErrors('Unterweisung konnte nicht aktualisiert werden');
         }
 
-        return back();
+        return redirect('admin/users');
     }
 
     /**
