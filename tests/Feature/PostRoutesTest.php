@@ -25,7 +25,11 @@ class PostRoutesTest extends TestCaseWithAuth {
 
     protected function setUp() {
         parent::setUp();
-        $this->user = factory(User::class)->create([ 'is_admin' => true ]);
+
+        $this->user = User::inRandomOrder()->first();
+        $this->user->is_admin = true;
+        $this->user->save();
+
         $this->post = factory(Post::class)->create([ 'user_id' => $this->user->id ]);
     }
 

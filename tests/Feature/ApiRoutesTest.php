@@ -28,7 +28,7 @@ class ApiRoutesTest extends TestCase {
     protected function setUp() {
         parent::setUp();
 
-        $this->user = factory(User::class)->create();
+        $this->user = User::inRandomOrder()->first();
         $this->user->cycleApiToken();
 
         Duty::destroy(Duty::all('id')->pluck('id')->all());

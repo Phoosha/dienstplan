@@ -24,10 +24,13 @@ class UserRoutesTest extends TestCaseWithAuth {
 
     protected function setUp() {
         parent::setUp();
+
         $this->password = $this->faker->password;
-        $this->user = factory(User::class)->create([
-            'password' => Hash::make($this->password)
-        ]);
+
+        $this->user = User::inRandomOrder()
+            ->whereNotIn('id', $this->userIds)->first();
+        $this->user->password = Hash::make($this->password);
+        $this->user->save();
     }
 
     /**

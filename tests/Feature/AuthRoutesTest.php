@@ -8,23 +8,40 @@ use Hash;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithFaker;
 use Notification;
-use Tests\TestCaseWithAuth;
+use Tests\TestCase;
 
-class AuthRoutesTest extends TestCaseWithAuth {
+class AuthRoutesTest extends TestCase {
 
     use WithFaker, DatabaseTransactions;
 
+    /**
+     * @var string
+     */
     protected $password;
+
+    /**
+     * @var User
+     */
     protected $user;
+
+    /**
+     * @var User
+     */
     protected $other_user;
 
     protected function setUp() {
         parent::setUp();
+
+        $users = User::inRandomOrder()->take(2)->get();
+
         $this->password = $this->faker->password;
-        $this->user = factory(User::class)->create([
-            'password' => Hash::make($this->password)
-        ]);
-        $this->other_user = factory(User::class)->make();
+
+        $this->user = $users[0];
+        $this->user->password = Hash::make($this->password);
+        $this->user->save();
+
+        $this->other_user = $users[1];
+        $this->other_user->forceDelete();
     }
 
     protected function triggerLogin(User $user, string $password) {

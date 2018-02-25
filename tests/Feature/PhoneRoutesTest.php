@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Phone;
-use Auth;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCaseWithAuth;
 

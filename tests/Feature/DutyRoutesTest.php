@@ -29,7 +29,7 @@ class DutyRoutesTest extends TestCaseWithAuth {
     protected function setUp() {
         parent::setUp();
 
-        $this->user = factory(User::class)->create();
+        $this->user = User::inRandomOrder()->first();
 
         $start = now()->addDay();
         $this->dutyAsRequest = [
