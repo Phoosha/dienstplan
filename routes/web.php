@@ -45,7 +45,7 @@ Route::delete('users/{user}/api_token', 'UserController@resetToken');
 
 Route::group([ 'prefix' => 'admin' ], function () {
 
-    Route::redirect('/', 'admin/users');
+    Route::redirect('/', url('admin/users'));
     Route::get('users', 'UserController@view');
     Route::post('users', 'UserController@store');
     Route::get('users/create', 'UserController@create');
