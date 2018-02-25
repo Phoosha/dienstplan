@@ -160,4 +160,24 @@ class ShiftTest extends TestCase {
         self::assertTrue(Shift::firstOfDay()->isFirstNowish());
     }
 
+    public function propertyProvider() {
+        return [
+            'start property' => [ 'start', true ],
+            'end property' => [ 'end', true ],
+            'shift property' => [ 'shift', true ],
+            'shiftslots property' => [ 'shiftslots', true ],
+            'duties property' => [ 'duties', true ],
+            'invalid property' => [ 'xyz', false ],
+        ];
+    }
+
+    /**
+     * @dataProvider propertyProvider
+     */
+    public function testMagicIssetReturnsTrueIfIsset($prop, $expected) {
+        $shift = new Shift();
+
+        self::assertEquals($expected, $shift->__isset($prop));
+    }
+
 }
