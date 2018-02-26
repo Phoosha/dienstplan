@@ -3,13 +3,14 @@
 namespace Tests\Feature;
 
 use App\Duty;
+use App\Notifications\DutyNotification;
 use App\Slot;
 use App\SlotConfig;
 use App\User;
-use Auth;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithFaker;
+use Notification;
 use Tests\TestCaseWithAuth;
 
 class DutyRoutesTest extends TestCaseWithAuth {
@@ -138,8 +139,23 @@ class DutyRoutesTest extends TestCaseWithAuth {
                 );
     }
 
-    public function testStoreDutyAsUserRedirectsToPlanWithoutErrorsWithStorePerformed() {
+    /**
+     * @dataProvider userProvider
+     */
+    public function testDutiesCreateFromShiftsReturnsOKUnlessGuest($user) {
+        $year     = now()->year;
+        $month    = now()->month;
+        $response = $this->actingByString($user)
+            ->get("/duties/create?year={$year}&month={$month}&shifts%5B12%5D%5B0%5D=2&shifts%5B12%5D%5B1%5D=2&shifts%5B13%5D%5B0%5D=2&shifts%5B14%5D%5B0%5D=1");
+
+        if (! $this->guestAssertions($response))
+            $response->assertStatus(200);
+    }
+
+    public function testStoreDutyAsUserRedirectsToPlanWithoutErrorsWithStorePerformedAndDutyNotification() {
         Duty::destroy(Duty::all('id')->pluck('id')->all());
+
+        Notification::fake();
 
         $response = $this->actingAs($this->user)
             ->post('/duties', [
@@ -150,11 +166,13 @@ class DutyRoutesTest extends TestCaseWithAuth {
         $duty = $this->dutyFromRequest($this->dutyAsRequest);
         $start = $duty->start;
 
-        if (! $this->guestAssertions($response)) {
-            $response->assertRedirect("/plan/{$start->year}/{$start->month}#day-{$start->day}")
-                ->assertSessionMissing('errors');
-            $this->assertDatabaseHas('duties', $duty->attributesToArray());
-        }
+        if ($this->guestAssertions($response))
+            return;
+
+        $response->assertRedirect("/plan/{$start->year}/{$start->month}#day-{$start->day}")
+            ->assertSessionMissing('errors');
+        $this->assertDatabaseHas('duties', $duty->attributesToArray());
+        Notification::assertSentTo($duty->user, DutyNotification::class);
     }
 
     /**
@@ -170,8 +188,10 @@ class DutyRoutesTest extends TestCaseWithAuth {
             $response->assertStatus(200);
     }
 
-    public function testPutDutyAsAdminRedirectsToPlanWithoutErrorsWithUpdatePerformed() {
+    public function testPutDutyAsAdminRedirectsToPlanWithoutErrorsWithUpdatePerformedAndDutyNotification() {
         $this->user->setAttribute('is_admin', true)->save();
+
+        Notification::fake();
 
         Duty::destroy(Duty::all('id')->pluck('id')->all());
         $duty = $this->dutyFromRequest($this->dutyAsRequest);
@@ -196,15 +216,18 @@ class DutyRoutesTest extends TestCaseWithAuth {
 
         $response->assertRedirect(planWithDuty($duty))->assertSessionMissing('errors');
         $this->assertDatabaseHas('duties', $duty->attributesToArray());
+        Notification::assertSentTo($duty->user, DutyNotification::class);
     }
 
     /**
      * @dataProvider userProvider
      */
-    public function testDeleteDutyRedirectsToPlanWithoutErrorsWithDestroyPerformedOnlyIfAdmin($user) {
+    public function testDeleteDutyRedirectsToPlanWithoutErrorsWithDestroyPerformedAndDutyNotificationOnlyIfAdmin($user) {
         $duty = $this->dutyFromRequest($this->dutyAsRequest);
         $duty->save();
         $duty->refresh();
+
+        Notification::fake();
 
         $response = $this->actingByString($user)->delete("/duties/{$duty->id}");
 
@@ -213,6 +236,7 @@ class DutyRoutesTest extends TestCaseWithAuth {
 
         $response->assertRedirect(planWithDuty($duty))->assertSessionMissing('errors');
         $this->assertDatabaseMissing('duties', $duty->attributesToArray());
+        Notification::assertSentTo($duty->user, DutyNotification::class);
     }
 
 }
