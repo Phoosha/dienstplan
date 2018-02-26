@@ -84,10 +84,13 @@ class Post extends Model {
      * Selects all active (released and not expired) <code>Post</code>s.
      *
      * @param Builder $query
+     * @param Carbon|null    $now
+     *
      * @return Builder
      */
-    public function scopeActive(Builder $query) {
-        return $query->notExpired()->where('release_on', '<=', now());
+    public function scopeActive(Builder $query, $now = null) {
+        $now = Carbon::instance($now ?? now());
+        return $query->notExpired()->where('release_on', '<=', $now);
     }
 
     /**
