@@ -3,8 +3,8 @@
 namespace App\Policies;
 
 use App\Duty;
-use App\Shift;
 use App\User;
+use App\ViewModels\Shift;
 use Carbon\Carbon;
 use Illuminate\Auth\Access\HandlesAuthorization;
 

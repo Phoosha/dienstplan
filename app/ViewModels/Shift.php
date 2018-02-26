@@ -1,7 +1,8 @@
 <?php
 
-namespace App;
+namespace App\ViewModels;
 
+use App\Duty;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;

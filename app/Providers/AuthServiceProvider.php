@@ -3,7 +3,6 @@
 namespace App\Providers;
 
 use App\Auth\RegisterTokenGuard;
-use App\CalendarMonth;
 use App\Duty;
 use App\Phone;
 use App\Policies\DutyPolicy;
@@ -11,8 +10,9 @@ use App\Policies\PhonePolicy;
 use App\Policies\PostPolicy;
 use App\Policies\UserPolicy;
 use App\Post;
-use App\Shift;
 use App\User;
+use App\ViewModels\CalendarMonth;
+use App\ViewModels\Shift;
 use Auth;
 use Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;

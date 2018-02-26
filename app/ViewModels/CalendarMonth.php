@@ -1,7 +1,9 @@
 <?php
 
-namespace App;
+namespace App\ViewModels;
 
+use App\Duty;
+use App\Slot;
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
 use Illuminate\Support\Collection;

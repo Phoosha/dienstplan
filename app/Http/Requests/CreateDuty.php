@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests;
 
-use App\CalendarMonth;
 use App\Duty;
-use App\Shift;
 use App\Slot;
+use App\ViewModels\CalendarMonth;
+use App\ViewModels\Shift;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;

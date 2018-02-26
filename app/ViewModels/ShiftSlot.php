@@ -1,8 +1,10 @@
 <?php
 
-namespace App;
+namespace App\ViewModels;
 
 
+use App\Duty;
+use App\Slot;
 use Auth;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;

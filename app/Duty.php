@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\ViewModels\Shift;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;

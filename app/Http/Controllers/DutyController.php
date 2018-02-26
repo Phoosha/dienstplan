@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\CalendarMonth;
 use App\Duty;
 use App\Events\DutyCreated;
 use App\Events\DutyDeleted;
@@ -11,8 +10,9 @@ use App\Events\DutyUpdated;
 use App\Http\Requests\CreateDuty;
 use App\Http\Requests\StoreDuty;
 use App\Http\Requests\UpdateDuty;
-use App\Shift;
 use App\User;
+use App\ViewModels\CalendarMonth;
+use App\ViewModels\Shift;
 use Auth;
 use Carbon\Exceptions\InvalidDateException;
 use DB;

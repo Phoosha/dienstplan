@@ -1,9 +1,9 @@
 <?php
 
 
-use App\CalendarMonth;
 use App\Duty;
-use App\Shift;
+use App\ViewModels\CalendarMonth;
+use App\ViewModels\Shift;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 

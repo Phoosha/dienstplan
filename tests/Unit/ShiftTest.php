@@ -3,7 +3,7 @@
 namespace Tests\Unit;
 
 use App\Duty;
-use App\Shift;
+use App\ViewModels\Shift;
 use Carbon\Carbon;
 use DateTime;
 use Tests\TestCase;
